@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+<body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:if='${sell.patientNumber == null and id == 0}'>Create New Cash Only Sell</h2>
+                <h2 th:if='${sell.patientNumber == null and id > 0}'>Update Cash Only Sell</h2>
+                <h2 th:if='${sell.patientNumber != null and id == 0}'>Create New Sell</h2>
+                <h2 th:if='${sell.patientNumber != null and id > 0}'>Update  Sell</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <div id="201"  class="pop"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{'/psp/sellaction/'+${sell.id}}" method="post" th:unless="${sell.transactionStatus == T(zw.co.psmi.hms.patient.entity.TransactionStatus).CANCELLED}">
+                    <input type="hidden" name="id" th:value="${sell.id}" />
+                      <div id="204" class="pop"> <div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Unlock For Editing</h3>
+  </div>
+                              <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6" ><label>Username:</label><input class="form-control" type="text" name="username" required="required" /></div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6" ><label>Password:</label> <input class="form-control" type="password" name="password" required="required" /></div>
+                                </div>
+                                <div class="row">  
+                                    <div class="col-lg-6 col-md-6 col-sm-6"  align="right"><input class="btn btn-primary" type="submit" value="Unlock For Editing"  /></div> 
+                                    <div class="col-lg-6 col-md-6 col-sm-6"><input class="btn btn-primary" type="button" value="Cancel" onclick="dropdownhide(204)" /></div>
+                                </div>            
+                              </div>
+                          </div>
+                              </div>
+                </form>
+                <form action="#" th:action="@{'/psp/sellcancel/'+${sell.id}}" method="post"  th:unless="${sell.transactionStatus == T(zw.co.psmi.hms.patient.entity.TransactionStatus).CANCELLED}">
+                    <input type="hidden" name="id" th:value="${sell.id}" />
+                      <div id="205" class="pop"> <div class="panel panel-info">
+                <div class="panel-heading">
+                <h3 class="panel-title">Cancel Entry</h3>
+                </div>
+                              <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6" ><label>Username:</label><input class="form-control" type="text" name="username" required="required" /></div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6" ><label>Password:</label> <input class="form-control" type="password" name="password" required="required" /></div>
+                                </div>
+                                 <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12" ><label>Reason</label> <textarea class="form-control" name="reason" required="required" ></textarea></div>
+                                </div>  
+                                <div class="row">  
+                                    <div class="col-lg-6 col-md-6 col-sm-6"  align="right"><input class="btn btn-primary" type="submit" value="Cancel Entry"  /></div> 
+                                    <div class="col-lg-6 col-md-6 col-sm-6"><input class="btn btn-primary" type="button" value="Cancel" onclick="dropdownhide(205)" /></div>
+                                </div>            
+                                  
+                                  
+                              </div>
+                          </div>
+                              </div>
+                </form>
+                <form action="#" id="formu" name="formu" th:action="@{/psp/sellform}" th:object="${sell}" method="post"  onchange="pickFormChanges();validateform();">
+                    <input type="hidden" class="form-control" th:field="*{id}"  />
+                    <input type="hidden" class="form-control" th:field="*{bill.id}"  /> 
+                    <input type="hidden" class="form-control" th:field="*{bill.billingStartDate}"  /> 
+                    <input type="hidden" class="form-control" th:field="*{stockTransactionType}"  /> 
+                    <input type="hidden" class="form-control" th:field="*{prescriptionNumber}"  />
+                    <input type="hidden" class="form-control" th:field="*{quotationNumber}"  />
+                    <input type="hidden" class="form-control" th:field="*{location}"  />
+                   <!-- <input type="hidden" class="form-control" th:field="*{patient.number}"  /> -->
+                    <input type="hidden" class="form-control" th:field="*{patientNumber}"  />
+                    <input type="hidden" class="form-control" th:field="*{patient}"  />
+                    <input type="hidden" class="form-control" th:field="*{unit.id}"  />
+                    <input type="hidden" class="form-control" th:field="*{readOnly}"  />
+                    <input type="hidden" class="form-control" th:field="*{jobOrder}"  />
+                    <input type="hidden" class="form-control" name="availablePrinters" id="availablePrinters"  />
+                    <input type="hidden" class="form-control" id="cyphers" th:value="${cyphers}"  />
+                    <input type="hidden" class="form-control" id="rowCount" th:value="${sell.tableSize}"  />
+                    <input type="hidden" class="form-control" id="rowCount1" th:value="${sell.tableSize1}"  />
+                    <input type="hidden" class="form-control" id="rowCount5" th:value="1"  />
+                    <div id="printer"></div>
+                    <input type="hidden" class="form-control" id="barcode"  />
+                    <div th:if="${sell.patientNumber}">
+                      <div class="row">
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Patient Number:</label> <span th:utext="*{patient.number}"></span></div>
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Patient Name:</label> <span th:utext="*{patient.fullname}"></span></div>
+                          <div class="col-lg-3 col-md-3 col-sm-3" ><label>Date Of Birth:</label> <span th:utext="*{patient.dateOfBirth}"></span></div>
+                          <div class="col-lg-1 col-md-1 col-sm-1" ><label>Age:</label> <span th:utext="*{patient.age}"></span></div>
+                      </div>   
+                      <div class="row">
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Gender:</label> <span th:utext="*{patient.gender.name}"></span></div>
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label style="color:red">Product Allergies:</label> <textarea class="form-control" th:field="*{patient.drugAllergy}"></textarea></div>
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label style="color:red">Other Allergies:</label> <textarea class="form-control" th:field="*{patient.otherAllergy}"></textarea></div>
+                      </div>         
+                    </div>
+                    <div th:if="*{pspSell}" class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12"> <a th:if="${sell.id > 0}" th:onclick="'printSell('+ ${sell.id}+','+${sell.bill.id}+')'"><span class="glyphicon glyphicon-print" style="font-size: 16px;"></span></a></div>
+                    </div>    
+                      <div id="202" class="pop"></div>
+                     <div  th:if="*{pspSell}" class="row">
+                         <div class="col-lg-2 col-md-2 col-sm-2"><a  th:if="${sell.patient != null and sell.id == 0}"  class="btn btn-warning" th:onclick="'getHistorySell(\''+${sell.patient.id}+'\')'">History Prescription</a></div>
+                          <div class="col-lg-2 col-md-2 col-sm-2"><a th:if="${sell.patientNumber != null and sell.id == 0}" class="btn btn-warning" th:onclick="'getRepeats(\''+${sell.patientNumber}+'\')'">Repeats</a></div>
+                          <div class="col-lg-2 col-md-2 col-sm-2"><a th:if="${sell.readOnly And (sell.transactionStatus == T(zw.co.psmi.hms.patient.entity.TransactionStatus).CREATED Or sell.transactionStatus == null)}" class="btn btn-warning" onclick="dropdown(204)">Allow Edit</a></div>
+                          <div class="col-lg-2 col-md-2 col-sm-2"><a  th:if="${sell.id > 0 And sell.transactionStatus != T(zw.co.psmi.hms.patient.entity.TransactionStatus).CANCELLED}" class="btn btn-warning" onclick="dropdown(205)">Cancel Entry</a></div>
+                          <div class="col-lg-2 col-md-2 col-sm-2"><a th:if="${sell.bill.cashOwing > 0 or sell.bill.shortfallOwing > 0}" th:href="@{'/bill/receiptaction/0/' + ${sell.bill.id}}" class="btn btn-warning">Pay Outstanding Amounts</a></div>
+                          <div class="col-lg-2 col-md-2 col-sm-2"><a   class="btn btn-warning" th:href="@{/psp/quotation}">Quotation List</a></div>
+                     </div>    
+                  <div class="row">
+                  <div class="col-lg-3 col-md-3 col-sm-3" align="right">Category</div>
+                  <div class="col-lg-3 col-md-3 col-sm-3">
+                      <div th:if='${sell.patientNumber != null and id == 0}' >
+                      <select  class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{billCategory}" onchange="changeSellCategory()" ><option th:each="billCategory : ${sell.billCategorys}"
+                                                                                                                                                                       th:value="${billCategory}"
+                                                                                                                                                                       th:text="${billCategory}">....</option>  </select>
+                      </div>
+                      <div th:unless='${sell.patientNumber != null and id == 0}' >
+                      <input class="form-control" type="text" th:field="*{billCategory}" readonly="readonly" />
+                      </div>
+                      </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3" align="right">Location</div>
+                  <div class="col-lg-3 col-md-3 col-sm-3"><input class="form-control" type="text" th:value="${sell.location.locationName.name}" readonly="readonly" /></div>
+                  </div>                    
+                    <div th:if="${sell.id == 0 and sell.patientNumber!=null}">
+                        <div class="row">
+                            <div style="display: none;" id="insuranceEl">
+                  <div class="col-lg-3 col-md-3 col-sm-3" align="right">Patient Insurance</div>
+                  <div class="col-lg-3 col-md-3 col-sm-3"><div class="form-group" > 
+                      <select  class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{bill.patientInsurance}"  data-empty-error="Patient Insurance Details cannot be empty" onchange="setStockListWithPrices();" >
+                          <option value="">Choose Patient Insurance</option>
+                          <option th:each="patientInsurance : ${sell.patientInsurances}" th:value="${patientInsurance.id}" th:text="${patientInsurance.insurance.name}+' - '+${patientInsurance.plan.name}+' - '+${patientInsurance.suffix.name}+' - '+${patientInsurance.memberNumber}">....</option>  
+                      </select>                      
+                          <div class="help-block with-errors"></div> </div></div>
+                            </div>
+                            <div style="display: none;" id="specialContractEl">
+                  <div class="col-lg-3 col-md-3 col-sm-3" align="right">Special Contract</div>
+                  <div class="col-lg-3 col-md-3 col-sm-3"><div class="form-group"> <select  class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{bill.specialContract}"  data-empty-error="Special Contract cannot be empty"   onchange="setStockListWithPrices();" >
+                          <option value="">Choose Special Contract</option>
+                          <option th:each="specialContract : ${sell.specialContracts}" th:value="${specialContract.id}"  th:text="${specialContract.name}">....</option>  </select>
+                          <div class="help-block with-errors"></div> </div></div>
+                  </div>         
+                        </div>
+                    </div>
+                      <div th:if="${sell.id > 0  And sell.billCategory != T(zw.co.psmi.hms.bill.entity.BillCategory).CASH}">
+                        <div class="row">
+                  <div class="col-lg-3 col-md-3 col-sm-3" align="right">Patient Insurance</div>
+                  <div class="col-lg-3 col-md-3 col-sm-3"><div class="form-group" > 
+                      <select  class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{bill.patientInsurance}"  data-empty-error="Patient Insurance Details cannot be empty"  onchange="setStockListWithPrices();">
+                          <option value="">Choose Patient Insurance</option>
+                          <option th:each="patientInsurance : ${sell.patientInsurances}"
+                                                                                                                                                                       th:value="${patientInsurance.id}"
+                                                                                                                                                                       th:text="${patientInsurance.insurance.name}+' - '+${patientInsurance.plan.name}+' - '+${patientInsurance.suffix.name}+' - '+${patientInsurance.memberNumber}">....</option>  </select>
+                      
+                          <div class="help-block with-errors"></div> </div>
+                            </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3" align="right">Special Contract</div>
+                  <div class="col-lg-3 col-md-3 col-sm-3"><div class="form-group"> <select  class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{bill.specialContract}"  data-empty-error="Special Contract cannot be empty"   onchange="setStockListWithPrices();" >
+                          <option value="">Choose Special Contract</option>
+                          <option th:each="specialContract : ${sell.specialContracts}"
+                                                                                                                                                                       th:value="${specialContract.id}"
+                                                                                                                                                                       th:text="${specialContract.name}">....</option>  </select>
+                          <div class="help-block with-errors"></div> </div></div>
+                  </div>     
+                    </div>
+                    <div class="row" th:if="${sell.patientNumber != null and sell.pspSell == true}">
+                  <div class="col-lg-3 col-md-3 col-sm-3" align="right">Referring Doctor</div>
+                  <div class="col-lg-3 col-md-3 col-sm-3">
+                      <div th:if='${sell.id == 0}' >
+                        <div class="form-group">  <input class="form-control" type="text" id="doctorText" onkeyup="getDoctorList()"  placeholder="Search Doctor List" /> <select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{doctor}"  validate="1" data-empty-error="Referring Doctor cannot be empty" ></select><div class="help-block with-errors"></div></div>
+                      </div>
+                      <div th:if='${sell.id > 0}' >
+                      <input class="form-control" type="text" th:field="*{doctor.fullname}" readonly="readonly" /><input class="form-control" type="hidden" th:field="*{doctor}" readonly="readonly" />
+                      </div>
+                      </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3" align="right">Referral Centre</div>
+                  <div class="col-lg-3 col-md-3 col-sm-3"> <div th:if='${sell.id == 0}' >
+                     <input class="form-control" type="text" id="referralCentreText" onkeyup="geReferralCentreList()"  placeholder="Search Referral Centre List" /> <select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{referralCentre}"  ></select>
+                      </div>
+                      <div th:unless='${sell.id == 0}' >
+                      <input class="form-control" type="text" th:field="*{referralCentre.name}" readonly="readonly" /><input class="form-control" type="hidden" th:field="*{referralCentre}" readonly="readonly" />
+                      </div></div>
+                  </div>  
+                    <br />
+                    <div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Sell Items</h3>
+  </div>
+  <div class="panel-body">
+                <div class="well">             
+                    
+                    <div th:if='${sell.prescriptionNumber != null Or sell.quotationNumber != null}' >
+                        <div th:unless="${sell.readOnly}">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg1"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Product</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input class="form-control" type="text" onkeyup="getStockTypesBySearch()" id="stockTypeSearch" placeholder="Search Product List" /><div id="stockTypeList1"  >  </div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Quantity</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="quantity"  oninput="this.value = getPositiveInt(this.value)"  /></div>
+                            </div>       
+                       <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Pharmacy Initiated Medication</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="left"><input type="checkbox" class="form-control" id="pharmacyInitiatedMedication" value="1"  /></div>
+                            </div>    
+                       <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Condition</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="conditionText"   /></div>
+                            </div>    
+                       <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Review Date</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control expiryDate" id="reviewDate"   /></div>
+                            </div>               
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addSellTable()" class="btn btn-success" /></div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="right"><a onclick="getCipherList()" style="cursor: pointer; line-height: 4px;">Show Cypher List</a></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="right"><a onclick="hideCipherList()" style="cursor: pointer; line-height: 4px;">Hide Cypher List</a></div>
+                            </div>
+                            <br /></div>
+                        <table class="table" id="table1" >
+                <tr>
+                  <th>Action</th>
+                  <th>Request</th>
+                  <th th:if="${sell.prescriptionNumber != null}">Dosage</th>
+                  <th th:if="${sell.prescriptionNumber != null}">Route of Admin</th>
+                  <th th:if="${sell.prescriptionNumber != null}">Frequency</th>
+                  <th th:if="${sell.prescriptionNumber != null}">Duration</th>
+                  <th>Quantity</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Unit Cost</th>
+                  <th>Cost</th>   
+                  <th>Dispensing Fee</th>
+                  <th>Vat </th>
+                  <th>Total Cost</th>
+                  <th>Autho Amount</th>
+                  <th>Instructions</th>
+                  <th>Pharmacy Initiated Medication</th>       
+                  <th>Condition</th>       
+                  <th>Review Date</th>       
+                  <th>Repeats</th>                     
+                </tr>
+                <tr th:each="listItems , rowStat: *{listItems}" th:id="${rowStat.index}">
+                    <td ><select class="form-control"  th:name="'sellItem['+${rowStat.index}+'].activeStatus'"  th:id="'sellItem'+${rowStat.index}+'.activeStatus'" >
+                          <option value="1" th:selected="${listItems.activeStatus == true}" >Yes</option>    
+                          <option value="0" th:selected="${listItems.activeStatus == false}" >No</option>    
+                      </select>
+                        <input type="hidden"  class="form-control" th:name="'sellItem['+${rowStat.index}+'].id'" value='0' />
+                        <input  th:if="${sell.prescriptionNumber != null}" type="hidden"  class="form-control" th:name="'sellItem['+${rowStat.index}+'].prescriptionItem'"  th:value="${listItems.id}"  />
+                        <input  th:if="${sell.quotationNumber != null}" type="hidden" th:name="'sellItem['+${rowStat.index}+'].quotationItem'"  th:value="${listItems.id}"  />
+                        <input  th:if="${sell.quotationNumber != null}" type="hidden" th:id="'sellItem['+${rowStat.index}+'].stockType.id'"  th:value="${listItems.stockType.id}"  />
+                        <input type='hidden' th:name="'sellItem['+${rowStat.index}+'].tariffCode'" th:id="'sellItem'+${rowStat.index}+'.tariffCode'"  th:value="${listItems.tariffCode}" />
+                        <input  th:if="${sell.prescriptionNumber != null and sell.id == 0}" type="hidden"  class="form-control" th:id="'sellItem['+${rowStat.index}+'].genericDrug'"  th:value="${listItems.genericDrug.id}"  />
+                        <input  th:if="${sell.prescriptionNumber != null and sell.id > 0}" type="hidden"  class="form-control" th:id="'sellItem['+${rowStat.index}+'].genericDrug'"  th:value="${listItems?.prescriptionItem?.genericDrug?.id}"  /></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id == 0}" th:text="${listItems.genericDrug.name}"></td>
+                   <td th:if="${sell.quotationNumber != null and sell.id == 0}" th:text="${listItems.stockType.name}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id == 0}" th:text="${listItems.dosage}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id == 0}" th:text="${listItems.routeOfAdministration.name}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id == 0}" th:text="${listItems.frequency.name}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id == 0}" th:text="${listItems.durationTime}+' '+${listItems.duration.name}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id > 0}" th:text="${listItems?.prescriptionItem?.genericDrug?.name}"></td>
+                   <td th:if="${sell.quotationNumber != null and sell.id > 0}" th:text="${listItems?.prescriptionItem?.stockType?.name}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id > 0}" th:text="${listItems?.prescriptionItem?.dosage}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id > 0}" th:text="${listItems?.prescriptionItem?.routeOfAdministration?.name}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id > 0}" th:text="${listItems?.prescriptionItem?.frequency?.name}"></td>
+                   <td th:if="${sell.prescriptionNumber != null and sell.id > 0}" th:text="${listItems?.prescriptionItem?.durationTime}+' '+${listItems?.prescriptionItem?.duration?.name}"></td>
+                   <td th:if="${sell.id == 0}"><input type="text"  readonly="readonly" class="form-control" th:id="'sellItem'+${rowStat.index}+'.listItems.quantity'" th:value="${listItems.quantity}"  /></td>
+                   <td  th:if="${sell.quotationNumber != null and sell.id > 0}"><input type="text"  readonly="readonly" class="form-control" th:id="'sellItem'+${rowStat.index}+'.listItems.quantity'" th:value="${listItems.quantity}"  /></td>
+                   <td  th:if="${sell.prescriptionNumber != null and sell.id > 0}"><input type="text"  readonly="readonly" class="form-control" th:id="'sellItem'+${rowStat.index}+'.listItems.quantity'" th:value="${listItems?.prescriptionItem?.quantity}"  /></td>
+                 <td > <div class="form-group">    <input type="hidden"  class="form-control" th:name="'sellItem['+${rowStat.index}+'].stockType'" th:id="'sellItem'+${rowStat.index}+'.stockType'" /><input type="hidden"  class="form-control" th:name="'sellItem['+${rowStat.index}+'].currentStock'" th:id="'sellItem'+${rowStat.index}+'.currentStock'" /><input type="hidden"  class="form-control" th:name="'sellItem['+${rowStat.index}+'].cashOnly'" th:id="'sellItem'+${rowStat.index}+'.cashOnly'" /><select  class="form-control"  th:onchange="'loadCurrentStockDetailsSell(this,'+${rowStat.index}+', '+${listItems.quantity}+')'" th:id="'sellItem'+${rowStat.index}+'.currentStocks'"  >
+                          <option value="">Choose Product</option>
+                            </select><div class="help-block with-errors"></div></div></td>
+                  <td > <div class="form-group">    <div th:id="'msg'+${rowStat.index}" ></div><input type="text"  class="form-control" th:name="'sellItem['+${rowStat.index}+'].quantity'" th:id="'sellItem'+${rowStat.index}+'.quantity'"  th:value="${listItems.quantity}" oninput="this.value = getPositiveInt(this.value)" /><div class="help-block with-errors"></div></div></td>
+                  <td ><input type="text"  readonly="readonly" class="form-control" style='width:60px;' th:name="'sellItem['+${rowStat.index}+'].unitCost'" th:id="'sellItem'+${rowStat.index}+'.unitCost'"  th:value="${listItems.unitCost}" /></td>
+                  <td ><input type="text"  readonly="readonly" class="form-control" style='width:60px;' th:name="'sellItem['+${rowStat.index}+'].cost'" th:id="'sellItem'+${rowStat.index}+'.cost'"  th:value="${listItems.cost}" /></td>
+                  <td ><input type="text"  class="form-control" style='width:60px;' th:name="'sellItem['+${rowStat.index}+'].dispensingFee'" th:id="'sellItem'+${rowStat.index}+'.dispensingFee'" th:value="${listItems.dispensingFee}"  oninput="this.value = getPositiveValue(this.value)"  onchange="calcSellBill('table1')" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" style='width:60px;' th:field="*{sellItem[__${rowStat.index}__].vat}"  th:value="${listItems.vat}" /><input type="hidden" th:field="*{sellItem[__${rowStat.index}__].vatPercentage}" /></td>
+                  <td ><input type="text"  readonly="readonly" class="form-control" style='width:60px;' th:name="'sellItem['+${rowStat.index}+'].totalCost'" th:id="'sellItem'+${rowStat.index}+'.totalCost'"  th:value="${listItems.totalCost}" /></td>
+                  <td ><input type="text"   class="form-control" style='width:60px;' th:field="*{sellItem[__${rowStat.index}__].authorisationAmount}"  th:value="${listItems.authorisationAmount}"  oninput="this.value = getPositiveValue(this.value)" onchange="calcSellBill('table1')" /></td>
+               <!--   <td  th:if="${sell.patientNumber != null}"><div class="form-group"><input list="'cypherListsellItem'+${rowStat.index}+'.instructions'" style='width:150px; height:40px;' type="text" class="form-control" th:value="*{sellItem[__${rowStat.index}__].instructions}" th:name="'sellItem['+${rowStat.index}+'].instructions'" th:id="'sellItem'+${rowStat.index}+'.instructions'"  oninput="processCipher(this)"  validate="1" data-empty-error="Instructions cannot be empty" /><datalist th:id="'cypherListsellItem'+${rowStat.index}+'.instructions'"></datalist><div class="help-block with-errors"></div></div></td> -->
+                <td  ><div class="form-group">  <input list="'cypherListsellItem'+${rowStat.index}+'.instructions'" style='width:150px; height:40px;' type="text" class="form-control" th:value="*{sellItem[__${rowStat.index}__].instructions}" th:name="'sellItem['+${rowStat.index}+'].instructions'" th:id="'sellItem'+${rowStat.index}+'.instructions'"  oninput="processCipher(this)"/><datalist th:id="'cypherListsellItem'+${rowStat.index}+'.instructions'"></datalist><div class="help-block with-errors"></div></div></td>
+              <td ><input type="checkbox" th:name="'sellItem['+${rowStat.index}+'].pharmacyInitiatedMedication'" th:id="'sellItem'+${rowStat.index}+'.pharmacyInitiatedMedication'" value="1"  /></td>               
+                 <td ><input type='text' class="form-control"   th:name="'sellItem['+${rowStat.index}+'].conditionText'" th:id="'sellItem'+${rowStat.index}+'.conditionText'" value="" /></td>               
+                <td ><input type='text' class="form-control expiryDate"   th:name="'sellItem['+${rowStat.index}+'].reviewDate'" th:id="'sellItem'+${rowStat.index}+'.reviewDate'" value="" /></td>                
+                <td ><input type='text' class="form-control"   th:name="'sellItem['+${rowStat.index}+'].repeats'" th:id="'sellItem'+${rowStat.index}+'.repeats'" value="0" /></td>               
+                </tr>                            
+                </table>                          
+                      <div id="cypherList"></div>
+                    </div>
+                    <div id="200" class="pop"></div>  
+                      <div id="201" class="pop"></div>
+                  <div th:if='${sell.prescriptionNumber == null And sell.quotationNumber == null}' >
+                       <div th:unless="${sell.readOnly}">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg1"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Product</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input class="form-control" type="text" onkeyup="getStockTypesBySearch()" id="stockTypeSearch" placeholder="Search Product List" /><div  id="stockTypeList1"  >  </div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Quantity</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="quantity"  oninput="this.value = getPositiveInt(this.value)"  /></div>
+                            </div>    
+                       <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Pharmacy Initiated Medication</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="checkbox" class="form-control" id="pharmacyInitiatedMedication" value="1"  /></div>
+                            </div>    
+                       <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Condition</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="conditionText"   v-model="message" /> <p style="white-space: pre-line;">{{ message }}</p></div>
+                            </div>    
+                       <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Review Date</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control expiryDate" id="reviewDate"   /></div>
+                            </div>    
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addSellTable2()" class="btn btn-success" /></div>
+                            </div> 
+                            <div th:if="${sell.pspSell}" class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="right"><a onclick="getCoPayment()" style="cursor: pointer; line-height: 4px;">Co Payment</a></div>
+                            </div>   
+                           <div th:unless="${sell.pspSell}" class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="right"><a onclick="getCoPayment();checkOptoAdd()" style="cursor: pointer; line-height: 4px;">Add Service</a></div>
+                            </div>  
+                            <div th:if="${sell.pspSell}" class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="right"><a onclick="getProductPreparation()" style="cursor: pointer; line-height: 4px;">Product Preparation</a></div>
+                            </div>
+                            <div th:if="${sell.pspSell}" class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="right"><a onclick="getCipherList()" style="cursor: pointer; line-height: 4px;">Show Cypher List</a></div>
+                            </div>
+                            <div th:if="${sell.pspSell}" class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="right"><a onclick="hideCipherList()" style="cursor: pointer; line-height: 4px;">Hide Cypher List</a></div>
+                            </div>
+                        <br />  
+                       </div>
+               <table class="table" id="table2"  >
+                <tr>
+                  <th>Action</th>
+                  <th>DP Name</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Unit Cost</th>
+                  <th>Cost</th>     
+                  <th>Dispensing Fee</th>
+                  <th>Vat </th>
+                  <th>Total Cost</th>
+                  <th>Autho Amount</th>     
+                  <th>Instructions</th> 
+                  <th>Pharmacy Initiated Medication</th>     
+                  <th>Condition</th>       
+                  <th>Review Date</th>       
+                  <th>Repeat</th>                                        
+                </tr>   
+                <tr th:each="sellItem , rowStat: *{sellItem}">
+                  
+                  <td ><select class="form-control" th:id="'sellItem'+${rowStat.index}+'.activeStatus'" th:field="*{sellItem[__${rowStat.index}__].activeStatus}" >
+                          <option value="1" th:selected="${sellItem.activeStatus == true}" >Yes</option>    
+                          <option value="0" th:selected="${sellItem.activeStatus == false}" >No</option>    
+                      </select><input type="hidden" th:field="*{sellItem[__${rowStat.index}__].id}" /><input type="hidden"  th:field="*{sellItem[__${rowStat.index}__].cashOnly}" /><input type="hidden" th:field="*{sellItem[__${rowStat.index}__].tariffCode}" /><input type="hidden" th:field="*{sellItem[__${rowStat.index}__].hmsService}" /><input type="hidden" th:field="*{sellItem[__${rowStat.index}__].stockType}" /><input type="hidden" th:field="*{sellItem[__${rowStat.index}__].currentStock}" /></td>
+                  <td th:text="${sellItem?.hmsService?.name}"></td>
+                  <td th:text="${sellItem?.stockType?.name}"></td>
+                  <td ><div class="form-group"><input type="text"  th:readonly="${sell.readOnly}" class="form-control" th:field="*{sellItem[__${rowStat.index}__].quantity}" th:max="${sellItem.quantity}" min="1" oninput="this.value = getPositiveInt(this.value)"  validate="1" data-empty-error="Quantity cannot be empty" data-min-error="Please enter a Quantity greater than 0" data-max-error="Quantity cannot be greater than the System Quantity"  onchange="calcSellBill('table2')" /><div class="help-block with-errors"></div></div></td>
+                  <td ><input type="text" readonly="readonly" style='width:60px;'  class="form-control" th:field="*{sellItem[__${rowStat.index}__].unitCost}" /></td>
+                  <td ><input type="text" readonly="readonly" style='width:60px;'  class="form-control" th:field="*{sellItem[__${rowStat.index}__].cost}" /></td>
+                  <td ><input type="text" style='width:60px;'  class="form-control" th:field="*{sellItem[__${rowStat.index}__].dispensingFee}"  oninput="this.value = getPositiveValue(this.value)"  onchange="calcSellBill('table2')" /></td>
+                   <td ><input type="text" readonly="readonly" style='width:60px;'  class="form-control" th:field="*{sellItem[__${rowStat.index}__].vat}" /></td>
+                   <td ><input type="text" readonly="readonly" style='width:60px;'  class="form-control" th:field="*{sellItem[__${rowStat.index}__].totalCost}" th:value="${sellItem?.totalCost}" /></td>
+                  <td ><input type="text"  class="form-control" style='width:60px;' th:readonly="${sell.readOnly}" th:field="*{sellItem[__${rowStat.index}__].authorisationAmount}" onchange="calcSellBill('table2')"  oninput="this.value = getPositiveValue(this.value)" /></td>
+                 <!--  <td th:if="${sell.patientNumber != null}"><div class="form-group"><input list="'cypherListsellItem'+${rowStat.index}+'.instructions'" style='width:150px; height:40px;' type="text" class="form-control"  th:value="*{sellItem[__${rowStat.index}__].instructions}" th:name="'sellItem['+${rowStat.index}+'].instructions'" th:id="'sellItem'+${rowStat.index}+'.instructions'"  oninput="processCipher(this)"   validate="1" data-empty-error="Instructions cannot be empty" /><datalist th:id="'cypherListsellItem'+${rowStat.index}+'.instructions'"></datalist><div class="help-block with-errors"></div></div></td> -->
+                 <td ><div class="form-group"><input list="'cypherListsellItem'+${rowStat.index}+'.instructions'" style='width:150px; height:40px;' type="text" class="form-control"  th:value="*{sellItem[__${rowStat.index}__].instructions}" th:name="'sellItem['+${rowStat.index}+'].instructions'" th:id="'sellItem'+${rowStat.index}+'.instructions'"  oninput="processCipher(this)"/><datalist th:id="'cypherListsellItem'+${rowStat.index}+'.instructions'"></datalist><div class="help-block with-errors"></div></div></td>
+                  <td ><input type="checkbox"  th:disabled="${sell.readOnly}" th:checked="${sellItem.pharmacyInitiatedMedication}" th:name="*{sellItem[__${rowStat.index}__].pharmacyInitiatedMedication}" value="1" /></td>             
+                  <td ><input type="text"  th:readonly="${sell.readOnly}" class="form-control" th:field="*{sellItem[__${rowStat.index}__].conditionText}" /></td>              
+                  <td ><input type="text"  th:readonly="${sell.readOnly}" class="form-control" th:field="*{sellItem[__${rowStat.index}__].reviewDate}" /><input type="hidden" th:field="*{sellItem[__${rowStat.index}__].vatPercentage}" /></td>            
+                  <td ><input type="text"  th:readonly="${sell.readOnly}" class="form-control" th:field="*{sellItem[__${rowStat.index}__].repeats}" /></td>              
+                </tr>
+                </table>  
+                      <div id="cypherList"></div>
+                    </div>    
+                </div>  
+  </div></div>
+                    <div class="panel panel-info">
+  <div class="panel-heading">
+      <h3 class="panel-title"><a data-toggle="collapse" href="#stockOut" role="button" aria-expanded="false" aria-controls="stockOut">Stock Outs</a></h3>
+  </div>
+  <div class="panel-body collapse" id="stockOut">
+             <div th:unless="${sell.readOnly}">
+                   <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg3"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Product</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input class="form-control" type="text" onkeyup="getGenericStockTypesBySearch3()" id="genericStockTypeText"  placeholder="Search Product List" /><div id="genericStockTypeList"  >  </div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Quantity</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="quantity3"  oninput="this.value = getPositiveInt(this.value)"  /></div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addSellTable3()" class="btn btn-success" /></div>
+                            </div>
+                        <br /> 
+             </div>
+               <table class="table" id="table3">
+                <tr>
+                  <th>Action</th>
+                  <th>Product Item</th>
+                  <th>Quantity</th>                              
+                </tr>
+                 <tr th:each="stockOut , rowStat: *{stockOut}">
+                  
+                  <td ><input type="hidden" readonly="readonly"  class="form-control" th:field="*{stockOut[__${rowStat.index}__].id}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{stockOut[__${rowStat.index}__].stockType}" /></td> 
+                  <td th:text="${stockOut.stockType.name}"></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockOut[__${rowStat.index}__].quantity}" /></td>
+                </tr>
+                </table>  
+  </div></div>
+                     <table class="table" style="width:100%;display: none;" id="authorisationEl">
+                        <tr>
+                            <td id="authoTable"></td>
+                            <th>Athorisation Number</th> 
+                            <td><div class="form-group"><input autocomplete="off" class="form-control" type="text" th:field="*{bill.authorisationNumber}"  data-empty-error="Athorisation Number cannot be empty" /><div class="help-block with-errors"></div></div></td>
+                            <th >Athorisation Amount</th>
+                            <td><input class="form-control" type="text" th:field="*{bill.authorisationAmount}" readonly="readonly" /></td>
+                             <td><input class="btn btn-warning" type="button" onclick="getAuthorisationCode()" value="Fetch Authorisation Code" /></td>
+                        </tr>
+                     </table>
+                    <table class="table">
+                        <tr>
+                            <td></td>
+                            <th>Cash</th>
+                            <th>Insurance</th>
+                            <th>Shortfall</th>
+                            <th>Special Contract</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <th>Payable</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.cashPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.insurancePayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.shortfallPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.specialContractPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.grossAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Paid</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.cashPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.insurancePaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.shortfallPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.specialContractPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.paidAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Owing</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.cashOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.insuranceOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.shortfallOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.specialContractOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.owingAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Refund</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.cashRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.insuranceRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.shortfallRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.specialContractRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.refundAmount}" /><input type="hidden" th:field="*{bill.vatTotal}" /></td>
+                        </tr>
+                    </table>  
+                    <div th:if="${sell.id > 0 And sell.transactionStatus != T(zw.co.psmi.hms.patient.entity.TransactionStatus).CLOSED and sell.readOnly == true}" class="form-group">    
+                        <input  th:if="${sell.bill.cashOwing > 0 or sell.bill.shortfallOwing > 0}" type="hidden" validate="1"  min="1" data-empty-error="Cannot be empty" data-min-error="Please enter a payment to Settle the bill" class="form-control" id="tableCount" value="0"  required="required" /><div class="help-block with-errors"></div></div>
+                    
+                 <div class="row">
+                     <div class="col-lg-12 col-md-12 col-sm-12"><label>Is Quotation:</label> <input th:if="${sell.id == 0}" type="checkbox" class="form-control" name="quotation" value="1" /></div>
+                 </div>
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div th:if="${sell.transactionStatus != T(zw.co.psmi.hms.patient.entity.TransactionStatus).CANCELLED}"><input th:if="${sell.readOnly And sell.transactionStatus != T(zw.co.psmi.hms.patient.entity.TransactionStatus).CLOSED}"  type="button" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)" value="Approve" class="btn btn-primary" /><input th:unless="${sell.readOnly}" type="button" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)" value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/psp/sell/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+        <script th:if='${sell.prescriptionNumber != null Or sell.quotationNumber != null}' type="text/javascript">setStockListWithPrices();changeSellCategory();</script>
+        <script th:utext="'getPrinterAvailability(\''+${printers}+'\');'" type="text/javascript"></script>
+        <script th:if='${sell.id > 0}' type="text/javascript">showAuthorisationForm();</script>
+        <script type="text/javascript">validateform();</script>
+ </body>
+</html>

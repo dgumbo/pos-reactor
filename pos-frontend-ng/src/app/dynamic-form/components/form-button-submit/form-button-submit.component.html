@@ -1,0 +1,12 @@
+
+<span 
+    class="dynamic-button-field form-button"
+    [formGroup]="group">
+    <button
+        [disabled]="config.disabled"
+        type="submit"
+        [name]="config.name"  
+        >
+        {{ config.label }}
+    </button>  
+</span>

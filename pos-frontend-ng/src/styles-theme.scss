@@ -1,0 +1,20 @@
+/*@import url(https://fonts googleapis com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light) ;*/
+/*@import url(http://fonts googleapis com/css?family=Lato:100,300,400,300italic) ;*/
+
+@import '~typeface-lato/index.css' ;
+
+/*!
+ * HiSolution Theme SCSS v1.0.0 
+ * Copyright 2018 Heritage Innovative Solutions 
+ * Author     : gdenzilg@gmail.com
+ */ 
+//$font-family: "Open Sans", "Arial", sans-serif;
+$font-family: "Lato", "Arial", sans-serif;
+$font-color: grey ;
+$primary-color-light: #634BDA; 
+$primary-color: #3F26BB; 
+$primary-color-dark: #311d91;  
+$svg-background-color: #060412 ; //#0b0620;
+$text:rgba(26, 35, 38, 0.8);
+$box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.2), 0 2px 8px 0 rgba(0, 0, 0, 0.14), 0 4px 8px -1px rgba(0, 0, 0, 0.12);
+$tab-border: 1px solid $primary-color-light;

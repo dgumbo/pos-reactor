@@ -1,0 +1,60 @@
+<div color="primary" class="navbar flex flex-direction-row align-items-center">
+  <div class="flex flex-direction-row titles">
+    <h1 routerLink="/sell" class="title subtitle add-margin">
+      <span class="fa fa-shopping-cart">
+        Sale.
+      </span>
+    </h1>  
+  </div>
+  <div class="flex flex-direction-row titles">
+    <h3 routerLink="/admin" class="title add-margin">Admin</h3>
+    <h3 routerLink="/stocks" class="title add-margin">Stocks</h3>
+    <h3 routerLink="/masters" class="title add-margin">Masters</h3>
+    <h3 routerLink="/dayend" class="title add-margin">Dayend</h3>
+    <h3 routerLink="/reports" class="title add-margin">Reports</h3>
+  </div>
+
+  <button mat-icon-button [matMenuTriggerFor]="menu" class="menu">
+      <mat-icon>more_vert</mat-icon> 
+  </button> 
+</div>
+
+<!-- Mobile Menu -->
+<mat-menu #menu="matMenu">
+  <button mat-menu-item routerLink="/sell">
+    <mat-icon>shopping_cart</mat-icon>
+    <span>Point of Sale</span>
+  </button>
+  <button mat-menu-item routerLink="/sell/date-sell">
+    <mat-icon>shopping_cart</mat-icon>
+    <span>Sell With Date</span>
+  </button>
+  <button mat-menu-item routerLink="/admin">
+    <mat-icon>perm_identity</mat-icon>
+    <span>Admin</span>
+  </button>
+  <button mat-menu-item routerLink="/masters/update-price-by-ratio">
+    <mat-icon>perm_identity</mat-icon>
+    <span>Update Price By Ratio</span>
+  </button>
+  <button mat-menu-item routerLink="/reports">
+    <mat-icon>multiline_chart</mat-icon>
+    <span>Reports</span>
+  </button>
+  <button mat-menu-item routerLink="/dayend">
+    <mat-icon>multiline_chart</mat-icon>
+    <span>Dayend</span>
+  </button>
+  <button mat-menu-item routerLink="/" (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Logout</span>
+  </button>
+  <button mat-menu-item routerLink="/printers">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Printers</span>
+  </button>
+  <button mat-menu-item routerLink="/printers/test">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Test Print</span>
+  </button>
+</mat-menu>

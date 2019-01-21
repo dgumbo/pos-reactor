@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+<body>
+<div class="wrapper">
+    <div th:replace ="sidebar::sidebar"></div>
+    <div id="content">
+
+        <div th:replace ="navheader::navheader"></div>
+        <h2 th:text="${title}"></h2>
+        <div class="line"></div>
+        <div id="msg"></div>
+        <!-- Content Start Here -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/stocks/requestaction/0/'+${workFlowType} }"><span class="glyphicon glyphicon-plus" title = "Add Request"></span></a></div>
+        </div>
+        <form th:method="get"  th:action="@{'/stocks/requestselect/'+ ${workFlowType}}"  th:object="${stockRequest}" class="form-inline">
+            <div class="form-group">
+                <label>From</label>
+                <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/>
+            </div>
+            <div class="form-group">
+                <label>To</label>
+                <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>
+            </div>
+            <div class="form-group">
+                <select class="selectpicker" data-style="btn-default"  data-live-search="true" name="locationId" id="locationId" th:field="*{location}">
+                    <option value="0">Location</option>
+                    <option th:each="location : ${stockRequest.locations}"
+                            th:value="${location.id}"
+                            th:text="${location.locationName.name}">....</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Search</button>
+            </div>
+
+        </form>
+        <form th:method="post"  th:action="@{'/stocks/selectedrequests/'+ ${workFlowType}}"  th:object="${stockRequest}" class="form-inline">
+        <table class="table">
+            <tr>
+                <th>Action</th>
+                <th></th>
+                <th>Request ID</th>
+                <th th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Request Number</th>
+                <th th:if="${workFlowType == T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Requisition Number</th>
+                <th th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Location</th>
+                <th>Creation Date</th>
+                <th>Created By</th>
+                <th>Status</th>
+            </tr>
+            <tr data-th-each="stockRequest,rowStat : ${stockRequests}">
+                <td><a th:href="@{'/stocks/requestaction/' + ${stockRequest.id}+'/'+${workFlowType}}"><span class="glyphicon glyphicon-folder-open"></span></a> &nbsp;&nbsp;&nbsp;
+                    <a th:onclick="'printPdf(\'/stocks/output/' + ${stockRequest.id}+'/'+${workFlowType}+'\')'"><span class="glyphicon glyphicon-print"></span></a>&nbsp;&nbsp;&nbsp;
+                    <a th:if="${stockRequest.approvalStatus == T(zw.co.psmi.hms.stocks.entity.ApprovalStatus).ACCEPTED}" th:href="@{'/stocks/requestcancellationaction/0/'+${workFlowType}+'?stockRequestId=' + ${stockRequest.id}}"><span class="glyphicon glyphicon-remove" style="color:red"></span></a>
+                </td>
+                <td>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <input type="checkbox"  th:field="*{stockRequestsIdList[__${rowStat.index}__]}" th:value="${stockRequest.id}" />
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td data-th-text="${stockRequest.id}">...</td>
+                <td data-th-text="${stockRequest.number}">...</td>
+                <td  th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}" data-th-text="${stockRequest.location?.locationName?.name}">...</td>
+                <td data-th-text="${stockRequest.creationTime}">...</td>
+                <td data-th-text="${stockRequest.createdByUser}">...</td>
+                <td data-th-text="${stockRequest.approvalStatus}">...</td>
+            </tr>
+        </table>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Select Requests</button>
+            </div>
+        </form>
+        <!-- Content End Here -->
+    </div>
+</div>
+<div th:replace ="footer::footer"></div>
+<script th:utext="${msg}"></script>
+</body>
+</html>

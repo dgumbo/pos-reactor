@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Bill List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <form method="get" class="form-inline"> 
+                         <div class="form-group">
+                        <label>From</label>
+                        <input type="text" class="form-control"  th:value="*{#dates.format(startDate, 'yyyy-MM-dd')}" name="startDate" id="startDate"/> 
+                     </div>
+                           <div class="form-group">
+                        <label>To</label>
+                        <input type="text" class="form-control" th:value="*{#dates.format(endDate, 'yyyy-MM-dd')}" name="endDate" id="endDate"/>  
+                           </div>
+                           <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" th:value="${name}" name="name" id="name"/>  
+                           </div>
+                           <div class="form-group">
+                        <label>Bill Number</label>
+                        <input type="text" class="form-control" th:value="${billNumber}" name="billNumber" id="billNumber"/>  
+                           </div>
+                           <div class="form-group">
+                        <label>billCategory</label>
+                        <select class="selectpicker" data-style="btn-default"  data-live-search="true" name="billCategory" id="billCategory"> 
+                            <option value="" >All</option>
+                 <option th:each="billCategory1 : ${billCategorys}" 
+                         th:value="${billCategory1}" 
+                         th:text="${billCategory1}">....</option> 
+                                    </select>
+                        </div>
+                    <button type="submit" class="btn btn-success">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Bill Number</th>
+                        <th>Bill Date</th>
+                       <th>Patient Name</th>
+                        <th>Unit</th>              
+                        <th>AhfozPsmas</th>             
+                        <th>Ahfoz</th>              
+                        <th>BillCategory</th>           
+                        <th>GrossAmount</th>           
+                        <th>ediBatchNumber</th>    
+                        <th>transactionStatus</th>           
+                        <th>ediStatus</th>           
+                        <th>paymentStatus</th>             
+                    </tr> 
+        <tr th:each="bill , rowStat: ${bills}">
+                        <td><a th:if="${bill.unit.allowEdit}" th:href="@{'/bill/billlistaction/' + ${bill.id}}"><span class="glyphicon glyphicon-edit" title="Edit"></span></a>&nbsp;&nbsp;&nbsp;<a th:if="${bill.cashOwing > 0 or bill.shortfallOwing > 0}" th:href="@{'/bill/receiptaction/0/' + ${bill.id}}"><span class="glyphicon glyphicon-usd" title="Receipt"></span></a>&nbsp;&nbsp;&nbsp;<a th:if="${bill.refundAvailable > 0}" th:href="@{'/bill/refundaction/0?billId=' + ${bill.id}}"><span class="glyphicon glyphicon-briefcase" title="Refund"></span></a>&nbsp;&nbsp;&nbsp;<a th:onclick="'printBill('+${bill.id}+')'"><span class="glyphicon glyphicon-print" title ="Print"></span></a></td>
+                        <td th:text="${bill.billNumber}"></td>
+                        <td th:text="${bill.billingStartDate}+' - '+${bill.billingStartDate}"></td>
+                        <td th:text="${bill.fullname}"></td>
+                        <td th:text="${bill.unit.name}"></td>
+                        <td th:text="${bill.unit.ahfozPsmas}"></td>
+                        <td th:text="${bill.unit.ahfoz}"></td>
+                        <td th:text="${bill.billCategory}"></td>
+                        <td th:text="${bill.grossAmount}"></td>
+                        <td th:text="${bill.ediBatchNumber}"></td>
+                        <td th:text="${bill.transactionStatus}"></td>
+                        <td th:text="${bill.ediStatus}"></td>
+                        <td th:text="${bill.paymentStatus}"></td>
+                        </tr>
+
+                </table>
+                <!-- Content End Here -->
+
+            </div>
+        </div>
+
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

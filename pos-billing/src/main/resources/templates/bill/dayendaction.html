@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}">...</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/bill/dayendform}" th:object="${dayEnd}" method="post">
+                  <input  class="form-control" type="hidden" th:field="*{id}" /> 
+                  <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Username</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{username}"  > 
+                                        <option value="">Choose User</option>
+                                     <option th:each="user : ${users}" th:value="${user.username}" th:text="${user.fullname}">....</option> 
+                                    </select></div>
+                            </div>
+                  <div  th:if="${id == 0}" >
+                 <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Payment Type</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" id="paymentType"  > 
+                                     <option th:each="paymentType : ${paymentTypes}" th:value="${paymentType.id}+'****'+${paymentType.name}" th:text="${paymentType.name}">....</option> 
+                                    </select></div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Currency</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" id="currency"  > 
+                                        <option value="">Choose Currency</option>
+                                     <option th:each="currency : ${currencys}" th:value="${currency.id}+'****'+${currency.name}+'****'+${currency.rate}" th:text="${currency.name}">....</option> 
+                                    </select></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Amount</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="amount"  oninput="this.value = getPositiveValue(this.value)"  /></div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addDayEndTable()" class="btn btn-success" /></div>
+                            </div>
+                         </div>
+                        <br /> 
+               <table class="table" id="table">
+                <tr>
+                  <th>Action</th>
+                  <th>Payment Type</th>
+                  <th>Currency</th>
+                  <th>Amount</th>           
+                </tr>
+                <tr th:each="dayEndItems , rowStat: *{dayEndItems}">
+                  
+                  <td ><input type="hidden" readonly="readonly"  class="form-control" th:field="*{dayEndItems[__${rowStat.index}__].id}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{dayEndItems[__${rowStat.index}__].paymentType}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{dayEndItems[__${rowStat.index}__].currency}" /></td>
+                  <td th:text="${dayEndItems.paymentType.name}"></td>
+                  <td th:text="${dayEndItems.currency.name}"></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{dayEndItems[__${rowStat.index}__].amount}" /></td>
+                </tr>
+                </table> 
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${id == 0}" ><input type="submit"  name="btnSubmit" onclick="disableSubmit(this)" id="btnSubmit" value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/bill/dayend/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

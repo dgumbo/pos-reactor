@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Refund List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <form method="get" th:action="@{'/bill/refund' }" oninput="ignoreSubmitOnInput()" th:object="${refund}" class="form-inline"> 
+                         <div class="form-group">
+                        <label>From</label>
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                     </div>
+                           <div class="form-group">
+                        <label>To</label>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>  
+                           </div>
+                    <button type="submit" class="btn btn-success">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Number</th>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Refundable Amount</th>
+                        <th>Refunded Amount</th> 
+                        <th>Balance</th>           
+                        <th>Status</th>            
+                        <th>Done By</th>                         
+                    </tr>
+                    <tr data-th-each="refund : ${refunds}">
+                        <td><a th:onclick="'printRefund('+${refund.id}+')'"><span class="glyphicon glyphicon-print" title = "Print"></span></a></td>
+                        <td data-th-text="${refund.number}">...</td>
+                        <td data-th-text="${refund.fullname}">...</td>
+                        <td data-th-text="${refund.refundDate}">...</td>
+                        <td data-th-text="${refund.refundableAmount}">...</td>
+                        <td data-th-text="${refund.refundAmount}">...</td>
+                        <td data-th-text="${refund.balanceAmount}">...</td>
+                        <td data-th-text="${refund.refundStatus}">...</td>
+                        <td data-th-text="${refund.username}">...</td>
+
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+
+            </div>
+        </div>
+
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

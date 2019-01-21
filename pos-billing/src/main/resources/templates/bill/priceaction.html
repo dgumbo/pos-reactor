@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Update Price</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/bill/priceaction}" th:object="${price}" method="get">
+                   <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-3" align="right">Name</div>
+                        <div class="col-lg-3 col-md-3 col-sm-3">    <input th:field="*{name}" type="text" class="form-control" /></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"></div>                        
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-3" align="right">Lob</div>
+                        <div class="col-lg-3 col-md-3 col-sm-3"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{lob}" onchange="getUnitsListSell(this)" >
+                                <option value="">Choose Category</option>
+                                <option th:each="lob : ${price.lobs}" th:value="${lob.id}" th:text="${lob.name}">....</option>  </select></div>
+                        <div class="col-lg-3 col-md-3 col-sm-3" align="right">Unit</div>
+                        <div class="col-lg-3 col-md-3 col-sm-3"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{unit}" >
+                            <option th:if="*{unit}" th:value="*{unit.id}" th.text="*{unit.name}">...</option>
+                            </select></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-3" align="right">Category</div>
+                        <div class="col-lg-3 col-md-3 col-sm-3"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{billCategory}" onchange="getInstituationsList(this)" >
+                                <option value="">Choose Category</option>
+                                <option th:each="billCategory : ${price.billCategorys}" th:value="${billCategory}" th:text="${billCategory}">....</option>  </select></div>
+                        <div class="col-lg-3 col-md-3 col-sm-3" align="right">Institution</div>
+                        <div class="col-lg-3 col-md-3 col-sm-3"><select class="form-control" th:field="*{institution}" >
+                            </select></div>
+                    </div>    
+                            <label for="pageSizeSelect">Items / Page</label> 
+                            <select class="form-control pagination" id="pageSize" name="pageSize">
+                                <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+                                        th:selected="${pageSize} == ${selectedPageSize}"></option>
+                            </select>           
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="submit" value="Get Price List" class="btn btn-success" /></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"></div>
+                    </div>       
+                    <br />
+                </form>
+                        <td th:if="${priceslist}" colspan="4"> 
+
+                            <div th:if="${priceslist.totalPages != 1}" class="form-group col-md-11 pagination-centered">
+                                <ul class="pagination">
+                                    <li th:class="${priceslist.number == 0} ? disabled">
+                                        <a class="pageLink" th:href="@{''(pageSizeSelect=${selectedPageSize}, page=1)}">&laquo;</a>
+                                    </li>
+                                    <li th:class="${priceslist.number == 0} ? disabled">
+                                        <a class="pageLink" th:href="@{${'/stocks/priceaction'}(name=${price.name}, lob=${price.lob.id}, billCategory=${price.billCategory}, unit=${price.unit.id}, institution=${price.institution.id},pageSizeSelect=${selectedPageSize}, page=${priceslist.number})}">&larr;</a>
+                                    </li>
+                                    <li th:class="${priceslist.number == (page - 1)} ? 'active pointer-disabled'"
+                                        th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                        <a class="pageLink" th:href="@{''(name=${price.name}, lob=${price.lob.id}, billCategory=${price.billCategory}, unit=${price.unit.id}, institution=${price.institution.id},pageSizeSelect=${selectedPageSize}, page=${page})}"
+                                           th:text="${page}"></a>
+                                    </li>
+                                    <li th:class="${priceslist.number + 1 == priceslist.totalPages} ? disabled">
+                                        <a class="pageLink"
+                                           th:href="@{''(name=${price.name}, lob=${price.lob.id}, billCategory=${price.billCategory}, unit=${price.unit.id}, institution=${price.institution.id}, pageSizeSelect=${selectedPageSize}, page=${priceslist.number + 2})}">&rarr;</a>
+                                    </li>
+                                    <li th:class="${priceslist.number + 1 == priceslist.totalPages} ? disabled">
+                                        <a class="pageLink"
+                                           th:href="@{''(name=${price.name}, lob=${price.lob.id}, billCategory=${price.billCategory}, unit=${price.unit.id}, institution=${price.institution.id},pageSizeSelect=${selectedPageSize}, page=${priceslist.totalPages})}">&raquo;</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </td>  
+                <form action="#" th:action="@{/bill/priceform}" th:object="${price}" method="post">
+                    <table class="table" id="table">
+                        <tr>
+                            <th>Action</th>
+                            <th>Material or Product</th>
+                            <th>Lob</th>
+                            <th>Unit</th>
+                            <th>Bill Category</th>
+                            <th>Insititution</th>
+                            <th>Tariff Code</th>
+                            <th>Authorisation Amount</th>
+                            <th>Mark Up On Last Receipt</th>
+                            <th>Fixed Cost</th>
+                            <th>Dispensing Fee</th>
+                            <th>Vat %</th>
+                        </tr> 
+                        <tr th:each="prices , rowStat: *{prices}">
+                         <td><input type='hidden' th:field='*{prices[__${rowStat.index}__].stockType}' /><input type='hidden' th:field='*{prices[__${rowStat.index}__].id}'  />
+                         <input type='hidden' th:field='*{prices[__${rowStat.index}__].lob}'  /><input type='hidden' th:field='*{prices[__${rowStat.index}__].unit}'  /><input type='hidden' th:field='*{prices[__${rowStat.index}__].billCategory}'  />
+                         <input type='hidden' th:field='*{prices[__${rowStat.index}__].institution}'  />
+                         
+                         </td>
+                         <td th:text="*{prices[__${rowStat.index}__].stockType?.name}"></td>
+                         <td th:text="*{prices[__${rowStat.index}__].lob?.name}"></td>
+                         <td th:text="*{prices[__${rowStat.index}__].unit?.name}"></td>
+                         <td th:text="*{prices[__${rowStat.index}__].billCategory}"></td>
+                         <td th:text="*{prices[__${rowStat.index}__].institution?.name}"></td>
+                         <td ><input type='text' class="form-control" th:field='*{prices[__${rowStat.index}__].tariffCode}'  /></td>
+                         <td ><input type='text' class="form-control" required="required" th:field='*{prices[__${rowStat.index}__].authorisationAmount}'  /></td>
+                         <td ><input type='text' class="form-control" required="required" th:field='*{prices[__${rowStat.index}__].markup}'  /></td>
+                         <td ><input type='text' class="form-control" required="required" th:field='*{prices[__${rowStat.index}__].fixedCost}'  /></td>
+                         <td ><input type='text' class="form-control" required="required" th:field='*{prices[__${rowStat.index}__].dispensingFee}'  /></td>
+                         <td ><input type='text' class="form-control" required="required" th:field='*{prices[__${rowStat.index}__].vat}'  /></td>
+                        </tr>
+                      
+                    </table>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">
+                            <input type="hidden" id="pageSize" name="pageSize" th:value="${selectedPageSize}"/>
+                            <input th:if="${priceslist}" type="hidden" id="page" name="page" th:value="${priceslist.number}"/>
+                            <input type="submit" value="Submit" class="btn btn-primary" /></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"></div>
+                    </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+        </div>            
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html> 

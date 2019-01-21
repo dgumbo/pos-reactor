@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body>
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Create New / Update Stock Receive</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form id="formu" name="formu" action="#" th:action="@{/stocks/stockreceiveform}" th:object="${stockTransaction}" method="post"  onchange="validateform()">
+                    <input type="hidden" class="form-control" th:field="*{id}"  />
+                    <input type="hidden" readonly="readonly" class="form-control" id="transactionCost" name ="transactionCost" value="0.0" />
+                    <input type="hidden" class="form-control" th:field="*{originalStockTransaction}"  />
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Requesting Unit</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><div th:text="*{unitTo.name}"> </div></div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Requesting Location</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><div th:text="*{locationTo.locationName.name}"></div></div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Remarks</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><textarea  th:readonly="${id > 0}" class="form-control" th:field="*{remarks}" ></textarea></div>
+                </div>
+                <div class="well">
+                    <div th:if='${id > 0}' >
+                <table class="table" id="table">
+                <tr>
+                  <th>Name</th>
+                  <th>Received Quantity</th>
+                  <th>Last Receipt Cost</th>
+                  <th>Weighted Average Cost</th>
+                  <th>Batch Number</th>
+                  <th>Expiry Date</th>
+                </tr>
+                <tr th:each="stockTransactionLines , rowStat: *{stockTransactionLines}">
+                  
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{stockTransactionLines[__${rowStat.index}__].stockType.name}" th:title="*{stockTransactionLines[__${rowStat.index}__].stockType.name}" /><input type="hidden"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].stockType.id}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].id}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].quantity}"  /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].lastReceiptCostRate}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].weightedAverageCost}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].batchNumber}" /></td>               
+                  <td ><input type="text" readonly="readonly"  class="form-control dateField" th:field="*{stockTransactionLines[__${rowStat.index}__].expiryDate}" /></td>
+                </tr>
+                
+                </table>
+                </div>
+                    
+                    <div th:if='${stockTransactionId > 0 and id == 0}' >
+                       <table class="table" id="table1">
+                <tr>
+                  <th>Issue Name</th>
+                  <th>Issue Quantity</th>
+                  <th>Received Quantity</th>
+                  <th>Last Receipt Cost</th>
+                  <th>Weighted Average Cost</th>
+                  <th>Batch Number</th>
+                  <th>Expiry Date</th>
+                </tr>
+                <tr th:each="stockTransactionLines , rowStat: *{stockTransactionLines}">
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{stockTransactionLines[__${rowStat.index}__].stockType.name}" th:title="*{stockTransactionLines[__${rowStat.index}__].stockType.name}" /><input type="hidden"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].stockType.id}" /><input type="hidden"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].stockRequestItem.id}" /><input type="hidden"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].baseStock.id}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{stockTransactionLines[__${rowStat.index}__].quantity}"    /></td>
+                  <td ><div class="form-group"><input type="text"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].quantity}"  validate="1"  min="1" th:max="*{stockTransactionLines[__${rowStat.index}__].quantity}" data-empty-error="Quantity cannot be empty" data-min-error="Please enter a Quantity greater than 0" data-max-error="Quantity cannot be greater than the Issued Quantity"  oninput="this.value = getPositiveInt(this.value)" /><div class="help-block with-errors"></div></div></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].lastReceiptCostRate}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].weightedAverageCost}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].batchNumber}" /></td>               
+                  <td ><input type="text" readonly="readonly"  class="form-control dateField" th:field="*{stockTransactionLines[__${rowStat.index}__].expiryDate}" /></td>
+                </tr>
+                
+                </table>  
+                        
+                    </div>
+                </div>               
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${id == 0}" ><input type="submit" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)"  value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/stocks/stockreceive/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+        <script type="text/javascript">//$('#formu').sisyphus().restoreAllData(); 
+      validateform();</script>
+ </body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Unit</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/auth/unitform}" th:object="${unit}" method="post">
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Name</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" th:field="*{name}"  /><input type="hidden" class="form-control" th:field="*{id}"  /></div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Unit Code</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" th:field="*{unitCode}"  /></div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Lob</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" th:field="*{lob.id}"  ><option th:each="lob : ${unit.lobs}" 
+          th:value="${lob.id}" 
+          th:text="${lob.name}">....</option>  </select></div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Site</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" th:field="*{site.id}"  ><option th:each="site : ${unit.sites}" 
+          th:value="${site.id}" 
+          th:text="${site.name}">....</option>  </select></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Active</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" th:field="*{activeStatus}" >
+							    <option value="0" >No</option>
+							    <option value="1" >Yes</option>
+							 </select></div>
+                </div>
+                <div class="well">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg"></div>
+                  </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Location Name</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" id="locationNames"  ><option th:each="locationName : ${unit.locationNames}" 
+          th:value="${locationName.id+'****'+locationName.name}" 
+          th:text="${locationName.name}">....</option>  </select></div>
+                </div>                
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Active</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" id="active" >
+							    <option value="0" >No</option>
+							    <option value="1" selected='selected'>Yes</option>
+							 </select></div>
+                </div>
+                
+                 <div class="row">
+                       <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addUnitTable()" class="btn btn-success" /></div>
+                </div>
+                <br />
+                <table class="table" id="table">
+                <tr>
+                  <th>Location Name</th>
+                  <th>Active</th>
+                </tr>
+                <tr th:each="location , rowStat: *{location}">
+                  
+                  <td ><input type="hidden" class="form-control" th:field="*{location[__${rowStat.index}__].id}" />
+                  <select class="form-control" th:field="*{location[__${rowStat.index}__].locationName.id}"  ><option th:each="locationName : ${unit.locationNames}" 
+          th:value="${locationName.id}" 
+          th:text="${locationName.name}">....</option>  </select></td>
+                  <td ><select class="form-control" th:field="*{location[__${rowStat.index}__].activeStatus}" >
+							    <option value="0" >No</option>
+							    <option value="1" >Yes</option>
+							 </select></td>
+                </tr>
+                
+                </table>
+                </div>
+                <div class="well">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg1"></div>
+                  </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Department Name</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" id="departmentNames"  ><option th:each="departmentName : ${unit.departmentNames}" 
+          th:value="${departmentName.id+'****'+departmentName.name}" 
+          th:text="${departmentName.name}">....</option>  </select></div>
+                </div>                
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Active</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" id="active" >
+							    <option value="0" >No</option>
+							    <option value="1" selected='selected'>Yes</option>
+							 </select></div>
+                </div>
+                
+                 <div class="row">
+                       <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addUnitDepartmentTable()" class="btn btn-success" /></div>
+                </div>
+                <br />
+                <table class="table" id="table1">
+                <tr>
+                  <th>Department Name</th>
+                  <th>Active</th>
+                </tr>
+                <tr th:each="department , rowStat: *{department}">
+                  
+                  <td ><input type="hidden" class="form-control" th:field="*{department[__${rowStat.index}__].id}" />
+                  <select class="form-control" th:field="*{department[__${rowStat.index}__].departmentName.id}"  ><option th:each="departmentName : ${unit.departmentNames}" 
+          th:value="${departmentName.id}" 
+          th:text="${departmentName.name}">....</option>  </select></td>
+                  <td ><select class="form-control" th:field="*{department[__${rowStat.index}__].activeStatus}" >
+							    <option value="0" >No</option>
+							    <option value="1" >Yes</option>
+							 </select></td>
+                </tr>
+                
+                </table>
+                </div>                    
+                 <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="submit" value="Submit" class="btn btn-primary" /></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/auth/unit/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

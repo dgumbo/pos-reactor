@@ -1,0 +1,54 @@
+<h2 mat-dialog-title *ngIf="newForm">Add Dayend 
+    {{ dayendItem.currency ? ' - ' +  dayendItem.currency : '' }}
+    {{ paymentType ? ' - ' +  paymentType.name : '' }}
+</h2>
+<h2 mat-dialog-title *ngIf="!newForm">Edit Dayend Details - {{ dayendItem.currency }}</h2>
+<mat-dialog-content>
+  <mat-card class="add-margin">
+    <mat-card-content>
+      <!-- <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Username</div>
+        <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default" data-live-search="true"
+            th:field="*{username}">
+            <option value="">Choose User</option>
+            <option th:each="user : ${users}" th:value="${user.username}" th:text="${user.fullname}">....</option>
+          </select></div>
+      </div> -->
+
+      <!-- paymentType -->
+      <div class="form-group row">
+        <label for="dayendItem.paymentType" class="col-sm-4 col-form-label">Payment Type : </label>
+        <div class="col-sm-8">
+          <select class="form-control" name="dayendItem.paymentType" [(ngModel)]="dayendItem.paymentType" [disabled]="!newForm">
+            <option *ngFor="let paymentType of paymentTypes" [ngValue]="paymentType">{{ paymentType.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- currency -->
+      <div class="form-group row">
+        <label for="dayendItem.currency" class="col-sm-4 col-form-label">Currency : </label>
+        <div class="col-sm-8">
+          <select class="form-control" name="dayendItem.currency" [(ngModel)]="dayendItem.currency" [disabled]="!newForm">
+            <option *ngFor="let currency of currencies" [ngValue]="currency">{{ currency.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- amount -->
+      <div class="form-group row">
+        <label for="dayendItem.bondRate" class="col-sm-4 col-form-label">Amount : </label>
+        <div class="col-sm-8 input-group">
+          <input class="form-control" placeholder="amount" type="number" step="0.01" name="dayendItem.amount" [(ngModel)]="dayendItem.amount">
+        </div>
+      </div> 
+
+    </mat-card-content>
+  </mat-card>
+</mat-dialog-content>
+
+<div class="spacer"></div>
+<mat-dialog-actions class="dialog-footer ml ml-a" style="margin-left:auto;">
+  <button mat-raised-button color="primary" (click)="returnDayend()">Add Dayend</button>
+  <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+</mat-dialog-actions>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}">...</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form id="formu" name="formu" action="#" th:action="@{/bill/depositallocationform}" th:object="${depositAllocation}" method="post"  onchange="validateform();">
+                  <input  class="form-control" type="hidden" th:field="*{bill}" />  
+                  <input  class="form-control" type="hidden" th:field="*{deposit}" />  
+                      <div class="row">
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Patient Number:</label> <span th:utext="*{bill.patient.number}"></span></div>
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Patient Name:</label> <span th:utext="*{bill.patient.fullname}"></span></div>
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Date Of Birth:</label> <span th:utext="*{bill.patient.dateOfBirth}"></span></div>
+                      </div>   
+                      <div class="row">
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Gender:</label> <span th:utext="*{bill.patient.gender.name}"></span></div>
+                          <div class="col-lg-8 col-md-8 col-sm-8" ></div>
+                      </div> 
+                    <table class="table">
+                        <tr>
+                            <td></td>
+                            <th>Cash</th>
+                            <th>Insurance</th>
+                            <th>Shortfall</th>
+                            <th>Special Contract</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <th>Payable</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.cashPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.insurancePayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.shortfallPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.specialContractPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.grossAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Paid</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.cashPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.insurancePaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.shortfallPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.specialContractPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.paidAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Owing</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.cashOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.insuranceOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.shortfallOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.specialContractOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.owingAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Refund</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.cashRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.insuranceRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.shortfallRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.specialContractRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{bill.refundAmount}" /></td>
+                        </tr>
+                    </table>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Payment For</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{paymentFor}"  validate="1" data-empty-error="Payment For cannot be empty" > 
+                                        <option value="">Choose Payment For</option>
+                                     <option th:each="paymentFor : ${depositAllocation.paymentFors}" th:value="${paymentFor}" th:text="${paymentFor}">....</option> 
+                                    </select><div class="help-block with-errors"></div></div>
+                                    </div>
+                                </div>  
+                            <div class="row" th:if="*{id == 0}">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Deposits</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><select class="selectpicker" data-style="btn-default"  data-live-search="true" id="depositList" onchange="setDepositItem(this)" validate="1" data-empty-error="Currency cannot be empty" > 
+                                        <option value="">Choose Deposit</option>
+                                     <option th:each="deposit : ${depositAllocation.deposits}" th:value="${deposit.availableAmount}+'****'+${deposit.id}" th:text="${deposit.number}+' - '+${deposit.availableAmount}">....</option> 
+                                        </select><div class="help-block with-errors"></div></div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Available Amount</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" readonly="readonly" class="form-control" th:field="*{availableAmount}" /> </div>
+                            </div>      
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Use Amount</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" readonly="readonly" class="form-control" th:field="*{usedAmount}"  /> </div>
+                            </div>
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${id == 0}" ><input type="submit" onclick="disableSubmit(this)" name="btnSubmit" id="btnSubmit" value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/bill/depositallocation/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

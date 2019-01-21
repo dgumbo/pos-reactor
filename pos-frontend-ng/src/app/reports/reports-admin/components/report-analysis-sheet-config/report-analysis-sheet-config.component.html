@@ -1,0 +1,277 @@
+<div class="container-fluid" >
+    <form class="form-inline" (ngSubmit)="onSubmit(f)" #f="ngForm">   
+        <div class="row">
+            <div class="col col-sm-12">                                                                         
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Worksheet : <u>Analysis by {{ selectedSheet.name }}</u> :  Properties</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="name">Sheet Name : </label>
+                            <input style="max-width:150px;"  type="text" class="form-control" name="name" [(ngModel)]="selectedSheet.name"/> 
+                        </div>
+
+                        <div class="form-group">
+                            <label for="position">Position : </label>
+
+                            <input style="max-width:80px;" type="text" class="form-control" name="position" [(ngModel)]="selectedSheet.position"/>                                                     
+                        </div>   
+
+                        <div class="form-group">
+                            <label for="activeStatus">Active? : </label> 
+                            <select class="form-control" name="activeStatus" [(ngModel)]="selectedSheet.activeStatus">
+                                <option value="false">False</option>
+                                <option value="true" >True</option>
+                            </select> 
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sheetProtected">Protected? : </label> 
+                            <select class="form-control" name="sheetProtected" [(ngModel)]="selectedSheet.sheetProtected">
+                                <option value="false" >False</option>
+                                <option value="true" >True</option>
+                            </select> 
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <div class="ui-widget ui-helper-clearfix">
+
+            <div class="row">
+                <div class="col col-sm-12">  
+                    <div id="None" class="panel panel-danger" droppable (onDrop)="acceptAnalysisColumn($event)" (onDragEnter)="setDroppedTarget($event)" >
+                         <div class="panel-heading">
+                            <h3 class="panel-title">Available Columns</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="gallery ui-helper-reset ui-helper-clearfix"> 
+                                <ng-container *ngFor="let analysisColumn of selectedSheet.analysisColumnList"  > 
+                                    <li class=" " draggable
+                                    [dragData]="analysisColumn"
+                                    *ngIf="analysisColumn.analysisSector=='None'"  
+                                    >
+                                    <h5 class="ui-widget-header">{{ analysisColumn.name }}</h5> 
+                                        <a class="ui-icon ui-icon-plus" style="cursor:pointer;" [title]="analysisColumn.name" [title]="'Add ' + analysisColumn.name + ' to Report.'"> </a>        
+                                        <a class="ui-icon ui-icon-gear" style="cursor:pointer;" data-toggle="modal" data-target="#myModal" [title]="'Edit properties for - ' + analysisColumn.name" (click)="draggableItemActionOnClickEdit($event)"  [attr.data-value]="analysisColumn|json"> </a>
+                                    </li> 
+                                </ng-container>                              
+                            </ul>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col col-md-6"> 
+                    <div id="Filters" class="panel panel-warning" droppable (onDrop)="acceptAnalysisColumn($event)" (onDragEnter)="setDroppedTarget($event)" >
+                         <div class="panel-heading">
+                            <h3 class="panel-title">Report Filters</h3>
+                        </div>
+                        <div class="panel-body"  >
+                            <ul class="gallery ui-helper-reset ui-helper-clearfix"> 
+                                <ng-container *ngFor="let analysisColumn of selectedSheet.analysisColumnList" >
+                                    <li class="ui-draggable" draggable   
+                                    [dragData]="analysisColumn"                            
+                                    *ngIf="analysisColumn.analysisSector=='Filters'"  
+                                    >
+                                    <h5 class="ui-widget-header">{{ analysisColumn.name }}</h5>
+                                        <div align='left'> 
+                                            <span>Position : <u>{{ analysisColumn.position }}</u><br/></span>                                                                
+                                            <span>Filter Value : <u>{{ analysisColumn.filterValue }}</u><br/></span>  
+                                        </div> 
+                                        <a class="ui-icon ui-icon-gear" style="cursor:pointer;" data-toggle="modal" data-target="#myModal" [title]="'Edit properties for - ' + analysisColumn.name" (click)="draggableItemActionOnClickEdit($event)" [attr.data-value]="analysisColumn|json"> </a>
+                                        <a class="ui-icon ui-icon-trash" style="cursor:pointer;" [title]="'Remove ' + analysisColumn.name" (click)="draggableItemActionOnClickRemove($event)" [attr.data-value]="analysisColumn|json"></a>     
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-md-6">  
+                    <div id="Columns" class="panel panel-success" droppable (onDrop)="acceptAnalysisColumn($event)" (onDragEnter)="setDroppedTarget($event)" >
+                         <div class="panel-heading">
+                            <h3 class="panel-title">Report Columns</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="gallery ui-helper-reset ui-helper-clearfix"> 
+                                <ng-container *ngFor="let analysisColumn of selectedSheet.analysisColumnList"  >
+                                    <li class="ui-draggable" draggable
+                                    [dragData]="analysisColumn"
+                                    *ngIf="analysisColumn.analysisSector=='Columns'"  >
+                                    <h5 class="ui-widget-header">{{ analysisColumn.name }}</h5>
+                                        <div align='left'>
+                                            <span>Display Name : <u>{{ analysisColumn.displayName }}</u><br/></span>
+                                            <span>Position : <u>{{ analysisColumn.position }}</u><br/></span>                                                                
+                                        </div>
+                                        <a class="ui-icon ui-icon-gear" style="cursor:pointer;" data-toggle="modal" data-target="#myModal" [title]="'Edit properties for - ' + analysisColumn.name" (click)="draggableItemActionOnClickEdit($event)" [attr.data-value]="analysisColumn|json"> </a>
+                                        <a class="ui-icon ui-icon-trash" style="cursor:pointer;" [title]="'Remove ' + analysisColumn.name" (click)="draggableItemActionOnClickRemove($event)" [attr.data-value]="analysisColumn|json"></a>                                                                                   
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col col-md-6"> 
+                    <div id="Rows" class="panel panel-info" droppable (onDrop)="acceptAnalysisColumn($event)" (onDragEnter)="setDroppedTarget($event)" >
+                         <div class="panel-heading">
+                            <h3 class="panel-title">Report Rows</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="gallery ui-helper-reset ui-helper-clearfix"> 
+                                <ng-container *ngFor="let analysisColumn of selectedSheet.analysisColumnList" >
+                                    <li class="ui-draggable" draggable
+                                    [dragData]="analysisColumn"
+                                    *ngIf="analysisColumn.analysisSector=='Rows'"  >
+                                    <h5 class="ui-widget-header">{{ analysisColumn.name }}</h5>
+                                        <div align='left'>
+                                            <span>Display Name : <u>{{ analysisColumn.displayName }}</u><br/></span>
+                                            <span>Position : <u>{{ analysisColumn.position }}</u><br/></span>
+                                            <span>Show Subtotal : <u>{{ analysisColumn.showSubTotal }}</u><br/></span>
+                                        </div>
+                                        <a class="ui-icon ui-icon-gear" style="cursor:pointer;" data-toggle="modal" data-target="#myModal" [title]="'Edit properties for - ' + analysisColumn.name" (click)="draggableItemActionOnClickEdit($event)" [attr.data-value]="analysisColumn|json"> </a>
+                                        <a class="ui-icon ui-icon-trash" style="cursor:pointer;" [title]="'Remove ' + analysisColumn.name" (click)="draggableItemActionOnClickRemove($event)" [attr.data-value]="analysisColumn|json"></a>                                                                                   
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-md-6">  
+                    <div id="Data" class="panel panel-danger" droppable (onDrop)="acceptAnalysisColumn($event)" (onDragEnter)="setDroppedTarget($event)" >
+                         <div class="panel-heading">
+                            <h3 class="panel-title">Report Data</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="gallery ui-helper-reset ui-helper-clearfix"> 
+                                <ng-container *ngFor="let analysisColumn of selectedSheet.analysisColumnList"  >
+                                    <li class="ui-draggable" draggable
+                                    [dragData]="analysisColumn"
+                                    *ngIf="analysisColumn.analysisSector=='Data'"   >
+                                    <h5 class="ui-widget-header">{{ analysisColumn.name }}</h5>
+                                        <div align='left'>
+                                            <span>Display Name : <u>{{ analysisColumn.displayName }}</u><br/></span>                                                                
+                                            <span>Position : <u>{{ analysisColumn.position }}</u><br/></span>
+                                            <span>Aggregate Function : <u>{{ analysisColumn.aggregateFunction }}</u><br/></span>
+                                            <span>Number Format : <u>{{ analysisColumn.numberFormat }}</u><br/></span>
+                                            <span>Filter Value : <u>{{ analysisColumn.filterValue }}</u><br/></span>  
+                                        </div> 
+                                        <a class="ui-icon ui-icon-gear" style="cursor:pointer;" data-toggle="modal" data-target="#myModal" [title]="'Edit properties for - ' + analysisColumn.name" (click)="draggableItemActionOnClickEdit($event)" [attr.data-value]="analysisColumn|json"> </a>
+                                        <a class="ui-icon ui-icon-trash" style="cursor:pointer;" [title]="'Remove ' + analysisColumn.name" (click)="draggableItemActionOnClickRemove($event)" [attr.data-value]="analysisColumn|json"></a>                                                                               
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="well"> 
+                <div class="row">
+                    <div class="col-sm-4" align="right"><input type="submit" value="Submit" class="btn btn-primary" /></div>
+                    <div class="col-sm-4" align="center"><button  class="btn btn-info" >Preview</button></div>
+                    <div class="col-sm-4" align="left"><button type="button" (click)="onCancel()"  class="btn btn-warning">Cancel</button></div>
+                </div>  
+            </div> 
+        </div>
+    </form>
+</div>  
+
+
+<!-- Start Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="top: 10px;">
+    <form id="myModalForm"  #ff="ngForm" (ngSubmit)="onChangeAnalysisSheetColumn(ff)" >
+
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel"><strong>Edit Column - {{ modalReportAnalysisColumn.name }}</strong></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body ">   
+                    <div class="row form-group">
+                        <div class="col col-sm-4" align="right"><label for="sheetName">Analysis Sector : </label></div>
+                        <div class="col col-sm-8">
+                            <select class="form-control" name="analysisSector" [(ngModel)]="modalReportAnalysisColumn.analysisSector" > 
+                                <option *ngFor="let analysisSector of analysisSectorList"
+                                    [value]="analysisSector"
+                                    [text]="analysisSector" >....</option>  
+                            </select>
+                        </div>
+                    </div>  
+                    <div class="row form-group">
+                        <div class="col col-sm-4" align="right"><label for="sheetName">Display Name : </label></div>
+                        <div class="col col-sm-8">
+                            <input id="displayName" name="displayName" type="text" class="form-control" [(ngModel)]="modalReportAnalysisColumn.displayName" /> 
+                        </div>
+                    </div>  
+                    <div class="row form-group">
+                        <div class="col col-sm-4" align="right">
+                            <label for="sheetName">Position : </label>
+                        </div>
+                        <div class="col col-sm-8">
+                            <input id="position" name="position" type="number" class="form-control" [(ngModel)]="modalReportAnalysisColumn.position" /> 
+                        </div>
+                    </div>  
+                    <div class="row form-group" [ngStyle]=" modalReportAnalysisColumn.analysisSector ==='Data' ? {} : {'display' : 'none' }">
+                        <div class="col col-sm-4" align="right">
+                            <label for="sheetName">Aggregate Function : </label>
+                        </div>
+                        <div class="col col-sm-8"> 
+                            <select class="form-control" name="aggregateFunction" [(ngModel)]="modalReportAnalysisColumn.aggregateFunction"  > 
+                                <option *ngFor="let aggregateFunction of aggregateFunctionsList"
+                                    [value]="aggregateFunction"
+                                    [text]="aggregateFunction" >....</option>  
+                            </select>
+                        </div>
+                    </div>  
+                    <div class="row form-group" [ngStyle]=" modalReportAnalysisColumn.analysisSector ==='Rows' ? {} : {'display' : 'none' }">
+                        <div class="col col-sm-4" align="right">
+                            <label for="sheetName">Show Sub Total : </label>
+                        </div>
+                        <div class="col col-sm-8"> 
+                            <select class="form-control" name="showSubTotal" [(ngModel)]="modalReportAnalysisColumn.showSubTotal" >
+                                <option value="false" >false</option>
+                                <option value="true" selected='selected'>true</option>
+                            </select>
+                        </div>
+                    </div>  
+                    <div class="row form-group" [ngStyle]=" modalReportAnalysisColumn.analysisSector ==='Data' ? {} : {'display' : 'none' }">
+                        <div class="col col-sm-4" align="right">
+                            <label for="sheetName">Number Format : </label>
+                        </div>
+                        <div class="col col-sm-8">
+                            <select class="form-control" name="numberFormat" [(ngModel)]="modalReportAnalysisColumn.numberFormat"  > 
+                                <option *ngFor="let numberFormat of numberFormatList"
+                                    [value]="numberFormat"
+                                    [text]="numberFormat" >....</option>  
+                            </select>
+                        </div>
+                    </div>  
+                    <div class="row form-group" [ngStyle]=" modalReportAnalysisColumn.analysisSector ==='Filters' ? {} : {'display' : 'none' }">
+                        <div class="col col-sm-4" align="right">
+                            <label for="sheetName">Filter Value : </label>
+                        </div>
+                        <div class="col col-sm-8">
+                            <input id="filterValue" name="filterValue" type="text" class="form-control" [(ngModel)]="modalReportAnalysisColumn.filterValue" /> 
+                        </div>
+                    </div>  
+                </div>
+                <div class="modal-footer">  
+                    <div class="row">  
+                        <div class="col col-md-6" align="right"><input type="submit" class="btn btn-primary btn-md" value="Submit" /></div>    
+                        <div class="col col-md-6" align="center"><button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button></div>                                                                           
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </form>
+</div>
+<!-- End Modal -->  

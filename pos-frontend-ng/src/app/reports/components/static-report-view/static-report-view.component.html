@@ -1,0 +1,46 @@
+<div class="text-danger">{{ msg }}</div>
+
+<section id="content" class="container-fluid" [ngStyle]="(isLoading$|async) ? {'display': 'none'} : {}"> 
+    <!-- Content Start Here -->   
+    <div >
+        <h2 id="reportName" class="mx-auto text-center" style="margin-top: 15px; margin-bottom: 15px;" *ngIf="reportMenu.name !== ''" >
+            {{ reportMenu.name }}
+        </h2>
+
+        <!-- Populating Report Parameters Here  [enabled]="(IsDownloading$|async)" -->
+        <dynamic-form [disabled]="(IsDownloading$)"
+            #form="dynamicForm"
+            [config]="dyanmicConfigParameters"
+            (submit)="onFormSubmit(form)"  
+            >  
+        </dynamic-form> 
+        <!-- End Populating Report Parameters [innerHtml]="param.htmlElements" -->
+    </div>  
+    <!-- Content End Here -->
+
+
+    <div *ngIf="(IsDownloading$|async)" > 
+        <br/>
+        <mat-progress-bar mode="query">  Downloading !!      
+        </mat-progress-bar>
+    </div> 
+
+    <br/>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" > 
+           <!-- Columns -->
+           <ng-container 
+            *ngFor="let column of displayedColumns"
+            [matColumnDef]="column" >
+            <th mat-header-cell *matHeaderCellDef>{{ column | splitCamelCase }}</th>
+            <td mat-cell *matCellDef="let reportData"> {{ reportData[column] }} </td> 
+        </ng-container>    
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table> 
+</section> 
+
+<section  class="container-fluid" >
+    <mat-progress-bar mode="query" *ngIf="(isLoading$|async)">        
+    </mat-progress-bar>
+</section> 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>StockMovementDescription List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/stocks/stockmovementdescriptionaction/0' }"><span class="glyphicon glyphicon-plus" title = "Add Stock Movement Description"></span></a></div>
+                </div>
+               <table class="table">
+               <tr>
+               <th>Action</th>
+                <th>Name</th>
+                <th>Active</th>
+               </tr>
+    <tr data-th-each="stockMovementDescription : ${stockMovementDescriptions}">
+        <td><a th:href="@{'/stocks/stockmovementdescriptionaction/' + ${stockMovementDescription.id}}"><span class="glyphicon glyphicon-edit" title = "Edit"></span></a></td>
+        <td data-th-text="${stockMovementDescription.name}">...</td>
+        <td ><div th:if="${stockMovementDescription.activeStatus}"> Yes </div><div th:if="${!stockMovementDescription.activeStatus}">No</div></td>
+    </tr>
+</table>
+                <!-- Content End Here -->
+            </div>
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

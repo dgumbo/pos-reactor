@@ -1,0 +1,32 @@
+
+<h2>Report Configuration List</h2>
+<div class="line"></div>
+<div id="msg"></div>
+<!-- Content Start Here -->       
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <a title="New Report" [routerLink]="['../report-config', 0]">
+            <i class="fa fa-plus"></i>
+        </a>
+    </div>
+</div>
+
+
+<table class="table" id="table">
+    <tr>
+        <th>Action</th>  
+        <th>Name</th>     
+    </tr>
+    <tr *ngFor="let reportConfig of reportConfigList" >
+        <td>
+            <a title="Edit" [routerLink]="['../report-config', reportConfig?.id]"><i class="fa fa-edit"></i></a>
+            | 
+            <a title="Configure Report Analysis" [routerLink]="['../report-analysis-sheet-list', reportConfig?.id]"><i class="fa fa-gears"></i></a>
+            | 
+            <a title="Preview" [routerLink]="['/reports/report-view-by-name/', reportConfig?.name]" ><i class="fa fa-list-alt"></i></a>
+        </td>                   
+        <td>     
+            <a title="{{reportConfig?.name }} Preview"  [routerLink]="['../view', reportConfig?.name]">{{ reportConfig?.name }}</a>
+        </td>                     
+    </tr>
+</table>     

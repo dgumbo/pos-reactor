@@ -1,0 +1,83 @@
+<div id="invoice" class="container">
+    <div class="row">
+        <!-- <div class="well col-xs-11 col-sm-11 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3"> -->
+        <div class="well col-11 col-offset-1">
+
+            <div class="row">
+                <div class="col-6">
+                    <address>
+                        <strong>Katanga Groceries</strong>
+                    </address>
+                </div>
+                <div class="col-6 text-right right-header">
+                    <div class="row">
+                        <div class="col col-5">
+                            <em>Run Date :</em>
+                        </div>
+                        <div class="col col-7 date">
+                            <div>
+                                <em>{{ date | date: 'dd MMMM yyyy' }}</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col col-11">
+                    Sales Summary Report - {{summarised ? 'Summarized' : 'Detailed'}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col col-11">
+                    Period : {{ fromDate | date : 'dd MMM yyyy HH:mm' }} - {{ toDate | date : 'dd MMM yyyy HH:mm' }}
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="col col-3 text-left"><strong>Date</strong></th>
+                            <th class="col col-4 text-left"><strong>Product</strong></th>
+                            <th class="col col-1 text-right"><strong>#</strong></th>
+                            <th class="col col-3 text-right"><strong>Unit Price</strong></th>
+                            <th class="col col-3 text-right"><strong>Total Price</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of stockReOrders">
+                            <td class="text-left">
+                                <em>{{ item.sellDatetime | date : 'd MMM, yy H:mm'}}</em>
+                            </td>
+                            <td class="text-left">
+                                <em>{{ item.stockItem }}</em>
+                            </td>
+                            <td class="text-right">{{ item.quantity }}</td>
+                            <td class="text-right">{{ item.unitPrice | currency }}</td>
+                            <td class="text-right">{{ item.totalPrice | currency }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" colspan="3">
+                                <strong>Lines: </strong>
+                            </td>
+                            <td class="text-right" colspan="2">
+                                <strong>{{ stockReOrders.length }}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" colspan="3">
+                                <strong>Total Order Cost: </strong>
+                            </td>
+                            <td class="text-right" colspan="2">
+                                <strong>{{ totalOrderCost | currency }}</strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

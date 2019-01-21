@@ -1,0 +1,74 @@
+<mat-card class="ticket-section flex flex-direction-column justify-between">
+    <table class="table">
+        <tr class="table-header">
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th>&nbsp;</th>
+        </tr>
+        <tr *ngFor="let item of cart.items" class="item">
+            <td>{{item.product.name}}</td>
+            <td>
+                <input type="number" [(ngModel)]="item.quantity" (change)="refreshCartTotals( )" class="form-control quantity" />
+            </td>
+            <td>{{ item.product.bondPrice | currency:'USD':"symbol" }}</td>
+            <td><strong>{{ (item.quantity * item.product.bondPrice) | currency:'USD':"symbol" }}</strong></td>
+            <td (click)="removeItem(item)" style="cursor:pointer; color:red;">
+                <span class="fa fa-close"></span>
+            </td>
+        </tr>
+    </table>
+
+
+    <mat-card-actions class="summary flex flex-direction-row align-items-center justify-between">
+        <div class="card ml-auto" style="width: 25rem;">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item total">
+                    <div class="form-group row">
+                        <label class="col col-4 text-right">Total : </label>
+                        <div class="col col-7 text-right">
+                            {{ cart.totalAmount | currency:'USD':"symbol" }}
+                        </div>
+                    </div>
+                </li>
+                <li *ngIf="ecocashCurrency" class="list-group-item ecocash-total">
+                    <div class="form-group row">
+                        <label class="col col-4 text-right" for="dt1">Ecocash : </label>
+                        <div class="col col-7 text-right">
+                            {{ cart.totalEcocashAmount | currency:'USD':"symbol" }}
+                        </div>
+                    </div>
+                </li>
+                <li *ngIf="!isDateSell" class="list-group-item static-time">
+                    <div class="form-group row">
+                        <label class="col-4 text-right">Time : </label>
+                        <div class="col col-7 text-right">
+                            {{ cart.dateSaleDate | date : "H:mm:ss" }}
+                        </div>
+                    </div>
+                </li>
+                <li *ngIf="isDateSell" class="list-group-item time">
+                    <div class="form-group row">
+                        <label class="col col-4 text-right" for="dt1">Sell Date : </label>
+                        <div class="col col-7">
+                            <input [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" [(ngModel)]="cart.dateSaleDate" class="form-control">
+                        </div>
+                        <div class="col col-1">
+                            <i [owlDateTimeTrigger]="dt1" class="fa fa-calendar"></i>
+                            <owl-date-time [pickerType]="'calendar'" [pickerMode]="'dialog'" #dt1></owl-date-time>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </mat-card-actions>
+
+    <mat-card-actions class="summary flex flex-direction-row align-items-center justify-between">
+        <div class="flex flex-direction-row buttons">
+            <button class="cart-buttons clear" mat-raised-button (click)="clearCart()">Clear</button>
+            <!-- <button class="cart-buttons save" mat-raised-button (click)="saveCart()">Save for Later</button> -->
+            <button class="cart-buttons checkout btn btn-md primary" (click)="checkout()" #checkoutButton>Make Payment</button>
+        </div>
+    </mat-card-actions>
+</mat-card>

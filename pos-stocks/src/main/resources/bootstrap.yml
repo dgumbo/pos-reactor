@@ -1,0 +1,16 @@
+
+## YAML Template.
+--- 
+spring:
+    application:
+        name: hmsstocks      
+    cloud:
+        config:
+            server:
+                bootstrap:  true
+                prefix: /config
+                git:
+                    uri: http://gitsrvr/configs/hmsconfigs.git
+#                    uri: file:////home/com4t/src/psmi/hmsconfigs
+                    basedir:    /data/hms/config-git
+                    force-pull: true

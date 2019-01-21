@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Book Stock Cancellation List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->  
+                <form method="post"  th:action="@{'/stocks/bookstockcancelaction'}" >
+                <input type="hidden" name="id" id="id" />
+                    <div id="205" class="pop"> <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Cancel Entry</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                           <div class="col-lg-4 col-md-4 col-sm-4" align="right">Reason</div>
+                        <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="form-group">  <textarea class="form-control" type="text" name="reason" id="reason"  required="required" ></textarea><div class="help-block with-errors"></div></div>
+                           </div>
+                    </div>  
+                                <div class="row">  
+                                    <div class="col-lg-6 col-md-6 col-sm-6"  align="right"><input class="btn btn-primary" type="submit" value="Cancel Entry"  /></div> 
+                                    <div class="col-lg-6 col-md-6 col-sm-6"><input class="btn btn-primary" type="button" value="Cancel" onclick="dropdownhide(205)" /></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </form>    
+                <form th:method="get"  th:action="@{'/stocks/bookstockcancel/'}"  th:object="${bookStock}" class="form-inline">
+                    <span class="add-on">From</span>
+                    <input type="text" class="form-control" th:field="*{startDate}" /> 
+                    <span class="add-on">To</span>
+                    <input type="text" class="form-control" th:field="*{endDate}" />  
+                    <button type="submit" class="btn btn-success">Search</button>
+                </form>
+               <table class="table" id="table">
+               <tr>
+               <th>Action</th>       
+               <th>Book Stock ID</th> 
+               <th>Book Stock Created By</th>  
+               <th>Book Stock Number</th>               
+               <th>Book Stock Creation Date</th> 
+               <th>Book Notes</th>    
+               </tr>
+                <tr data-th-each="bookStock,stat : ${bookStocks}" >
+                    <td><a th:onclick="'cancelBookStock(' + ${bookStock.id}+')'"><span class="glyphicon glyphicon-remove-circle" style="color:red" title = "Delete"></span></a> &nbsp;
+                    </td>   
+                    <td th:text="${bookStock.id}"></td>                    
+                    <td th:text="${bookStock.user}"></td>                    
+                    <td th:text="${bookStock.number}"></td>                    
+                    <td th:text="${bookStock.bookStockDate}"></td>              
+                    <td th:text="${bookStock.notes}"></td>                
+                </tr>
+            </table>              
+            </div>  
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}"></h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/stocks/conversionaction/0' }"><span class="glyphicon glyphicon-plus" title = "Add Stock Conversion"></span></a></div>
+                </div>
+                <form th:method="get"  th:action="@{'/stocks/conversion/'+${stockTransactionType}}"  th:object="${stockTransaction}" class="form-inline">
+
+                    <div class="form-group row">
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                        <span class="add-on">To</span>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/> 
+
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                </form>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Conversion Number</th>
+                        <th>Issuing Unit</th>
+                        <th>Receiving Unit</th>
+                        <th>Issuing Location</th>
+                        <th>Receiving Location</th>
+                        <th>Transaction Type</th>
+                        <th>Creation Date</th>
+                        <th>Created By</th>
+                        <th>Transaction Status</th>
+                        <th>Transaction Cost</th>
+                    </tr>
+                    <tr data-th-each="stockTransaction : ${stockTransactions}">
+                        <td><a th:href="@{'/stocks/conversionaction/' + ${stockTransaction.id}}"><span class="glyphicon glyphicon-open" title = "View"></span></a>
+                            <a th:onclick="'printPdf(\'/stocks/output/' + ${stockTransaction.id}+'/'+${stockTransaction.stockTransactionType}+'\')'"><span class="glyphicon glyphicon-print" title = "Print"></span></a>
+                        </td>
+                        <td data-th-text="${stockTransaction.id}">...</td>
+                        <td data-th-text="${stockTransaction.unitFrom?.name}">...</td>
+                        <td data-th-text="${stockTransaction.unitTo?.name}">...</td>
+                        <td data-th-text="${stockTransaction.locationFrom?.locationName?.name}">...</td>
+                        <td data-th-text="${stockTransaction.locationTo?.locationName?.name}">...</td>
+                        <td data-th-text="${stockTransaction.stockTransactionType}">...</td>
+                        <td data-th-text="${stockTransaction.creationTime}">...</td>
+                        <td data-th-text="${stockTransaction.user}">...</td>
+                        <td data-th-text="${stockTransaction.stockTransactionStatus}">...</td>
+                        <td data-th-text="${stockTransaction.transactionCost}">...</td>        
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+            </div>
+        </div>
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

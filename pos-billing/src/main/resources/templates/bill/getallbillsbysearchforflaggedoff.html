@@ -1,0 +1,28 @@
+<tr>
+                        <th>Action</th>
+                        <th>Bill Number</th>
+                        <th>Bill Date</th>
+                       <th>Patient Name</th>
+                        <th>Unit</th>              
+                        <th>Ahfoz</th>              
+                        <th>Total</th>              
+                        <th>Authorisation Number</th>              
+                    </tr> 
+                    <tr>
+                        <td></td>
+                         <td><input type="text" class="form-control" oninput="filterBillNumber(this)" placeholder="Filter By Bill Number" /></td>
+                         <td><input type="text" class="form-control" oninput="filterDate(this)" placeholder="Filter By Date" /></td>
+                         <td><input type="text" class="form-control" oninput="filterFullname(this)" placeholder="Filter By Fullname" /></td>
+                         <td colspan="3"></td>   
+                         <td><input type="text" class="form-control" oninput="filterAuthorisationNumber(this)" placeholder="Filter By Authorisation Number" /></td>                         
+                    </tr>
+        <tr th:each="bill , rowStat: ${bills}">
+<td><input type='checkbox' th:name="'flaggedOffItems['+${rowStat.index}+'].ticked'" th:id="'flaggedOffItems'+${rowStat.index}+'.ticked'" th:onchange="'checkedThis(this,'+${rowStat.index}+')'"  class='form-control'  value='1'   /><input type='hidden' th:name="'flaggedOffItems['+${rowStat.index}+'].bill.id'" th:id="'flaggedOffItems'+${rowStat.index}+'.bill.id'" th:value="${bill.id}" class='form-control'   /><input type='hidden' th:name="'flaggedOffItems['+${rowStat.index}+'].tickOrder'" th:id="'flaggedOffItems'+${rowStat.index}+'.tickOrder'" class='form-control'  value='0'   /></td>
+<td th:text="${bill.billNumber}"></td>
+<td th:text="${bill.billingStartDate}+' - '+${bill.billingStartDate}"></td>
+<td th:text="${bill.fullname}"></td>
+<td th:text="${bill.unit.name}"></td>
+<td th:text="${bill.unit.ahfozPsmas}"></td>
+<td th:text="${bill.grossInsurancePayable}"></td>
+<td th:text="${bill.authorisationNumber}"></td>
+</tr>

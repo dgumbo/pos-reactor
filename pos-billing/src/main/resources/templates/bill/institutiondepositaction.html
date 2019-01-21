@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}">...</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/bill/institutiondepositform}" th:object="${institutionDeposit}" method="post">
+                  <input  class="form-control" type="hidden" th:field="*{id}" />  
+                             <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Institution</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{institution}" >
+                            <option data-th-each="institution : ${institutions}" th:value="${institution.id}" th:text="${institution.name}"></option>
+                        </select></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Paid Amount</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" readonly="readonly" class="form-control" th:field="*{paidAmount}" /> </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Available Amount</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" readonly="readonly" class="form-control" th:field="*{availableAmount}" /> </div>
+                            </div>
+                  <div  th:if="${institutionDeposit.id == 0}" >
+                 <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Payment Type</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" id="paymentType"  > 
+                                     <option th:each="paymentType : ${institutionDeposit.paymentTypes}" th:value="${paymentType.id}+'****'+${paymentType.name}" th:text="${paymentType.name}">....</option> 
+                                    </select></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Currency</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" id="currency"  > 
+                                        <option value="">Choose Currency</option>
+                                     <option th:each="currency : ${institutionDeposit.currencys}" th:value="${currency.id}+'****'+${currency.name}+'****'+${currency.rate}" th:text="${currency.name}">....</option> 
+                                    </select></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Amount</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="amount"  oninput="this.value = getPositiveValue(this.value)"  /></div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addInstitutionDepositTable()" class="btn btn-success" /></div>
+                            </div>
+                         </div>
+                        <br /> 
+               <table class="table" id="table">
+                <tr>
+                  <th>Action</th>
+                  <th>Payment Type</th>
+                  <th>Currency</th>
+                  <th>Amount</th>
+                  <th>Rate</th>
+                  <th>Converted Amount</th>                    
+                </tr>
+                <tr th:each="institutionDepositItem , rowStat: *{institutionDepositItem}">                  
+                  <td ><input type="hidden" readonly="readonly"  class="form-control" th:field="*{institutionDepositItem[__${rowStat.index}__].id}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{institutionDepositItem[__${rowStat.index}__].paymentType}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{institutionDepositItem[__${rowStat.index}__].currency}" /></td>
+                  <td th:text="${institutionDepositItem.paymentType.name}"></td>
+                  <td th:text="${institutionDepositItem.currency.name}"></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{institutionDepositItem[__${rowStat.index}__].amount}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{institutionDepositItem[__${rowStat.index}__].currencyRate}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{institutionDepositItem[__${rowStat.index}__].convertedAmount}" /></td>
+                </tr>
+                </table> 
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${id == 0}" ><input type="submit" onclick="disableSubmit(this)" name="btnSubmit" id="btnSubmit" value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/bill/institutiondeposit/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Receipt List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <form method="get" th:action="@{'/bill/receipt' }" oninput="ignoreSubmitOnInput()" th:object="${receipt}" class="form-inline"> 
+                          <span class="add-on">From</span>
+                    <input type="text" class="form-control" th:field="*{startDate}" /> 
+                    <span class="add-on">To</span>
+                    <input type="text" class="form-control" th:field="*{endDate}" />  
+                    <button type="submit" class="btn btn-success">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Bill</th>
+                        <th>Category</th>
+                        <th>Gross Amount</th>
+                        <th>Paid</th> 
+                        <th>Owing</th>           
+                        <th>Refund</th>           
+                        <th>Done By</th>                         
+                    </tr>
+                    <tr data-th-each="receipt : ${receipts}">
+                        <td><a  th:href="@{'/bill/receiptaction/'+${receipt.id}+'/' + ${receipt.bill.id}}"><span class="glyphicon glyphicon-folder-open" title = "View"></span></a>&nbsp;&nbsp;&nbsp;<a th:onclick="'printReceipt('+ ${receipt.id}+')'"><span class="glyphicon glyphicon-print" title = "Print"></span></a></td>
+                        <td data-th-text="${receipt.bill.fullname}">...</td>
+                        <td data-th-text="${receipt.creationTime}">...</td>
+                        <td data-th-text="${receipt.bill.billNumber}">...</td>
+                        <td data-th-text="${receipt.bill.billCategory}">...</td>
+                        <td data-th-text="${receipt.bill.grossAmount}">...</td>
+                        <td data-th-text="${receipt.bill.paidAmount}">...</td>
+                        <td data-th-text="${receipt.bill.owingAmount}">...</td>
+                        <td data-th-text="${receipt.bill.refundAmount}">...</td>
+                        <td data-th-text="${receipt.username}">...</td>
+
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+
+            </div>
+        </div>
+
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

@@ -1,0 +1,210 @@
+<section class="container">
+    <h2><u>{{ reportConfig.name }}</u> - Report Configuration</h2>
+    <div class="line"></div>
+    <div id="msg"></div>
+    <!-- Content Start Here -->
+
+
+    <form class="form-container" (ngSubmit)="onSubmit(f)" #f="ngForm" ngForm >       
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6" align="right">
+                Name
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <input class="form-control" type="text" name="name" [(ngModel)]="reportConfig.name"  /> 
+            </div>
+        </div>   
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6" align="right">native Query</div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <textarea id="nativeQuery" name="nativeQuery" rows="3" class="form-control" [(ngModel)]="reportConfig.nativeQuery" 
+                          (blur)="populateReportColumns()"></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6" align="right" valign="middle">Column Names</div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <i><input id="autopopulatecolums"  name="autopopulatecolums" [(ngModel)]="autopopulatecolums"  type="checkbox"   />
+                    <label for="autopopulatecolums" >Auto-Populate Column Names</label></i>
+                <textarea id="columns" name="columns" rows="3" class="form-control" [(ngModel)]="reportConfig.columns" ></textarea>
+            </div>
+        </div> 
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Unit Query</div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <select class="form-control" name="unitQuery" [(ngModel)]="reportConfig.unitQuery" >
+                    <option value="false" >false</option>
+                    <option value="true" selected='selected'>true</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="well">
+            <table class="table" id="table">
+                <tr>
+                    <th></th>
+                    <th>Parameter</th>
+                    <th>Filter name</th>
+                    <th>Column Name</th>
+                    <th>Parameter Type</th>
+                    <th>Select Value/ Field</th>
+                    <th>Select SQL</th>
+                    <th>Active Status</th>
+                </tr>
+                <tr *ngFor="let reportConfigParameter of reportConfig.reportConfigParameters; let i = index">
+                    <td>  
+                        <button type="button"  [title]="'Remove ' + reportConfigParameter.name  + ' Parameter'" 
+                                (click)="removeParameter(reportConfigParameter)" > 
+                                <span class="fa fa-remove" > </span> 
+                        </button> 
+                        <button type="button" 
+                                data-toggle="modal" 
+                                data-target="#myModal"
+                                value="{{reportConfigParameter | json}}"
+                                (click)="setModalReportConfigParameter(reportConfigParameter)" >
+                            <span class="fa fa-pencil"></span> 
+                        </button>
+                    </td> 
+                    <td ><select class="form-control" style="min-width:105px;" name="parameter_{{reportConfigParameter.name}}" [(ngModel)]="reportConfigParameter.parameter" >      
+                            <option value="parameter1">Parameter 1</option>
+                            <option value="parameter2">Parameter 2</option>
+                            <option value="parameter3">Parameter 3</option>
+                            <option value="parameter4">Parameter 4</option>
+                            <option value="parameter5">Parameter 5</option>
+                            <option value="parameter6">Parameter 6</option>
+                            <option value="parameter7">Parameter 7</option>
+                            <option value="parameter8">Parameter 8</option>
+                            <option value="parameter9">Parameter 9</option>
+                        </select></td>
+                    <td ><input type="text" class="form-control" name="name_{{reportConfigParameter.name}}" [(ngModel)]="reportConfigParameter.name" /></td>
+                    <td ><input type="text" class="form-control"  name="columnName_{{reportConfigParameter.name}}"[(ngModel)]="reportConfigParameter.columnName" /></td>
+                    <td >
+                        <select class="form-control" style="min-width:140px;" name="parameterType_{{reportConfigParameter.name}}" [(ngModel)]="reportConfigParameter.parameterType" >
+                            <option *ngFor="let reportParameterType of reportParameterTypes"
+                                [value]="reportParameterType"
+                                [text]="reportParameterType" >....</option>       
+                        </select>
+                    </td>
+                    <td ><input type="text" class="form-control" name="selectValueField_{{reportConfigParameter.name}}" [(ngModel)]="reportConfigParameter.selectValueField" /></td>
+                    <td ><input type="text" class="form-control" name="selectSql_{{reportConfigParameter.name}}" [(ngModel)]="reportConfigParameter.selectSql" /></td>
+                    <td ><input type="text" class="form-control" name="activeStatus_{{reportConfigParameter.name}}" [(ngModel)]="reportConfigParameter.activeStatus" /></td>
+                </tr>
+            </table>
+        </div>
+
+        <br /> 
+
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" 
+                        data-toggle="modal" 
+                        data-target="#myModal"
+                        [value]="modalConfigParameter" >
+                    <span class="fa fa-plus"></span>
+                    Add Report Parameter
+                </button>
+            </div>     
+            <div class="col-lg-8 col-md-8 col-sm-8"> 
+                <div id="tableMsg"></div> 
+            </div>
+        </div>  
+
+        <div class="row">  
+            <div class="col-lg-6 col-md-6 col-sm-6" align="right">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6"> 
+                <button type="button" (click)="onCancel()" class="btn btn-primary">Cancel</button>
+            </div>
+        </div>
+    </form> 
+    <!-- Content End Here -->     
+
+
+    <!-- Start Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form id="myModalForm"  #pp="ngForm" (ngSubmit)="updateReportConfigParameters(pp)" >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel"><strong>Configure New Report Parameter</strong></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div> 
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Parameter Mapping</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <select class="form-control" id="parameter"  name="parameter"  
+                                        [(ngModel)]="modalConfigParameter.parameter" >
+                                    <option value="parameter1">Parameter 1</option>
+                                    <option value="parameter2">Parameter 2</option>
+                                    <option value="parameter3">Parameter 3</option>
+                                    <option value="parameter4">Parameter 4</option>
+                                    <option value="parameter5">Parameter 5</option>
+                                    <option value="parameter6">Parameter 6</option>
+                                    <option value="parameter7">Parameter 7</option>
+                                    <option value="parameter8">Parameter 8</option>
+                                    <option value="parameter9">Parameter 9</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Filter name</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input id="reportConfigname" name="reportConfigname" type="text" class="form-control" 
+                                       [(ngModel)]="modalConfigParameter.name"  /> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Column Name</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input type="text" class="form-control" id="columnName" name="columnName" 
+                                       [(ngModel)]="modalConfigParameter.columnName"  />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Report Parameter Type</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <select class="form-control"  id="reportParameterType" name="reportParameterType" [(ngModel)]="modalConfigParameter.parameterType"  >
+                                    <option *ngFor="let reportParameterType of reportParameterTypes"
+                                        [value]="reportParameterType"
+                                        [text]="reportParameterType" >....</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">    
+                            <label for="selectValueField" class="col-lg-6 col-md-6 col-sm-6"  >Select Value Field</label> 
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input type="text" class="form-control" id="selectValueField" name="selectValueField"  
+                                       [(ngModel)]="modalConfigParameter.selectValueField"  /> 
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Select SQL</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <textarea class="form-control" id="selectSql" name="selectSql"  [(ngModel)]="modalConfigParameter.selectSql"  ></textarea>
+
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="modal-footer">  
+                        <div class="col-lg-12 col-md-12 col-sm-12" align="center"> 
+                            <input type="submit" class="btn btn-success"
+                                   value="{{ modalConfigParameter.id ==0 ? 'Add Report Parameter' : 'Update Parameters' }}" 
+                                   />    
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" >Cancel</button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form> 
+    </div>  
+</section>

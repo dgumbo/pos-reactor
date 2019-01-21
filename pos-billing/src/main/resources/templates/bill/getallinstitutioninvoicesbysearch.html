@@ -1,0 +1,18 @@
+<tr>
+                        <th>Action</th>
+                        <th>Invoice Number</th>
+                       <th>Invoice Date</th>
+                        <th>Payable</th>
+                        <th>Paid</th>
+                        <th>Owing</th>
+                        <th>Ahfoz</th>
+                    </tr>
+<tr th:each="institutionInvoice , rowStat: ${institutionInvoices}">
+<td><input type='checkbox'  th:name="'institutionReceiptItems['+${rowStat.index}+'].ticked'" th:id="'institutionReceiptItems'+${rowStat.index}+'.ticked'" class='form-control'  value='1'   /><input type='hidden'  th:name="'institutionReceiptItems['+${rowStat.index}+'].institutionInvoice.id'" th:id="'institutionReceiptItems'+${rowStat.index}+'.institutionInvoice.id'" class='form-control'  th:value="${institutionInvoice.id}"   /></td>
+<td th:text="${institutionInvoice.number}"></td>
+<td th:text="${institutionInvoice.institutionInvoiceDate}"></td>
+<td><input type='text' readonly='readonly'  th:name="'institutionReceiptItems['+${rowStat.index}+'].institutionInvoice.totalPayable'" th:id="'institutionReceiptItems'+${rowStat.index}+'.institutionInvoice.totalPayable'" class='form-control'  th:value="${institutionInvoice.totalPayable}"   /></td>
+<td><input type='text'  th:name="'institutionReceiptItems['+${rowStat.index}+'].institutionInvoice.totalPaid'" th:id="'institutionReceiptItems'+${rowStat.index}+'.institutionInvoice.totalPaid'" class='form-control'  th:value="${institutionInvoice.totalPaid}"   /></td>
+<td><input type='text' readonly='readonly'  th:name="'institutionReceiptItems['+${rowStat.index}+'].institutionInvoice.totalOwing'" th:id="'institutionReceiptItems'+${rowStat.index}+'.institutionInvoice.totalOwing'" class='form-control'  th:value="${institutionInvoice.totalOwing}"   /></td>
+<td th:text="${institutionInvoice.ahfoz}"></td>
+</tr>                    

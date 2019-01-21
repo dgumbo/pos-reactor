@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Edi Batch List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/bill/edibatchaction/0' }"><span class="glyphicon glyphicon-plus" title = "Add New"></span></a></div>
+                </div>
+                <form method="get" th:action="@{'/bill/edibatch' }" th:object="${ediBatch}" class="form-inline">
+
+                   <div class="form-group">
+                        <label>From</label>
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                     </div>
+                           <div class="form-group">
+                        <label>To</label>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>  
+                           </div>
+                           <div class="form-group">
+                        <label>Institution</label>
+                        <select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{institution}" >
+                            <option data-th-each="institution : ${institutions}" th:value="${institution.id}" th:text="${institution.name}"></option>
+                        </select></div>  
+                           <div class="form-group">
+                        <label>Ahfoz</label>
+                        <select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{ahfoz}" >
+                            <option data-th-each="ahfoz : ${ahfozs}" th:value="${ahfoz}" th:text="${ahfoz}"></option>
+                        </select> 
+                           </div>
+                           <div class="form-group">
+                        <label>Unit</label>
+                        <select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{unit}" >
+                            <option value="" >All</option>
+                            <option data-th-each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                        </select> 
+                           </div>
+                            <div class="form-group"> 
+                            <button type="submit" class="btn btn-success">Search</button>
+                   </div>
+                </form>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Batch Number</th>
+                        <th>Date</th>
+                        <th>Unit</th>
+                        <th>Status</th>
+                        <th>Done By</th>
+                        <th>Active</th>
+                    </tr>
+                    <tr data-th-each="ediBatch : ${ediBatchs}">
+                        <td><a th:href="@{'/bill/edibatchaction/' + ${ediBatch.id}}"><span class="glyphicon glyphicon-folder-open" title = "View"></span></a>&nbsp;&nbsp;&nbsp;<a th:if="${ediBatch.batchStatus == T(zw.co.psmi.hms.edi.entity.BatchStatus).CREATED}" th:onclick="'cancelEdiBatch(\''+${ediBatch.batchNumber}+'\','+${ediBatch.id}+')'"><span class="glyphicon glyphicon-remove-sign" style='color:#ff0000' title="Cancel"></span></a>&nbsp;&nbsp;&nbsp;<a  th:if="${ediBatch.batchStatus != T(zw.co.psmi.hms.edi.entity.BatchStatus).CANCELLED}" th:onclick="'printEdiBatch('+ ${ediBatch.id}+')'"><span class="glyphicon glyphicon-print" title = "Print"></span></a></td>
+                        <td data-th-text="${ediBatch.batchNumber}">...</td>
+                        <td data-th-text="${ediBatch.creationTime}">...</td>
+                        <td data-th-text="${ediBatch?.unit?.name}">...</td>
+                        <td data-th-text="${ediBatch.batchStatus}">...</td>
+                        <td data-th-text="${ediBatch.createdByUser}">...</td>
+                        <td ><div th:if="${ediBatch.activeStatus}"> Yes </div><div th:if="${!ediBatch.activeStatus}">No</div></td>
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+            </div>
+        </div>
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html> 

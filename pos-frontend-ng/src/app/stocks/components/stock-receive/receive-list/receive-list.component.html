@@ -1,0 +1,69 @@
+<div class="add-margin flex flex-direction-column container">
+  <div class="title">
+    <h1>Received Stock List</h1>
+  </div>
+
+  <div class="add-margin">
+    <button mat-stroked-button color="primary" [routerLink]="['..','stock-receive','receive']" >Receive Stock</button>
+  </div>
+
+  <br/>
+
+  <!-- List of new Stock Receipts -->
+  <div class="add-margin"> 
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"> 
+      <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element"> 
+            <button [routerLink]="['..','stock-receive','preview', element.id ]" mat-button color="warn">Preview</button>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element"> {{element.receiveDateTime | date : 'dd MMM yyyy HH:mm'}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element"> {{ element.receiveStatus }} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="receiveCountItems">
+        <th mat-header-cell *matHeaderCellDef> Item Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.stockReceiveItems.length }} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="receiveTotalCost">
+        <th mat-header-cell *matHeaderCellDef> Total Cost </th>
+        <td mat-cell *matCellDef="let element"> {{element.totalCost | currency }} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="remarks">
+        <th mat-header-cell *matHeaderCellDef> Remarks </th>
+        <td mat-cell *matCellDef="let element"> {{ element.remarks }} </td>
+      </ng-container> 
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef> User </th>
+        <td mat-cell *matCellDef="let element"> {{ element.createdByUser }} </td>
+      </ng-container> 
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+</div>
+ 

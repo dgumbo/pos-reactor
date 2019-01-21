@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Create New Stock Update</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+
+                <div class="danger"  th:if="${not stockCounts.isEmpty()}">
+                    Please enter the following counts before stock update!
+                </div>
+                <table class="table"  th:if="${not stockCounts.isEmpty()}">
+              
+                    <tr>
+                        <th>Name</th>
+                        <th>Batch Number</th>
+                        <th>Location</th>
+                    </tr>
+                    <tr data-th-each="stockCount : ${stockCounts}">
+                        <td data-th-text="${stockCount.stockType.name}">...</td>
+                        <td data-th-text="${stockCount.batchNumber}">...</td>
+                        <td data-th-text="${stockCount.location.locationName.name}">...</td>
+                    </tr>
+                </table>
+                <div th:if="${stockCounts.isEmpty()}">
+                <form id="formu" name="formu" action="#" th:action="@{/stocks/stockupdateform}" th:object="${stockTransaction}" method="post">                
+
+                    <input type="hidden" class="form-control" th:field="*{booksStockId}"  />
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${stockTransaction.booksStockId > 0}" ><input  type="submit" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)" value="Submit" class="btn btn-primary" /></div></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/stocks/stockupdate/}"  class="btn btn-primary">Cancel</a></div>
+                    </div>                
+                </form> </div>
+            </div>  
+        </div>
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

@@ -1,0 +1,33 @@
+<h2 mat-dialog-title *ngIf="newForm" >Add Payment Type {{ paymentType.name ? ' - ' + paymentType.name : '' }}</h2>
+<h2 mat-dialog-title *ngIf="!newForm" >Edit Payment Type Details - {{ paymentType.name }}</h2>
+<mat-dialog-content>
+  <mat-card class="add-margin">
+    <mat-card-content> 
+
+
+      <!-- Name -->
+      <div class="form-group row">
+        <label for="paymentType.name" class="col-sm-4 col-form-label">Name : </label>
+        <div class="col-sm-8">
+          <input class="form-control" placeholder="name"  name="paymentType.name"
+            [(ngModel)]="paymentType.name">
+        </div>
+      </div> 
+
+      <!-- defaultPaymentType -->
+      <div class="form-group row">
+        <label for="paymentType.defaultPaymentType" class="col-sm-4 col-form-label">Default Payment Type: </label>
+        <div class="col-sm-8 input-group">
+          <mat-checkbox [(ngModel)]="paymentType.defaultPaymentType"></mat-checkbox>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</mat-dialog-content>
+
+<div class="spacer"></div>
+<mat-dialog-actions class="dialog-footer ml ml-a" style="margin-left:auto;">
+  <button mat-raised-button color="primary" (click)="returnPaymentType()">Add Payment type</button>
+  <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+</mat-dialog-actions>

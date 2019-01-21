@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 >Update Bill Dates</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form id="formu" name="formu" action="#" th:action="@{/bill/billlistform}" th:object="${bill}" method="post"  onchange="validateform();">
+                  <input  class="form-control" type="hidden" th:field="*{id}" /> 
+                  <div >
+                      <div class="row">
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Patient Number:</label> <span th:utext="*{patient.number}"></span></div>
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Patient Name:</label> <span th:utext="*{patient.fullname}"></span></div>
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Date Of Birth:</label> <span th:utext="*{patient.dateOfBirth}"></span></div>
+                      </div>   
+                      <div class="row">
+                          <div class="col-lg-4 col-md-4 col-sm-4" ><label>Gender:</label> <span th:utext="*{patient.gender.name}"></span></div>
+                          <div class="col-lg-8 col-md-8 col-sm-8" ></div>
+                      </div>         
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td></td>
+                            <th>Cash</th>
+                            <th>Insurance</th>
+                            <th>Shortfall</th>
+                            <th>Special Contract</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <th>Payable</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{insurancePayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{specialContractPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{grossAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Paid</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{insurancePaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{specialContractPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{paidAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Owing</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{insuranceOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{specialContractOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{owingAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Refund</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{insuranceRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{specialContractRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{refundAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Refunded</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashRefunded}" /></td>
+                            <td></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallRefunded}" /></td>
+                            <td></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{refundedAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Refund Available</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashRefundAvailable}" /></td>
+                            <td></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallRefundAvailable}" /></td>
+                            <td></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{refundAvailable}" /></td>
+                        </tr>
+                    </table>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Bill Start Date Time </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><input type="text"  class="form-control" th:field="*{billingStartDateTime}" /> <div class="help-block with-errors"></div></div> </div>
+                            </div>                  
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Bill End Date Time</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><input type="text"  class="form-control" th:field="*{billingEndDateTime}" /> <div class="help-block with-errors"></div></div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Bill Start Date Only </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><input type="text"  class="form-control dateOfBirth" th:field="*{billingStartDate}" /> <div class="help-block with-errors"></div></div> </div>
+                            </div>                  
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Bill End Date Only</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><input type="text"  class="form-control dateOfBirth" th:field="*{billingEndDate}" /> <div class="help-block with-errors"></div></div></div>
+                            </div>
+               <table class="table" id="tableBill">
+                <tr>
+                  <th>Action</th>
+                  <th>Service</th>
+                  <th>Tariff Code</th>
+                  <th>Modifier</th>
+                  <th>Quantity</th>   
+                  <th>Start Date</th>   
+                  <th>End Date</th>   
+                  <th>Unit Cost</th>     
+                  <th>Authorisation Amount</th>   
+                  <th>Cost</th>                              
+                </tr>
+                 <tr th:each="billItem , rowStat: *{billItem}">                  
+                  <td ><select class="form-control" th:id="'billItem'+${rowStat.index}+'.activeStatus'"  th:name="'billItem['+${rowStat.index}+'].activeStatus'" >
+                          <option value="1" th:selected="${billItem.activeStatus == true}" >Yes</option>    
+                          <option value="0" th:selected="${billItem.activeStatus == false}" >No</option>    
+                      </select><input type="hidden" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].id}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].allowEdit}" />
+                      <input type="hidden" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].service.id}" />
+                      <input type="hidden" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].cashOnly}" /></td>
+                  <td th:text="${billItem.service.name}"></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].tariffCode}" /></td>
+                  <td ><input type="text"  class="form-control" th:field="*{billItem[__${rowStat.index}__].modifier}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].quantity}" /></td>
+                  <td ><input type="text"  class="form-control dateOfBirth" th:field="*{billItem[__${rowStat.index}__].billStartDate}" /></td>
+                  <td ><input type="text"  class="form-control dateOfBirth" th:field="*{billItem[__${rowStat.index}__].billEndDate}" /></td>
+                  <td ><input type="text" th:readonly="${billItem.allowEdit == null or billItem.allowEdit == false}"  class="form-control" th:field="*{billItem[__${rowStat.index}__].unitCost}" th:onchange="'calcCostFromUnit('+${rowStat.index}+')'" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].authorisationAmount}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].cost}" /></td>
+                </tr>
+                </table>
+                        <br /> 
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="submit"  name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)" value="Submit" class="btn btn-primary" /></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/bill/billlist/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

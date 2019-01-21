@@ -1,0 +1,38 @@
+section {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    padding-top: 5px;
+}
+
+section :first-child { 
+    padding-top: 0px;
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-button {
+    margin: 16px 8px;
+    padding: 10px; 
+}
+
+.mat-header-cell {
+    font-size: 12px; 
+    border-right : 0.5px solid #f3f4f6 ;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-weight: bold;
+}
+
+.mat-cell, .mat-footer-cell {
+    font-size: 10px;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-right : 0.5px solid #f3f4f6 ;
+}
+
+td.mat-cell:first-child, td.mat-footer-cell:first-child, th.mat-header-cell:first-child {
+    padding-left: 2px;
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Bill Rejected Correction</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/bill/billrejectedform}" th:object="${bill}" method="post">
+                  <input  class="form-control" type="hidden" th:field="*{id}" /> 
+                  <input  class="form-control" type="hidden" th:field="*{ediBatch}" /> 
+                  <input  class="form-control" type="hidden" th:field="*{billRejected}" /> 
+             <!--     <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Patient</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{patient}"  > 
+                                        <option value="">Change Patient Details</option>
+                                     <option th:each="patient : *{patients}" th:value="${patient.id}" th:text="${patient.fullname}">....</option> 
+                                    </select></div>
+                            </div>-->
+                  <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Patient Insurance</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{patientInsurance}"  > 
+                                        <option value="">Change Insurance Details</option>
+                                     <option th:each="patientInsurance : *{patientInsurances}" th:value="${patientInsurance.id}" th:text="${patientInsurance.insurance.name}+' - '+${patientInsurance.plan.name}+' - '+${patientInsurance.suffix.name}+' - '+${patientInsurance.memberNumber}">....</option> 
+                                    </select></div>
+                            </div> 
+                  <div class="panel panel-info">
+  <div class="panel-heading">
+      <h3 class="panel-title">Bill Form</h3>
+  </div>
+  <div class="panel-body" >
+                  
+                        <br /> 
+               <table class="table" id="tableBill">
+                <tr>
+                  <th>Action</th>
+                  <th>Name</th>
+                  <th>Tariff Code</th>
+                  <th>Quantity</th>   
+                  <th>Start Date</th>   
+                  <th>End Date</th>   
+                  <th>Unit Cost</th>     
+                  <th>Cost</th>     
+                  <th>Dispensing Fee</th>    
+                  <th>Vat</th>     
+                  <th>TotalCost</th>                      
+                  <th>Authorisation Amount</th>                  
+                </tr>
+                 <tr th:each="billItem , rowStat: *{billItem}">                  
+                     <td ><input type="checkbox" th:checked="${billItem.activeStatus}" class="form-control" th:id="'billItem'+${rowStat.index}+'.activeStatus'"  th:name="'billItem['+${rowStat.index}+'].activeStatus'" th:value="${billItem.activeStatus}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].id}" /></td>
+                   <td th:if="${billItem.service != null}" th:text="${billItem.service?.name}"></td>
+                   <td th:unless="${billItem.service != null}"  th:text="${billItem.stockType?.name}"></td>
+                  <td ><input type="text"  class="form-control" th:field="*{billItem[__${rowStat.index}__].tariffCode}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].quantity}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].billStartDate}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].billEndDate}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].unitCost}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].cost}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].dispensingFee}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].vat}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].totalCost}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{billItem[__${rowStat.index}__].authorisationAmount}" /></td>
+                </tr>
+                </table>  
+                     <table class="table" >
+                        <tr>
+                             <td id="authoTable"></td>
+                            <th>Athorisation Number</th> 
+                            <td><div class="form-group"><input class="form-control" type="text" th:field="*{authorisationNumber}"  data-empty-error="Athorisation Number cannot be empty" /><div class="help-block with-errors"></div></div></td>
+                            <th>Athorisation Amount</th>
+                            <td><input class="form-control" type="text" th:field="*{authorisationAmount}" readonly="readonly" /></td>
+                             <td><input class="btn btn-warning" type="button" onclick="getAuthorisationCode()" value="Fetch Authorisation Code" /></td>
+                        </tr>
+                     </table>
+                    <table class="table">
+                        <tr>
+                            <td></td>
+                            <th>Cash</th>
+                            <th>Insurance</th>
+                            <th>Shortfall</th>
+                            <th>Special Contract</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <th>Payable</th>
+                            <td><input type="hidden" class="form-control" th:field="*{id}"/>
+                                <input readonly="readonly" class="form-control" type="text" th:field="*{cashPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{insurancePayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{specialContractPayable}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{grossAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Paid</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{insurancePaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{specialContractPaid}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{paidAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Owing</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{insuranceOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{specialContractOwing}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{owingAmount}" /></td>
+                        </tr>
+                        <tr>
+                            <th>Refund</th>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{cashRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{insuranceRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{shortfallRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{specialContractRefund}" /></td>
+                            <td><input readonly="readonly" class="form-control" type="text" th:field="*{refundAmount}" /></td>
+                        </tr>
+                    </table>                          
+  </div></div>
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="submit"  name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)" value="Submit" class="btn btn-primary" /></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/bill/billrejected/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Quotation List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/patient/patient' }"><span class="glyphicon glyphicon-plus"></span></a> <a th:href="@{'/psp/sellaction/0' }"><span class="glyphicon glyphicon-indent-left"></span></a></div>
+                </div> 
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <form method="get" th:action="@{'/psp/quotation' }" onchange="this.submit()" th:object="${quotation}" class="form-inline"> 
+                            <div class="form-group">
+                        <label>From</label>
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                     </div>
+                           <div class="form-group">
+                        <label>To</label>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>  
+                           </div>
+                            <button type="submit" class="btn btn-success">Search</button> 
+                        </form>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Quotation Number</th> 
+                        <th>Bill Category</th>
+                        <th>Date</th>     
+                        <th>Patient</th>    
+                        <th>Gross</th>                     
+                    </tr>
+                    <tr data-th-each="quotation : ${quotations}">
+                        <td><a th:href="@{'/psp/sellaction/0?quotationNumber=' + ${quotation.quotationNumber}}"><span class="glyphicon glyphicon-random"></span></a>  &nbsp;&nbsp; <a th:onclick="'printQuotation('+ ${quotation.id}+')'"><span class="glyphicon glyphicon-print"></span></a> </td>
+                         <td data-th-text="${quotation.quotationNumber}">...</td>
+                        <td data-th-text="${quotation.billCategory}">...</td> 
+                        <td data-th-text="${quotation.quotationDate}">...</td>
+                        <td data-th-text="${quotation?.patient?.fullname}">...</td>
+                        <td data-th-text="${quotation.grossAmount}">...</td>
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+
+            </div>
+        </div>
+
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

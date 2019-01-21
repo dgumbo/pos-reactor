@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Create New Returned Drug</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/psp/returneddrugform}" th:object="${returnedDrug}" method="post">
+                       <div >
+                   <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg3"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Product</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input class="form-control" type="text" onkeyup="getGenericStockTypesBySearch3()" id="genericStockTypeText"  placeholder="Search Product List" /><div id="genericStockTypeList"  >  </div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Quantity</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="quantity3"  oninput="this.value = getPositiveInt(this.value)"  /></div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addReturnedDrugTable()" class="btn btn-success" /></div>
+                            </div>
+                        <br /> 
+             </div>
+               <table class="table" id="table3">
+                <tr>
+                  <th>Action</th>
+                  <th>Product Item</th>
+                  <th>Quantity</th>                              
+                </tr>
+                 <tr th:each="returnedDrugs , rowStat: *{returnedDrugs}">
+                  
+                  <td ><input type="hidden" readonly="readonly"  class="form-control" th:field="*{returnedDrugs[__${rowStat.index}__].id}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{returnedDrugs[__${rowStat.index}__].stockType}" /></td> 
+                  <td th:text="${returnedDrugs.stockType.name}"></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{returnedDrugs[__${rowStat.index}__].quantity}" /></td>
+                </tr>
+                </table>          
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="submit" value="Submit" class="btn btn-primary" /></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/psp/returneddrug/}"  class="btn btn-primary">Cancel</a></div>
+                    </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+        </div>            
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html> 

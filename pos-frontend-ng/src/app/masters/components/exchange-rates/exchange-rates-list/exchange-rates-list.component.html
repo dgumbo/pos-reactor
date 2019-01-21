@@ -1,0 +1,54 @@
+<div class="add-margin flex flex-direction-column container">
+  <div class="title">
+    <h1>Exchange Rates</h1>
+  </div>
+
+  <div class="add-margin">
+    <button mat-button color="primary" (click)="addNewGlobalExchangeRate()">
+      <span class="fa fa-plus"></span>
+      Add Exchange Rate
+    </button>
+  </div>
+
+
+  <!-- List of new Stock Receipts -->
+  <div class="add-margin"> 
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"> 
+      <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element"> 
+            <button mat-button color="warn" (click)="editGlobalExchangeRate(element)">
+              <span class="fa fa-pencil"></span>
+            </button>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="currency">' 
+        <th mat-header-cell *matHeaderCellDef>Currency</th>
+        <td mat-cell *matCellDef="let element"> {{element.currency }} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="currencyRate">
+        <th mat-header-cell *matHeaderCellDef> Currency Rate </th>
+        <td mat-cell *matCellDef="let element"> {{element.currencyRate}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="bondRate">
+        <th mat-header-cell *matHeaderCellDef> Bond Rate </th>
+        <td mat-cell *matCellDef="let element"> {{ element.bondRate }} </td>
+      </ng-container> 
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+</div>

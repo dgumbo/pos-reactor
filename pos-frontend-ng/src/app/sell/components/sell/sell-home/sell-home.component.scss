@@ -1,0 +1,31 @@
+@import 'app/app.component.scss';
+
+.cart {
+  min-width: 400px; 
+}
+
+ .items {
+  min-width: 400px; 
+}
+
+.content {
+  flex-wrap: wrap;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+@media screen and (min-width: 425px) {
+  .items , .cart , .bottom-content {
+    width: 92%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .items , .cart {
+    width: 45%;
+  }
+  .bottom-content {
+    width: 92%;
+  }
+}

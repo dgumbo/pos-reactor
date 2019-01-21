@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>zw.co.hisolutions.pos</groupId>
+        <artifactId>pos-parent</artifactId> 
+        <version>1.0.0</version>
+    </parent> 
+ 
+    <artifactId>pos-frontend-ng</artifactId>  
+    <packaging>war</packaging> 
+
+    <name>pos-frontend-ng</name>
+
+    <properties> 
+        <argLine>-XX:MaxMetaspaceSize=256m</argLine>
+    </properties> 
+
+    <build>
+        <sourceDirectory>./src</sourceDirectory>     
+        <testSourceDirectory>.</testSourceDirectory>
+    
+        <resources>      
+            <resource>
+                <directory>ui-src</directory>
+            </resource> 
+        </resources>
+    
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>ui-src</directory>
+                            <includes>
+                                <include>*</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>  
+            
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.6</version> 
+        
+                <executions> 
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <!--See https://nodejs.org/en/download/ for latest node and npm (lts) versions-->                              
+                            <nodeVersion>v11.6.0</nodeVersion>
+                            <npmVersion>6.5.0</npmVersion> 
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <!--Optional configuration which provides for running any npm command--> 
+                        <configuration>
+                            <arguments>install</arguments>
+                            <!--<arguments>audit fix</arguments>-->
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build-prod</arguments>
+                        </configuration>
+                    </execution>      
+                </executions> 
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,46 @@
+<h2 mat-dialog-title *ngIf="newForm" >Add Exchange Rate {{ globalExchangeRate.currency ? ' - ' + globalExchangeRate.currency : '' }}</h2>
+<h2 mat-dialog-title *ngIf="!newForm" >Edit Exchange Rate Details - {{ globalExchangeRate.currency }}</h2>
+<mat-dialog-content>
+  <mat-card class="add-margin">
+    <mat-card-content>
+ 
+      <!-- classification -->
+      <div class="form-group row">
+        <label for="globalExchangeRate.classification" class="col-sm-4 col-form-label">Currency : </label>
+        <div class="col-sm-8">
+          <select class="form-control" name="globalExchangeRate.currency" [(ngModel)]=" globalExchangeRate.currency" [disabled]="!newForm">
+            <option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</option>
+          </select>
+        </div>
+      </div>
+
+
+      <!-- Name -->
+      <div class="form-group row">
+        <label for="globalExchangeRate.currencyRate" class="col-sm-4 col-form-label">{{ globalExchangeRate.currency }}
+          Value
+          : </label>
+        <div class="col-sm-8">
+          <input class="form-control" placeholder="currencyRate" type="number" step="0.01" name="globalExchangeRate.currencyRate"
+            [(ngModel)]="globalExchangeRate.currencyRate">
+        </div>
+      </div>
+
+      <!-- address -->
+      <div class="form-group row">
+        <label for="globalExchangeRate.bondRate" class="col-sm-4 col-form-label">Bond Value : </label>
+        <div class="col-sm-8 input-group">
+          <input class="form-control" placeholder="bondRate" type="number" step="0.01" name="globalExchangeRate.bondRate"
+            [(ngModel)]="globalExchangeRate.bondRate">
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</mat-dialog-content>
+
+<div class="spacer"></div>
+<mat-dialog-actions class="dialog-footer ml ml-a" style="margin-left:auto;">
+  <button mat-raised-button color="primary" (click)="ReturnExchangeRate()">Add Exchange Rate</button>
+  <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+</mat-dialog-actions>

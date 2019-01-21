@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Bill Rejected List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="pop" id="helpHtml"></div>
+                <div align="right"><a onclick="popHelp(1)"><span class="glyphicon glyphicon-question-sign"></span></a> </div>  
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <form method="get" th:action="@{'/bill/billrejected' }" oninput="ignoreSubmitOnInput()" th:object="${bill}" class="form-inline"> 
+                         <div class="form-group">
+                        <label>From</label>
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                     </div>
+                           <div class="form-group">
+                        <label>To</label>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>  
+                           </div>
+                           <div class="form-group">
+                        <label>Unit</label>
+                        <select class="selectpicker" data-style="btn-default" required="required"  data-live-search="true" th:field="*{unit}" >
+                            <option value="" >All</option>
+                            <option data-th-each="unit : ${bill.units}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                        </select> 
+                           </div>
+                            
+                    <button type="submit" class="btn btn-success">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Patient</th>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Gross Amount</th>
+                        <th>Done By</th>             
+                        <th>Edi Status</th> 
+                        <th>Error 1</th> 
+                        <th>Error 2</th>           
+                        <th>Error 3</th>            
+                        <th>Error 4</th>             
+                        <th>Error 5</th>                                    
+                    </tr>
+                    <tr data-th-each="bill : ${bills}">
+                        <td><a th:href="@{'/bill/billrejectedaction/' + ${bill.id}+'?billRejected='+${#dates.format(startDate, 'yyyy-MM-dd')}+'_'+${#dates.format(endDate, 'yyyy-MM-dd')}+'_'+${bill.unit.id}}"><span class="glyphicon glyphicon-edit" title = "Edit Bill Details"></span></a>&nbsp;&nbsp;&nbsp;<a th:href="'/demographics/patientaction/'+${bill.patient.id}+'?billRejected='+${#dates.format(startDate, 'yyyy-MM-dd')}+'_'+${#dates.format(endDate, 'yyyy-MM-dd')}+'_'+${bill.unit.id}+'&amp;billId='+${bill.id}"><span class="glyphicon glyphicon-retweet" title = "Edit Patient Details"></span></a></td>
+                        <td data-th-text="${bill.billNumber}">...</td>
+                         <td data-th-text="${bill.fullname}">...</td>
+                        <td data-th-text="${bill.creationTime}">...</td>
+                        <td data-th-text="${bill.billCategory}">...</td>
+                        <td data-th-text="${bill.grossAmount}">...</td>
+                        <td data-th-text="${bill.username}">...</td>
+                        <td data-th-text="${bill.ediStatus}">...</td>
+                        <td style="color:red" data-th-text="${bill.errorCode}">...</td>
+                        <td style="color:red" data-th-text="${bill.errorCode1}">...</td>
+                        <td style="color:red" data-th-text="${bill.errorCode2}">...</td>
+                        <td style="color:red" data-th-text="${bill.errorCode3}">...</td>
+                        <td style="color:red" data-th-text="${bill.errorCode4}">...</td>
+
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+
+            </div>
+        </div>
+
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

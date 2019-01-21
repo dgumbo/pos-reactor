@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Purchase Receipt</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{/stocks/requestlist/PURCHASEORDER}"><span class="glyphicon glyphicon-plus" title = "Add Request"></span></a></div>
+                </div>
+                <form th:method="get"  th:action="@{/stocks/purchasereceipt}"  th:object="${stockTransaction}" class="form-inline">
+
+                    <div class="form-group row">
+                        <span class="add-on">From</span>
+                        <input type="text" class="form-control" th:field="*{startDate}" /> 
+                        <span class="add-on">To</span>
+                        <input type="text" class="form-control" th:field="*{endDate}" />  
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                </form>
+               <table class="table">
+               <tr>
+               <th>Action</th>
+                <th>Purchase Receipt Number</th>
+                <th>Location</th>
+                  <th>Creation Date</th>
+                  <th>Created By</th>
+                  <th>Transaction Status</th>
+                  <th>Transaction Cost</th>
+               </tr>
+    <tr data-th-each="stockTransaction : ${stockTransactions}">
+        <td><a th:href="@{'/stocks/purchasereceiptaction/' + ${stockTransaction.id}+'/'+${stockTransaction.stockRequest.id}}"><span class="glyphicon glyphicon-folder-open" title = "View"></span></a>&nbsp; 
+        <a th:onclick="'printPdf(\'/stocks/output/' + ${stockTransaction.id}+'/'+${stockTransaction.stockTransactionType}+'\')'"><span class="glyphicon glyphicon-print" title = "Print"></span></a>
+        </td>
+        <td data-th-text="${stockTransaction.id}">...</td>
+        <td data-th-text="${stockTransaction.locationFrom.locationName.name}">...</td>
+        <td data-th-text="${stockTransaction.creationTime}">...</td>
+        <td data-th-text="${stockTransaction.user}">...</td>
+        <td data-th-text="${stockTransaction.stockTransactionStatus}">...</td>
+        <td data-th-text="${stockTransaction.transactionCost}">...</td>   
+    </tr>
+</table>
+                <!-- Content End Here -->
+            </div>
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

@@ -1,0 +1,32 @@
+<section class="container">
+    <div id="content"> 
+        <h2>Role Unit Selection</h2>
+        <div class="line"></div>
+        <div id="msg"></div>
+        <!-- Content Start Here -->
+        <form  
+            [formGroup]="roleUnitForm"
+            (ngSubmit)="onSubmit()"   >
+            <table class="table">
+                <tr>
+                    <th>Selection</th>
+                    <th>Unit</th>
+                    <th>Role</th>
+                </tr>
+                <tr *ngFor="let roleUserUnit of roleUserUnits" >
+                    <td>
+                        <input type="radio" id="roleunit{{ roleUserUnit.id }}" formControlName="roleunit" required="required" [value]="roleUserUnit"  />
+                    </td>
+                    <td ><label for="roleunit{{ roleUserUnit.id }}">{{ roleUserUnit.unit.name }}</label></td>
+                    <td ><label for="roleunit{{ roleUserUnit.id }}">{{ roleUserUnit.role.name }}</label></td>
+                </tr>
+            </table>               
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2" align="right">
+                    <input class="btn btn-primary" type="submit" value="Select" />
+                </div>
+            </div>
+        </form>
+        <!-- Content End Here -->
+    </div>
+</section> 

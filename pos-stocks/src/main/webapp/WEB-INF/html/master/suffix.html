@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Suffix</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/master/suffixaction/0' }"><span class="glyphicon glyphicon-plus"></span></a></div>
+                </div>
+               <table class="table">
+               <tr>
+               <th>Action</th>
+                <th>Name</th>
+                <th>Active</th>
+               </tr>
+    <tr data-th-each="suffix : ${suffixs}">
+        <td><a th:href="@{'/master/suffixaction/' + ${suffix.getSuffixID()}}"><span class="glyphicon glyphicon-edit"></span></a></td>
+        <td data-th-text="${suffix.getSuffixName()}">...</td>
+        <td ><div th:if="${suffix.findByActiveStatusTrueStatus() == 1}"> Yes </div><div th:if="${suffix.findByActiveStatusTrueStatus() == 0}">No</div></td>
+    </tr>
+</table>
+                <!-- Content End Here -->
+            </div>
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

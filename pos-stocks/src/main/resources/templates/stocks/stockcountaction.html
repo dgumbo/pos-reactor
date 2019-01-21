@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Create New StockCount</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form id="formu" name="formu" action="#" th:action="@{/stocks/stockcountform}" th:object="${stockCount}" method="post" onchange="validateform()">
+                    <div  th:if="${stockCount.id == 0}" >
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Book Stock</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control"  th:disabled="${stockCount.id > 0}" onchange="getBookStockLines(this)" id="bookStock"  >
+                          <option value="0">Choose Book Stock</option>
+                                                                                  <option th:each="bookStock : ${bookStocks}"
+                                                                                                                                  th:value="${bookStock.id}"
+                                                                                                                                  th:text="${bookStock.id+' '+bookStock.bookStockDate+' '+bookStock.number+' '+bookStock.user+' '+bookStock.notes}">....</option>  </select><input type="hidden" class="form-control" th:field="*{id}"  /></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Active</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select  th:disabled="${stockCount.id > 0}" class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{activeStatus}" >
+							    <option value="0" >No</option>
+							    <option value="1" >Yes</option>
+							 </select></div>
+                </div>
+                    </div>
+                <table class="table" id="table">
+                <tr>
+                  <th>Name</th>
+                  <th>Location</th>
+                  <th>Batch Number</th>
+                  <th>Expiry Date</th>
+                  <th>Count</th>
+                </tr>
+                <tr th:each="stockCountLines , rowStat: *{stockCountLines}">
+                  
+                  <td th:text="*{stockCountLines[__${rowStat.index}__].currentStock.stockType.name}" th:title="*{stockCountLines[__${rowStat.index}__].currentStock.stockType.name}"><input type="hidden"  class="form-control" readonly="readonly" th:field="*{stockCountLines[__${rowStat.index}__].currentStock.stockType.name}" th:title="*{stockCountLines[__${rowStat.index}__].currentStock.stockType.name}" /></td>
+                  <td ><input type="text"  class="form-control" readonly="readonly" th:field="*{stockCountLines[__${rowStat.index}__].currentStock.location.locationName.name}" /></td>
+                  <td ><input type="text"  class="form-control" readonly="readonly" th:field="*{stockCountLines[__${rowStat.index}__].currentStock.batchNumber}" /></td>
+                  <td ><input type="text"  class="form-control" readonly="readonly" th:field="*{stockCountLines[__${rowStat.index}__].currentStock.expiryDate}" /></td>
+                  <td ><input type="text"  class="form-control" readonly="readonly" th:field="*{stockCountLines[__${rowStat.index}__].count}"  /></td>
+                </tr>
+                
+                </table> <div class="form-group">    
+       <input type="hidden" validate="1"  min="1" data-empty-error="Cannot be empty" data-min-error="Please enter at least one Count value" class="form-control" name="tableCount" id="tableCount" value="0"  required="required" /><div class="help-block with-errors"></div></div>   
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${stockCount.id == 0}" ><input type="submit" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)" value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/stocks/stockcount/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+        <script type="text/javascript">validateform();</script>
+ </body>
+</html>

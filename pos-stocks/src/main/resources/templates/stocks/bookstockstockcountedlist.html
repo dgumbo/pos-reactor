@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Book Stock - Stock Counted List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->  
+                <form th:method="get"  th:action="@{'/stocks/bookstockstockcountedlist/'}"  th:object="${bookStock}" class="form-inline">
+
+                    <div class="form-group row">
+                        <input type="text" class="form-control" th:field="*{startDate}" /> 
+                        <span class="add-on">To</span>
+                        <input type="text" class="form-control" th:field="*{endDate}" /> 
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                </form>
+               <table class="table" id="table">
+               <tr>
+               <th>Action</th>       
+               <th>Book Stock ID</th> 
+               <th>Book Stock Created By</th>  
+               <th>Book Stock Number</th>               
+               <th>Book Stock Creation Date</th> 
+               <th>Book Notes</th>     
+               </tr>
+                <tr data-th-each="bookStock,stat : ${bookStocks}" >
+                    <td><a th:href="@{'/stocks/stockupdateaction/0/' + ${bookStock.id}}"><span class="glyphicon glyphicon-transfer" title ="Stock Update"></span></a></td>                   
+                    <td th:text="${bookStock.id}"></td>                    
+                    <td th:text="${bookStock.user}"></td>                    
+                    <td th:text="${bookStock.number}"></td>                    
+                    <td th:text="${bookStock.bookStockDate}"></td>              
+                    <td th:text="${bookStock.notes}"></td>                
+                </tr>
+            </table>              
+            </div>  
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

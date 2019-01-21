@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Create New Book Stock</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+            <form action="#" id="formu" name="formu" th:action="@{/stocks/bookstockform}" th:object="${bookStock}" method="post"  onchange="validateform()">                
+               <div class="row">
+                   <div class="col-lg-12 col-md-12 col-sm-12">Notes</div>
+                   <div th:if="${bookStock.id == 0}">
+                        <input type="text" class="form-control" th:field="*{notes}"/> 
+                   </div>
+                   <div th:if="${bookStock.id > 0}">
+                       <input type="text" readonly="readonly" class="form-control" th:field="*{notes}"/> 
+                   </div>
+                </div>
+               <table class="table" data-th-each="bookStockLocation,st1 : *{bookStockLocations}">
+                   <tr>
+                       <td><input th:if="${bookStock.id == 0}" type="checkbox" name="defaultCheckBox" 
+                                                                  onchange="var table= this.closest('table');
+                                                                      $('td input:checkbox',table).prop('checked',this.checked);checkboxValidator('formu');" /></td>
+                       <td colspan="2" align='left'><a th:href="'#bookStockLocation'+${st1.index}" data-toggle="collapse" aria-expanded="false" th:text="${bookStockLocation.locationName}"></a></td>
+                   </tr>  
+                   <tbody class="collapse"  th:id="'bookStockLocation'+${st1.index}">    
+               <tr>
+                  <th>Choose</th>
+                <th>Location Name</th>
+                <th>Product description/Material name</th>
+               </tr>
+                <tr data-th-each="bookstocklockview,stat : ${bookStockLocation.stocks}">
+                    
+                    <td><div  th:if="${bookStock.id == 0}" > 
+                          <input type="checkbox" th:field="*{bookStockLocations[__${st1.index}__].stocks[__${stat.index}__].lock}"  onchange="checkboxValidator('formu')" /> 
+                            <input type="hidden" th:field="*{bookStockLocations[__${st1.index}__].stocks[__${stat.index}__].genericStockTypeId}" readonly="readonly" /> 
+                            <input type="hidden" th:field="*{bookStockLocations[__${st1.index}__].stocks[__${stat.index}__].locationId}" readonly="readonly" /></div></td>                   
+                   <td th:text="*{bookStockLocations[__${st1.index}__].stocks[__${stat.index}__].locationName}"> </td>
+                    <td th:text="*{bookStockLocations[__${st1.index}__].stocks[__${stat.index}__].genericStockTypeName}"> </td>  
+                    
+                </tr>
+                   </tbody>
+            </table>
+                 <div class="form-group">    
+       <input type="hidden" validate="1"  min="1" data-empty-error="Cannot be empty" data-min-error="Please tick at least one Stock Generic Item" class="form-control" name="tableCount" id="tableCount" value="0"  required="required" /><div class="help-block with-errors"></div></div>
+                 <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${bookStock.id == 0}" ><input type="submit" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)" value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/stocks/bookstock/}"  class="btn btn-primary">Cancel</a></div>
+                </div>                
+              </form> 
+            </div>  
+                    </div>                
+<div th:replace ="footer::footer"></div>
+<script th:utext="${msg}"></script>
+<script type="text/javascript">validateform();</script>
+</body>
+</html>

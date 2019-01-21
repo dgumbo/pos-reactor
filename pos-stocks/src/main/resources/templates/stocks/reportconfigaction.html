@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Report Configuration</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/stocks/reportConfigForm}" th:object="${reportConfig}" method="post">                                                                                                          
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Name</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <input type="hidden" class="form-control" th:field="*{id}"  />
+                            <input type="text" class="form-control" th:field="*{name}"  />
+                        </div>
+                    </div>      
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Column Names</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <input type="text" class="form-control"   th:field="*{columns}"/>
+
+
+                        </div>
+                    </div>
+<!--                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">hql Query</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <input type="text" class="form-control"   th:field="*{hqlQuery}"/>
+                        </div>
+                    </div>-->
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">native Query</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <input type="text" class="form-control"   th:field="*{nativeQuery}"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Unit Query</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <select class="form-control"  th:field="*{unitQuery}" >
+                                <option value="false" >false</option>
+                                <option value="true" selected='selected'>true</option>
+                            </select>
+                        </div>
+                    </div>                    
+
+
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Report Configuration name</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input type="text" class="form-control" id="reportConfigname" name ="reportConfigname"  />
+
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Default value</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input type="text" class="form-control" id="defaultValue" name ="defaultValue"  />
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Report Parameter Types</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <select class="form-control"  id="reportParameterType" name="reportParameterType" >
+                                    <option value="">Parameter Types</option>
+                                    <option th:each="reportParameterType : ${reportParameterType}"
+                                            th:value="${reportParameterType }"
+                                            th:text="${reportParameterType}">....</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12" align="center">
+                                <input type="button" value="Add To Table" onclick="addReportParameterToConfigurationTable()" class="btn btn-success" />
+                            </div>
+                        </div>
+                        <br />
+                        <table class="table" id="table">
+                            <tr>
+                                <th>Report Configuration name</th>
+                                <th>Default value</th>
+                                <th>Parameter Type</th>
+                            </tr>
+                            <tr th:each="reportConfigParameters , rowStat: *{reportConfigParameters}">
+                                <td style="display:none;"><input type="text"  class="form-control" th:field="*{reportConfigParameters[__${rowStat.index}__].id}" /></td>
+                                <td ><input type="text"   class="form-control" th:field="*{reportConfigParameters[__${rowStat.index}__].name}" /></td>
+                                <td ><input type="text"   class="form-control" th:field="*{reportConfigParameters[__${rowStat.index}__].defaultValue}" /></td>
+                                <td ><input type="text"   class="form-control" th:field="*{reportConfigParameters[__${rowStat.index}__].parameterType}" /></td>
+                            </tr>
+                        </table>
+                    </div>  
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="submit" value="Submit" class="btn btn-primary" /></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/stocks/reportconfig/}"  class="btn btn-primary">Cancel</a></div>
+                    </div>
+
+                </form>
+                <!-- Content End Here -->
+            </div>
+        </div>            
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

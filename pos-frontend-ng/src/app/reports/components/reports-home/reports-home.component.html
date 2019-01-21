@@ -1,0 +1,54 @@
+<div id="msg"></div>
+<section class="container-fluid" style="margin: 50px;">
+    <h2>Report List</h2>
+    <div class="line"></div>
+    <!-- Content Start Here -->
+
+    <table class="table" id="table" *ngIf="!(isLoading$|async)">
+        <tr>
+            <th>Action</th>
+            <th>Report Name</th>
+        </tr>
+        <tr *ngFor="let report of staticReports">
+            <td>
+                <a title="Run {{ report.name }}" [routerLink]="['/reports','static-report-view-by-name', report.name, report.menuFunction]"><i
+                        class="fa fa-list-alt"></i></a>
+            </td>
+            <td>
+                <a title="Run {{ report.name }}" [routerLink]="['/reports','static-report-view-by-name', report.name, report.menuFunction]">{{
+                    report.name }}</a>
+            </td>
+        </tr>
+        <tr *ngFor="let menu of (userReportMenus|async)">
+            <td>
+                <a title="Run {{ menu.name }}" [routerLink]="['/reports/report-view-by-name/', menu.menuFunction.split('/').pop()]"><i
+                        class="fa fa-list-alt"></i></a>
+            </td>
+            <td>
+                <a title="Run {{ menu.name }}" [routerLink]="['/reports/report-view-by-name/', menu?.menuFunction.split('/').pop()]">{{
+                    menu.name }}</a>
+            </td>
+        </tr>
+
+        <tr *ngFor="let report of receiptPrintReports">
+            <td>
+                <a title="Print {{ report.name }}" 
+                    [routerLink]="['/reports', { outlets: {'print': ['print', report.menuFunction] }}]">
+                    <i class="fa fa-list-alt"></i>
+                </a>
+            </td>
+            <td>
+                <button class="btn btn-link" style="padding-left:0;border-left:0px;" title="Print {{ report.name }}"
+                    [routerLink]="['/reports', { outlets: {'print': ['report-receipt-print', report.menuFunction] }}]">
+                    {{ report.name }}
+                </button>
+            </td>
+        </tr>
+    </table>
+
+
+    <mat-spinner *ngIf="(isLoading$|async)">
+
+    </mat-spinner>
+
+</section>

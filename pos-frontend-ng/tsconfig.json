@@ -1,0 +1,32 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./src/",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+//    "noUnusedLocals": true,
+//    "noUnusedParameters": true,
+    "target": "es5",
+    "types": [ "jasmine" ], 
+    "typeRoots": [
+      "../node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    
+    "paths":{
+            "shared/*": [ "app/shared/*" ],
+            "admin/*": [ "app/admin/*" ],
+            "site/*": [ "app/site/*" ],
+            "welcome/*": [ "app/welcome/*" ],
+            "auth/*": [ "app/auth/*" ],
+            "products-and-services/*": [ "app/products-and-services/*" ]
+            }
+  }
+}

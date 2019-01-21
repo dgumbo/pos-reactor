@@ -1,0 +1,82 @@
+<div class="add-margin flex flex-direction-column container">
+  <div class="title">
+    <h1>Currency</h1>
+  </div>
+
+  <div class="add-margin">
+    <button mat-button color="primary" (click)="addNewCurrency()">
+      <span class="fa fa-plus"></span>
+      Add Currency
+    </button>
+  </div>
+
+
+  <!-- List of new Stock Receipts -->
+  <div class="add-margin"> 
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"> 
+      <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element"> 
+            <button mat-button color="warn" (click)="editCurrency(element)">
+              <span class="fa fa-pencil"></span>
+            </button>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">' 
+        <th mat-header-cell *matHeaderCellDef>Currency</th>
+        <td mat-cell *matCellDef="let element"> {{element.name }} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="symbol">' 
+        <th mat-header-cell *matHeaderCellDef>Symbol</th>
+        <td mat-cell *matCellDef="let element"> {{element.symbol }} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="currencyRate">
+        <th mat-header-cell *matHeaderCellDef>Currency Rate </th>
+        <td mat-cell *matCellDef="let element"> {{element.currencyRate | currency }} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="bondRate">
+        <th mat-header-cell *matHeaderCellDef>Bond Rate </th>
+        <td mat-cell *matCellDef="let element"> {{ element.bondRate | currency  }} </td>
+      </ng-container> 
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="ecocashTransferRate">
+        <th mat-header-cell *matHeaderCellDef>Ecocash Transfer Rate </th>
+        <td mat-cell *matCellDef="let element"> {{ element.ecocashTransferRate | currency  }} </td>
+      </ng-container> 
+
+      <!-- Default Currency Column -->
+      <ng-container matColumnDef="defaultCurrency">
+        <th mat-header-cell *matHeaderCellDef>Primary Currency</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox [ngModel]="element.defaultCurrency" onclick="return false;"></mat-checkbox>
+        </td>
+      </ng-container> 
+
+      <!-- displayOnSummary Column -->
+      <ng-container matColumnDef="displayOnSummary">
+        <th mat-header-cell *matHeaderCellDef>Display On Summary</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox [ngModel]="element.displayOnSummary" onclick="return false;"></mat-checkbox>
+        </td>
+      </ng-container> 
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+</div>

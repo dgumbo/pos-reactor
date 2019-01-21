@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Create New / Update Claim Number</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/bill/claimnumberform}" th:object="${claimNumber}" method="post">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Start Claim Number</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" th:field="*{startClaimNumber}"  /><input type="hidden" class="form-control" th:field="*{id}"  /></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">End Claim Number</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" th:field="*{endClaimNumber}"  /></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Ahfoz</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" th:field="*{ahfoz}"  /></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Run Number</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" th:field="*{runNumber}"  /></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Active</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" th:field="*{activeStatus}" >
+                                <option value="0" >No</option>
+                                <option value="1" >Yes</option>
+                            </select></div>
+                    </div>               
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="submit" value="Submit" class="btn btn-primary" /></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/bill/claimnumber/}"  class="btn btn-primary">Cancel</a></div>
+                    </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+        </div>            
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html> 

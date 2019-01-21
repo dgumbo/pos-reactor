@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Institution Deposit List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/bill/institutiondepositaction/0' }"><span class="glyphicon glyphicon-plus" title = "Add New"></span></a></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <form method="get" th:action="@{'/bill/institutiondeposit' }" oninput="ignoreSubmitOnInput()" th:object="${institutionDeposit}" class="form-inline"> 
+                         <div class="form-group">
+                        <label>From</label>
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                     </div>
+                           <div class="form-group">
+                        <label>To</label>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>  
+                           </div>
+                    <button type="submit" class="btn btn-success">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Number</th>
+                        <th>Special Contract</th>
+                        <th>Date</th>
+                        <th>Deposited Amount</th> 
+                        <th>Used Amount</th>     
+                        <th>Available Amount</th>    
+                        <th>Done By</th>                         
+                    </tr>
+                    <tr data-th-each="institutionDeposit : ${institutionDeposits}">
+                        <td><a th:href="@{'/bill/institutiondepositaction/' + ${institutionDeposit.id}}"><span class="glyphicon glyphicon-folder-open" title = "View"></span></a>&nbsp;&nbsp; <a th:onclick="'printInstitutionDeposit('+${institutionDeposit.id}+')'"><span class="glyphicon glyphicon-print" title = "Print"></span></a></td>
+                        <td data-th-text="${institutionDeposit.number}">...</td>
+                        <td data-th-text="${institutionDeposit.institution.name}">...</td>
+                        <td data-th-text="${institutionDeposit.institutionDepositDate}">...</td>
+                        <td data-th-text="${institutionDeposit.paidAmount}">...</td>
+                        <td data-th-text="${institutionDeposit.usedAmount}">...</td>
+                        <td data-th-text="${institutionDeposit.availableAmount}">...</td>
+                        <td data-th-text="${institutionDeposit.username}">...</td>
+
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+
+            </div>
+        </div>
+
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

@@ -1,0 +1,12 @@
+<div class="card">
+  <h5 class="card-header">Stock Item Search Error</h5>
+  <div class="card-body">
+    <h5 class="card-title">Search Error - <span style="color:red; font-size: 110%; font-weight: bolder;">{{data}}</span></h5>
+    <p class="card-text">
+      Stock Item with barcode or name : '<strong><u>{{data}}</u></strong>' was not found.
+    </p>
+    <div class="ml-auto mr-auto">
+      <button style="width:250px;" class="btn btn-primary" (click)="dialogRef.close(null)">Ok</button>
+    </div>
+  </div>
+</div>

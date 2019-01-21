@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}"></h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form id="formu" name="formu" action="#" th:action="@{/stocks/receiptform}" th:object="${stockTransaction}" method="post"  onchange="validateform()">
+                    <input type="hidden" class="form-control" th:field="*{id}"  />
+                    <input type="hidden" class="form-control" th:field="*{stockTransactionType}"  />
+                    <input type="hidden" class="form-control" th:field="*{locationFrom}"  />
+                    <input type="hidden" class="form-control" th:field="*{unitTo}"  />
+                    <input type="hidden" class="form-control" th:field="*{unitFrom}"  />
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Location</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><select  th:disabled="${stockTransaction.id > 0}" class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{locationTo}"  validate="1" data-empty-error="Location cannot be empty" >
+                          <option value="">Select Location</option>
+                          <option th:each="location : ${locations}"
+                          th:value="${location.id}"
+                          th:text="${location.locationName.name}">....</option>  
+                      </select><div class="help-block with-errors"></div> </div></div>
+                </div>
+                    <div class="row" th:if="${stockTransactionType == T(zw.co.psmi.hms.stocks.entity.StockTransactionType).ADJUSTMENT_RECEIPT}">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Stock Movement Description</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" th:disabled="${stockTransaction.id > 0}" th:field="*{stockMovementDescription}"><option th:each="stockMovementDescription : ${stockMovementDescriptions}"
+                                                                                                                                  th:value="${stockMovementDescription.id}"
+                                                                                                                                  th:text="${stockMovementDescription.name}">....</option>  </select></div>
+                     </div>
+                     <div th:if="${stockTransactionType == T(zw.co.psmi.hms.stocks.entity.StockTransactionType).CASH_PURCHASE}">
+                     <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6" align="right">Supplier</div>
+                            <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group">
+                                <select th:disabled="${stockTransaction.id > 0}" class="selectpicker" data-style="btn-default"  data-live-search="true" th:field="*{stockSupplier}"    validate="1" data-empty-error="Supplier cannot be empty">
+                                    <option value="">Select Supplier</option>
+                                    <option th:each="stockSupplier : ${stockTransaction.stockSuppliers}"
+                                    th:value="${stockSupplier.id}"
+                                    th:text="${stockSupplier.name}">....</option>  </select>
+                            <div class="help-block with-errors"></div> </div></div>
+
+                        </div>
+                     </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Remarks</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><textarea   th:readonly="${stockTransaction.id > 0}" class="form-control" th:field="*{remarks}"  validate="1"  data-empty-error="Remarks cannot be empty"></textarea><div class="help-block with-errors"></div></div></div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Total Cost</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><input type="text" readonly="readonly" class="form-control" th:field="*{transactionCost}" /><div class="help-block with-errors"></div></div></div>
+                </div>
+                <div class="well">
+                     <div  th:if="${stockTransaction.id == 0}" >
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg"></div>
+                  </div>                    
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Stock Type</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input class="form-control" type="text" onkeypress="getStockTypeBySearch(this)" />
+                      <select class="selectpicker" data-style="btn-default"  data-live-search="true" id="stockType"  onchange="addReceiptTablePreupdate()">  </select></div>
+                </div>          
+                    
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Quantity</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="quantity" onkeyup="this.value = getPositiveInt(this.value)"  /></div>
+                </div>    
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Last Receipt Cost Rate</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="lastReceiptCostRate" onkeyup="this.value = getPositiveValue(this.value)"  /></div>
+                </div>    
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Weighted Average Cost Rate</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" readonly="readonly" class="form-control" id="hmsWac"  /></div>
+                </div>   
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Vat</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="vat" onkeyup="this.value = getPositiveValue(this.value)" value="0"  /></div>
+                </div>    
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Batch Number</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="batchNumber"  /></div>
+                </div>     
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Expiry Date</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control expiryDate" id="expiryDate"  /></div>
+                </div>       
+                  <div class="row" >
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Is Consignment</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" id="consignment"  >
+                          <option value="0">No</option>
+                          <option value="1">Yes</option>
+                      </select></div>
+                </div>                      
+                 <div class="row">
+                       <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addReceiptTable()" class="btn btn-success" /></div>
+                </div>
+                <br />
+                     </div>
+                <table class="table" id="table">
+                <tr>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                  <th>Last Receipt Cost</th>
+                  <th>Weighted Average Cost</th>
+                  <th>Cost</th>
+                  <th>Vat</th>
+                  <th>Total Cost</th>
+                  <th>Batch Number</th>
+                  <th>Expiry Date</th>
+                  <th>Action</th>
+                  <th>Consignment</th>
+                </tr>
+                <tr th:each="stockTransactionLines , rowStat: *{stockTransactionLines}">
+                  
+                   
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{stockTransactionLines[__${rowStat.index}__].stockType.name}" th:title="*{stockTransactionLines[__${rowStat.index}__].stockType.name}" />
+                      <input type="hidden"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].stockType.id}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].id}" /></td>
+                  <td ><input type="text"  readonly="readonly" class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].quantity}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].lastReceiptCostRate}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].weightedAverageCost}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].cost}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].vat}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].totalCost}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].batchNumber}" /></td>               
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].expiryDate}" /></td>
+                  <td></td>
+                  <td><input type="checkbox"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].consignment}" /></td>
+                </tr>
+                
+                </table>
+                 <div class="form-group">    
+       <input type="hidden" validate="1"  min="1" data-empty-error="Cannot be empty" data-min-error="Please enter a table Stock Item" class="form-control" name="tableCount" id="tableCount" value="0"  required="required" /><div class="help-block with-errors"></div></div>
+                </div>               
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"> <div  th:if="${stockTransaction.id == 0}" ><input type="submit" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)"  value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{'/stocks/receipt/'+${stockTransactionType}}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+        <script type="text/javascript">
+      validateform();</script>
+ </body>
+</html>

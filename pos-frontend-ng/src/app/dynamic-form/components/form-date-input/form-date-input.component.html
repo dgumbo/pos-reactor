@@ -1,0 +1,14 @@
+
+<div class="dynamic-field form-input" 
+     [formGroup]="group">
+  <label>{{ config.label }} : </label>  
+
+    <input 
+        [owlDateTime]="d1" 
+        [owlDateTimeTrigger]="d1" 
+        [attr.placeholder]="config.placeholder"
+        [formControlName]="config.name" >
+     <i [owlDateTimeTrigger]="d1" class="fa fa-calendar"></i> 
+    <owl-date-time [pickerType]="'calendar'" [pickerMode]="'dialog'" #d1></owl-date-time>
+ 
+</div>

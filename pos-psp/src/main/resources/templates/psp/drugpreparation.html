@@ -1,0 +1,48 @@
+<div class="panel panel-primary">
+                     <div class="panel-heading">
+                      <h3 class="panel-title">Product Preparation</h3>
+                      </div>
+                       <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg2"></div>
+                            </div>
+                      <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Name</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" id="pspServiceCharge"  >
+                       <option th:each="drugPreparation : ${drugPreparations}" th:value="${drugPreparation.id}+'****'+${drugPreparation.hmsService.id}+'****'+${drugPreparation.hmsService.name}+'****'+${drugPreparation.tariffCode}+'****'+${drugPreparation.unitCost}+'****'+${drugPreparation.dispensingFee}" th:text="${drugPreparation.hmsService.name}"></option>
+              </select></div>   </div>
+                      <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Instructions</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><textarea  list="instructions" readonly="readonly" class="form-control" id="pspServiceChargeInstructions"  onchange="getCipherProcessed(this)" ></textarea><datalist id="instructions"></datalist></div>
+                            </div>
+                    <div class="well">
+                      <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Product</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input class="form-control" type="text" onkeyup="getStockTypesBySearch4()" id="stockTypeSearch4" placeholder="Search Product List" /><div  id="stockTypeList4"  >  </div></div>
+                            </div>"+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Quantity</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="quantity4"  oninput="this.value = getPositiveInt(this.value)"  /></div>
+                            </div>                       
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addSellTable4()" class="btn btn-success" /></div>
+                            </div>   
+                         <br />
+                    <table class="table" id="table5">
+                     <tr>
+                     <th></th>
+                     <th>Product</th>
+                     <th>Quantity</th>
+                     <th>Unit Cost</th>
+                     <th>Cost</th>
+                     <th>Autho Amount</th>
+                     <th>Dispensing Fee</th>
+                     <th>Vat</th>
+                     <th>Total Cost</th>
+                     </tr>
+                    </table></div>
+                         <div class='row'>
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="button" value="Add To Bill" onclick="addSellBillTable()" class="btn btn-success" /></div>
+                           <div class='col-lg-6 col-md-6 col-sm-6' align='left'><input class='btn btn-success' type='button' name='button2' id='button' value='Close' onclick='dropdownhide(201)' /></div>
+                           </div>
+                    </div></div>

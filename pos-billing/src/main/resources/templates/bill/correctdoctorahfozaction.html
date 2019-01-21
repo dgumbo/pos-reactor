@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}">...</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form id="formu" name="formu" action="#" th:action="@{/bill/correctdoctorahfozform}" th:object="${correctDoctorAhfoz}" method="post"  onchange="validateform();">
+                  <input  class="form-control" type="hidden" th:field="*{id}" /> 
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Start Date</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" readonly="readonly" class="form-control" th:field="*{billStartDate}" id="startDate" /> </div>
+                            </div>   
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">End Date</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" readonly="readonly" class="form-control" th:field="*{billEndDate}" id="endDate" /> </div>
+                            </div>
+                  <div  th:if="${id == 0}" >
+                      <div class="well">    
+                 <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg4"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Doctor</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"> <input class="form-control" type="text" id="doctorText" onkeyup="getDoctorListAhfoz()"  placeholder="Search Doctor List" /><select class="selectpicker" data-style="btn-default"  data-live-search="true" id="doctor" onchange="setDoctorListAhfoz(this)" ></select></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Ahfoz</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="ahfoz"   /></div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" align="right">Ahfoz Psmas</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" class="form-control" id="ahfozPsmas"   /></div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addCorrectDoctorAhfozTable()" class="btn btn-success" /></div>
+                            </div>
+                         </div>
+                  </div>
+                        <br /> 
+               <table class="table" id="table">
+                <tr>
+                  <th>Action</th>
+                  <th>Doctor</th>
+                  <th>Ahfoz</th>   
+                  <th>Ahfoz Psmas</th>            
+                </tr>
+                <tr th:each="correctDoctorAhfozItem , rowStat: *{correctDoctorAhfozItem}">
+                  
+                  <td ><input type="hidden" readonly="readonly"  class="form-control" th:field="*{correctDoctorAhfozItem[__${rowStat.index}__].id}" /><input type="hidden" readonly="readonly"  class="form-control" th:field="*{correctDoctorAhfozItem[__${rowStat.index}__].activeStatus}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{correctDoctorAhfozItem[__${rowStat.index}__].doctor.fullname}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{correctDoctorAhfozItem[__${rowStat.index}__].ahfoz}" /></td>
+                  <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{correctDoctorAhfozItem[__${rowStat.index}__].ahfozPsmas}" /></td>
+                </tr>
+                </table> 
+                 <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${id == 0}" ><input type="submit" onclick="disableSubmit(this)" name="btnSubmit" id="btnSubmit" value="Submit" class="btn btn-primary" /></div></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/bill/correctdoctorahfoz/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

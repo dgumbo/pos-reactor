@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Day End List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/bill/dayendaction/0' }"><span class="glyphicon glyphicon-plus" title = "Add new"></span></a></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <form method="get" th:action="@{'/bill/dayend' }" oninput="ignoreSubmitOnInput()" th:object="${dayEnd}" class="form-inline"> 
+                           <div class="form-group">
+                        <label>Username</label>
+                    <input type="text" class="form-control" th:field="*{username}" /> 
+                           </div>
+                           <div class="form-group">
+                        <label>From</label>
+                    <input type="text" class="form-control" th:field="*{startDate}" /> 
+                           </div>
+                    <div class="form-group">
+                        <label>To</label>
+                    <input type="text" class="form-control" th:field="*{endDate}" />  
+                    </div>
+                    <button type="submit" class="btn btn-success">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Number</th>
+                        <th>Date</th>
+                        <th>Username</th>                         
+                    </tr>
+                    <tr data-th-each="dayEnd : ${dayEnds}">
+                        <td><a  th:href="@{'/bill/dayendaction/'+${dayEnd.id}}"><span class="glyphicon glyphicon-folder-open" title = "View"></span></a>&nbsp;&nbsp;&nbsp; <a th:onclick="'printDayEnd('+ ${dayEnd.id}+')'"><span class="glyphicon glyphicon-print" title = "Print"></span></a></td>
+                       <td data-th-text="${dayEnd.number}">...</td>
+                       <td data-th-text="${dayEnd.creationTime}">...</td>
+                        <td data-th-text="${dayEnd.username}">...</td>
+
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+
+            </div>
+        </div>
+
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Division List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/auth/divisionaction/0' }"><span class="glyphicon glyphicon-plus"></span></a></div>
+                </div>
+               <table class="table">
+               <tr>
+               <th>Action</th>
+                <th>Name</th>
+                <th>Active</th>
+               </tr>
+    <tr data-th-each="division : ${divisions}">
+        <td><a th:href="@{'/auth/divisionaction/' + ${division.id}}"><span class="glyphicon glyphicon-edit"></span></a></td>
+        <td data-th-text="${division.name}">...</td>
+        <td ><div th:if="${division.activeStatus}"> Yes </div><div th:if="${!division.activeStatus}">No</div></td>
+    </tr>
+</table>
+                <!-- Content End Here -->
+            </div>
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

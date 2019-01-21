@@ -1,0 +1,153 @@
+@import 'app/app.component.scss';
+
+$table-main-color: blue ;
+$table-alt-color: #fff ;
+$tr-main-color: skyblue ;
+$tr-alt-color: #fff ;
+
+.ticket-section {
+  min-height: 80vh; 
+  border: 1px solid $main-color;
+  border-radius: 2px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  padding-top:0px;
+}
+
+.heading {
+  color: $main-color;
+  font-family: $main-font;
+}
+
+.table {
+  width: 100%; 
+  font-family: $body-font; 
+  margin-bottom: 3px;
+} 
+
+.table-header {
+  text-align: left;
+  font-family: $body-font;
+  
+  th{
+    border-top: none;
+    background-color: $table-main-color;
+    color: $table-alt-color;
+    font-weight: 900;
+    letter-spacing: 2px;
+  }
+}
+
+.table td, .table th {
+  border: 1px solid $tr-main-color;
+  padding: 8px;
+}   
+
+.table tr:nth-child(odd){ 
+  background-color: $tr-main-color; 
+  td { border-color: $tr-alt-color;} 
+  td:first-child { border-left-color: $tr-main-color;} 
+  td:last-child { border-right-color: $tr-main-color;}
+ }  
+
+ .table tr:nth-child(even){ 
+   background-color: $tr-alt-color; 
+   td { 
+     border-color: $tr-main-color;
+    .quantity{
+        border: 1px solid $tr-main-color;
+      }
+    }  
+  }   
+
+.quantity{
+  border: none;
+  max-width: 100px;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 25px;
+  font-weight: bolder;
+  font-size: 110%;
+  color: #000;
+}  
+
+.del {
+  color: grey;
+}
+
+.del:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.summary {
+  margin-top: auto;
+  margin-bottom: 3px;
+  padding-bottom: 3px;
+}
+
+.total {
+  background-color: orange;
+}
+
+.ecocash-total {
+  background-color: rgb(154, 35, 190);
+}
+
+.time, .static-time {
+  background-color: lightblue;
+}
+ 
+.total , .time, .ecocash-total, .static-time {
+  padding: 0.75rem;
+  font-weight: bolder;
+  font-size: 120%; 
+  letter-spacing: 2px;
+  padding-top: 4px;
+  padding-bottom: 4px; 
+}
+ 
+.buttons{
+    margin-left: auto ;
+    margin-right: auto ;
+}
+
+.cart-buttons.clear {
+  margin-right: 0.75rem;
+  background-color: rgb(214, 102, 102);
+}
+
+.cart-buttons.checkout{
+  background-color: rgb( 102, 214, 102);
+}
+
+.cart-buttons.save{
+  background-color: rgb( 102, 102, 214);
+} 
+
+.time { 
+    height: 48px;
+    vertical-align: middle;
+}
+
+.time label, .total label, .ecocash-total label, .static-time label{ 
+  padding-right: 0px; 
+  // padding-left: 5px; 
+    text-align: left;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.time div { 
+    padding: 0px; 
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.time div, .total div, .ecocash-total div, .static-time div{ 
+    padding: 0px;  
+    margin-top: auto;
+    margin-bottom: auto;
+    vertical-align: middle;
+}  
+ 

@@ -1,0 +1,50 @@
+<h1 mat-dialog-title>
+    Total Amount to Pay : <strong>{{ paymentDetails.payableAmount | currency:'USD':"symbol" }}</strong>
+</h1>
+<div mat-dialog-content class="payment-modal-container">
+    <table>
+        <tr>
+            <th></th>
+            <!-- <th>Payment Type</th> -->
+            <th>Currency</th>
+            <th>Amount</th>
+            <th>Converted Amount</th>
+        </tr>
+        <tr *ngFor="let receiptItem of paymentDetails.receiptItems">
+            <td><span class="fa fa-pencil"></span></td>
+            <!-- <td>{{receiptItem.paymentType.name}}</td> -->
+            <td>{{receiptItem.currency.name}}</td>
+            <td>{{receiptItem.amount | currency }}</td>
+            <td>{{receiptItem.convertedAmount | currency }}</td>
+        </tr>
+        <tr><td colspan="4">&nbsp;</td></tr> 
+        <tr>
+            <td>
+                <h4>Total Paid</h4>
+            </td>
+            <td colspan="2"></td>
+            <td>
+                <h4>{{ paymentDetails.tenderedAmount | currency }}</h4>
+            </td>
+        </tr>
+        <tr *ngIf="totalOwing > 0"><td colspan="4">&nbsp;</td></tr> 
+        <tr *ngIf="totalOwing > 0">
+            <td colspan="2">
+                <button mat-raised-button (click)="addReceiptLine()"><span class="fa fa-plus"> Add Reciept Line</span></button>
+            </td>
+            <td colspan="2"></td>
+        </tr> 
+    </table> 
+    <br />
+    <br />
+    <h3>Total Tendered : {{ paymentDetails.tenderedAmount | currency }}</h3>
+    <h3 *ngIf="totalOwing > 0">Still Owing : {{ totalOwing | currency }}</h3>
+    <h3>Change : {{ paymentDetails.changeAmount
+        < 0 ? 0 : paymentDetails.changeAmount | currency }}</h3> 
+</div> 
+<br />
+
+        <div mat-dialog-actions>
+            <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
+            <button [disabled]="totalOwing > 0" mat-raised-button color="primary" (click)="returnPaymentDetails(paymentDetails)">Ok</button>
+        </div>

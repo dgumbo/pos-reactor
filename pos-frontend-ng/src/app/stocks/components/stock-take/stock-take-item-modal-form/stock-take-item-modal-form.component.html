@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>Stock Take Details - {{stockTakeLine.stockItem.name}}</h2>
+<mat-dialog-content>
+  <mat-card class="add-margin">
+    <!-- <mat-card-title>Stock Receipt Details - {{stockTakeLine.stockItem.name}}</mat-card-title> -->
+    <mat-card-content>
+
+      <!-- Name -->
+      <div class="form-group row">
+        <label for="stockTakeLine.stockItem.name" class="col-sm-4 col-form-label">Product
+          :</label>
+        <div class="col-sm-6">
+          <input class="form-control" value="{{stockTakeLine.stockItem.name}}" disabled>
+        </div>
+        <div class="col-sm-2">
+          <button mat-stroked-button color="primary" (click)="ChangeProduct()">Change</button>
+        </div>
+      </div>
+
+      <!-- Quantity -->
+      <div class="form-group row">
+        <label for="stockTakeLine.quantity" class="col-sm-4 col-form-label">Quantity:</label>
+        <div class="col-sm-8">
+          <input class="form-control" placeholder="Quantity" step="1" type="number" name="stockTakeLine.quantity"
+            [(ngModel)]="stockTakeLine.quantity" >
+        </div>
+      </div>
+
+      <!-- Comment -->
+      <div class="form-group row">
+        <label for="stockTakeLine.comment" class="col-sm-4 col-form-label">Comment :</label>
+        <div class="col-sm-8">
+          <input class="form-control" placeholder="Comment" name="stockTakeLine.comment" [(ngModel)]="stockTakeLine.comment">
+        </div>
+      </div>
+
+      <!-- Product Category   -->
+      <div class="form-group row">
+        <label for="stockTakeLine.stockItem.name" class="col-sm-4 col-form-label">Product Category :</label>
+        <div class="col-sm-8 input-group">
+          <input class="form-control" value="{{stockTakeLine.stockItem.productCategory.name }}" disabled>
+        </div>
+      </div>
+
+      <!-- Last Receipt Cost Rate -->
+      <div class="form-group row">
+        <label for="stockTakeLine.stockItem.lastReceiptCostRate" class="col-sm-4 col-form-label">Last Receipt
+          Cost Rate :</label>
+        <div class="col-sm-8 input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">$</span>
+          </div>
+          <input class="form-control" value="{{stockTakeLine.stockItem.lastReceiptCostRate}}" disabled>
+        </div>
+      </div>
+
+      <!-- Bar Code -->
+      <div class="form-group row">
+        <label for="stockTakeLine.stockItem.name" class="col-sm-4 col-form-label">Barcode :</label>
+        <div class="col-sm-8">
+          <input class="form-control" value="{{stockTakeLine.stockItem.barcode}}" disabled>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</mat-dialog-content>
+
+<div class="spacer"></div>
+<mat-dialog-actions class="dialog-footer ml ml-a" style="margin-left:auto;">
+  <button mat-raised-button color="primary" (click)="returnStockItem()" [disabled]="!stockTakeLine.quantity || stockTakeLine.quantity === 0">Add
+    stock Item</button>
+  <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+</mat-dialog-actions>

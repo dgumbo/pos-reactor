@@ -1,0 +1,25 @@
+<section class="container">
+    <form class="example-form"
+              [formGroup]="loginForm"
+    (ngSubmit)="onSubmit()"  >
+        <mat-form-field >
+            <input  type="text" matInput placeholder="username" 
+                   formControlName="username"  /> 
+            <mat-hint>Please enter your username.</mat-hint>
+            <mat-error> Username is <strong>Required</strong> ! </mat-error>
+        </mat-form-field> 
+
+        <mat-form-field>
+            <input   type="password" matInput placeholder="password"  
+                   formControlName="password"  /> 
+             <mat-hint>Please enter your password.</mat-hint>
+            <mat-error>Password is <strong>Required</strong> !</mat-error>
+        </mat-form-field> 
+
+        <div>
+            <button type="submit" mat-button class="btn-get-started" [disabled]="loginForm.invalid" >Login</button>
+        </div>
+<!--        <mat-form-field>
+        </mat-form-field>-->
+    </form>
+</section>

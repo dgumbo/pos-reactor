@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Create New / Update Approval Config</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form action="#" th:action="@{/stocks/approvalconfigform}" th:object="${approvalConfig}" method="post">
+                   <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Work Flow Type</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker"  data-live-search="true" th:field="*{workFlowType}"  >
+                          <option th:each="workFlowType : ${approvalConfig.workFlowTypes}"
+                                                                                                                                  th:value="${workFlowType}"
+                                                                                                                                  th:text="${workFlowType}">....</option>  </select></div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Unit</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-live-search="true" th:field="*{unit}"  >
+                          <option th:each="unit : ${approvalConfig.units}"
+                                                                                                                                  th:value="${unit.id}"
+                                                                                                                                  th:text="${unit.name}">....</option>  </select></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Active</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" th:field="*{activeStatus}" >
+							    <option value="0" >No</option>
+							    <option value="1" >Yes</option>
+							 </select><input type="hidden" class="form-control" th:field="*{id}"  /></div>
+                </div>
+                <div class="well">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12" align="center" id="tableMsg"></div>
+                  </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Role</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="selectpicker" data-style="btn-default"  data-live-search="true" id="role"  >
+                          <option value="0">Choose Unit</option>
+                          <option th:each="role : ${approvalConfig.roles}"
+                                                                                                                                  th:value="${role.id+'****'+role.name}"
+                                                                                                                                  th:text="${role.name}">....</option>  </select></div>
+                </div>
+                  <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right">Active</div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control" id="active" >
+							    <option value="0" >No</option>
+							    <option value="1" selected='selected'>Yes</option>
+							 </select></div>
+                </div>
+                
+                 <div class="row">
+                       <div class="col-lg-12 col-md-12 col-sm-12" align="center"><input type="button" value="Add To Table" onclick="addApprovalConfigTable()" class="btn btn-success" /></div>
+                </div>
+                <br />
+                <table class="table" id="table">
+                <tr>
+                  <th>Name</th>
+                  <th>Active</th>
+                </tr>
+                <tr th:each="approvalTemplates , rowStat: *{approvalTemplates}">
+                  
+                  <td ><input type="text"  class="form-control" th:field="*{approvalTemplates[__${rowStat.index}__].role.name}" /><input type="hidden"  class="form-control" th:field="*{approvalTemplates[__${rowStat.index}__].id}" /><input type="hidden"  class="form-control" th:field="*{approvalTemplates[__${rowStat.index}__].role.id}" /></td>
+                  <td ><select class="form-control" th:field="*{approvalTemplates[__${rowStat.index}__].activeStatus}" >
+							    <option value="0" >No</option>
+							    <option value="1" >Yes</option>
+							 </select></td>
+                  <td ><a href='#'><span class='glyphicon glyphicon-remove' title = "Remove" onclick='this.parent().parent().style.display="none"; return false' ></span></a></td>
+                </tr>
+                
+                </table>
+                </div>               
+                 <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6" align="right"><input type="submit" value="Submit" class="btn btn-primary" /></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/stocks/approvalconfig/}"  class="btn btn-primary">Cancel</a></div>
+                </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+            </div>            
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

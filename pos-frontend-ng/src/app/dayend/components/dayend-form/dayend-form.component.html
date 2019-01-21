@@ -1,0 +1,39 @@
+<h2>Add New Dayend</h2>
+<!-- Content Start Here -->
+
+
+<div class="add-margin">
+  <button mat-button color="primary" (click)="addNewDayend()">
+    <span class="fa fa-plus"> Add New Line</span>
+  </button>
+</div>
+
+<br />
+<table class="table" id="table">
+  <tr>
+    <th>Action</th>
+    <th>Payment Type</th>
+    <th>Currency</th>
+    <th>Amount</th>
+  </tr>
+  <tr *ngFor="let dayEndItem of dayend.dayendItems">
+    <td> 
+        <span class="fa fa-minus"></span> |
+        <span class="fa fa-pencil"></span>
+    </td>
+    <td>{{dayEndItem.paymentType.name}}</td>
+    <td>{{dayEndItem.currency.name}}</td>
+    <td>{{dayEndItem.amount | currency }}</td>
+  </tr>
+</table>
+<div class="row">
+  <div class="col-lg-6 col-md-6 col-sm-6" align="right">
+    <div th:if="${id == 0}">
+      <input type="submit" name="btnSubmit" (click)="disableSubmit(this)" id="btnSubmit" value="Submit" class="btn btn-primary" />
+    </div>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-6">
+    <a th:href="@{/bill/dayend/}" class="btn btn-primary">Cancel</a>
+  </div>
+</div>
+<!-- Content End Here -->

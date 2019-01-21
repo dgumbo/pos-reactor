@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Stock Update</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{/stocks/bookstockstockcountedlist}"><span class="glyphicon glyphicon-plus" title = "Add Book Stock"></span></a></div>
+                </div>
+
+                <form th:method="get"  th:action="@{/stocks/stockupdate/}"  th:object="${stockTransaction}" class="form-inline">
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                        <span class="add-on">To</span>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/> 
+                       <div class="form-group">
+                        <select class="selectpicker" data-style="btn-default"  data-live-search="true" name="locationId" id="locationId" th:field="*{locationTo}">
+                            <option value="0">Choose Location</option>
+                            <option th:each="location : ${stockTransaction.locations}"
+                                    th:value="${location.id}"
+                                    th:text="${location.locationName.name}">....</option>
+                        </select>
+                        </div>
+                        <div class="form-group">
+                        <button type="submit" class="btn btn-success">Search</button>
+                        </div>
+                        <!-- Button trigger modal -->
+                        <a data-toggle="modal" data-target="#helpModal"><span class="glyphicon glyphicon-question-sign" style="color:blue"></span></a>
+
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="helpModal" tabindex="-1" z-index="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="helpModalLabel">Help</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul>
+                                            <li><span class="glyphicon glyphicon-print" style="color:blue" title = "Print Stock Update Report"></span> STOCK UPDATE REPORT</li>
+                                            <li><span class="glyphicon glyphicon-print" style="color:red" title = "Print Variance report"></span> VARIANCE_REPORT</li>
+                                            <li><span class="glyphicon glyphicon-print" style="color:green" title = "Print Stock Valuation report"></span> STOCK_VALUATION_REPORT</li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Update Id</th>
+                        <th>Stock Update Number</th>
+                        <th>Book Stock Number</th>
+                        <th>Creation Date</th>
+                        <th>Created By</th>
+                        <th>Remarks</th>
+                        <th>Transaction Status</th>
+                        <th>Transaction Cost</th>
+                    </tr>
+                    <tr data-th-each="stockTransaction : ${stockTransactions}">
+                        <td>&nbsp; 
+                            <a th:onclick="'printPdf(\'/stocks/output/' + ${stockTransaction.id}+'/'+${stockTransaction.stockTransactionType}+'\')'"><span class="glyphicon glyphicon-print" style="color:blue" title = "Print"></span></a>
+                            <a th:onclick=" ' printPdf(\'/stocks/output/'+ ${stockTransaction.id}+'/VARIANCE_REPORT\') ' "><span class="glyphicon glyphicon-print" style="color:red" title = "Print"></span></a>        
+                            <a th:onclick=" ' printPdf(\'/stocks/output/'+ ${stockTransaction.id}+'/STOCK_VALUATION_REPORT\') ' "><span class="glyphicon glyphicon-print" style="color:green" title = "print"></span></a>        
+                        </td>
+                        <td data-th-text="${stockTransaction.id}">...</td>
+                        <td data-th-text="${stockTransaction.number}">...</td>
+                        <td data-th-text="${stockTransaction.bookStock.number}">...</td>
+                        <td data-th-text="${stockTransaction.creationTime}">...</td>
+                        <td data-th-text="${stockTransaction.user}">...</td>
+                        <td data-th-text="${stockTransaction.bookStock.notes}">...</td>
+                        <td data-th-text="${stockTransaction.stockTransactionStatus}">...</td>
+                        <td data-th-text="${stockTransaction.transactionCost}">...</td>   
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+            </div>
+        </div>
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

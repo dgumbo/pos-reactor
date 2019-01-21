@@ -1,0 +1,12 @@
+.payment-modal-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .payment-modal-container > * {
+    // width: 100%;
+  }
+  
+  .diag-title{
+    border: 1px solid red;
+  }

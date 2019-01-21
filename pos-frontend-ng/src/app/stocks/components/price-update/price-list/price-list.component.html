@@ -1,0 +1,72 @@
+<div class="add-margin flex flex-direction-column container">
+  <div class="title">
+    <h1>Price List</h1>
+  </div>
+
+  <div class="add-margin form-group row">
+    <label class="col col-4">Filter : </label>
+    <div class="col col-7">
+      <input class="form-control" (keyup)="onFilterKeyup(filter.value)" #filter placeholder="Filter Items By">
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+      <th mat-header-cell *matHeaderCellDef> {{ column }} </th>
+      <td mat-cell *matCellDef="let element"> {{ column==='productCategory' ? element[column].name :
+        column==='currentStock' ? element[column].quantity : column==='bondPrice' || column==='lastReceiptCostRate' ? (
+        element[column] | currency : 'USD' : 'symbol' ) : element[column] }} </td>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+        <div class="example-element-detail" [@detailExpand]="element == expandedProduct ? 'expanded' : 'collapsed'">
+          <form class="w-100">
+            <div class="card w-100">
+              <div class="card-header">{{ element.name }}</div>
+              <div class="card-body">
+                <div class="form-group row">
+                  <label for="oldPrice_{{element.id}}" class="col-sm-2 col-form-label">Old Price</label>
+                  <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" value="{{ element.bondPrice | currency : 'USD' : 'symbol' }}"
+                      id="oldPrice_{{element.id}}">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="newPrice_{{element.id}}" class="col-sm-2 col-form-label">New Price </label>
+                  <div class="col-sm-10">
+                    <input type="number" step="0.05" min="0.01" class="form-control" #newPrice id="newPrice_{{element.id}}"
+                      placeholder="Enter new price for : {{ element.name }}." cdkFocusRegionStart cdkFocusInitialTab>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="newPrice_{{element.id}}.currency" class="col-sm-2 col-form-label">New Price </label>
+                  <div class="col-sm-10">
+                    <select class="form-control" placeholder="Price Currency:" name="newPrice_{{element.id}}.currency"
+                      #newPriceCurrencyId>
+                      <option *ngFor="let cur of currencies" [value]="cur.id">
+                        {{cur.name}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <input type="hidden" [value]="element|json" #product>
+                <a (click)="updatePrice(product.value, newPrice.value, newPriceCurrencyId.value)" class="btn btn-primary">Update
+                  Price</a>
+              </div>
+            </div>
+          </form>
+        </div>
+        <br *ngIf="element == expandedProduct" />
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+      [class.example-expanded-row]="expandedProduct === element" (click)="expandedProduct = element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+
+</div>

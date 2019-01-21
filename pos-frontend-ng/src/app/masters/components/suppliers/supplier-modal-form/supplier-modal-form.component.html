@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Stock Supplier Details - {{stockSupplier.name}}</h2>
+<mat-dialog-content>
+  <mat-card class="add-margin">
+    <mat-card-content>
+
+      <!-- Name -->
+      <div class="form-group row">
+        <label for="stockSupplier.name" class="col-sm-4 col-form-label">Name
+          :</label>
+        <div class="col-sm-8">
+          <input class="form-control" placeholder="name" type="text" name="stockSupplier.name" [(ngModel)]="stockSupplier.name">
+        </div>
+      </div>
+
+      <!-- classification -->
+      <div class="form-group row">
+        <label for="stockSupplier.classification" class="col-sm-4 col-form-label">Classification:</label>
+        <div class="col-sm-8">  
+          <select class="form-control" name="stockSupplier.classification" [(ngModel)]=" stockSupplier.classification">
+            <option>WHOLESALER</option>
+            <option>SUPPERMARKET</option>
+            <option>TUCKSHOP</option>
+            <option>PERSON</option>
+            <option>IMPORTER</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- address -->
+      <div class="form-group row">
+        <label for="stockSupplier.totalCost" class="col-sm-4 col-form-label">Address :</label>
+        <div class="col-sm-8 input-group">
+          <input class="form-control" placeholder="address" type="text" name="stockSupplier.address" [(ngModel)]="stockSupplier.address">
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</mat-dialog-content>
+
+<div class="spacer"></div>
+<mat-dialog-actions class="dialog-footer ml ml-a" style="margin-left:auto;">
+  <button mat-raised-button color="primary" (click)="returnStockSupplier()">Add Stock Supplier</button>
+  <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+</mat-dialog-actions>

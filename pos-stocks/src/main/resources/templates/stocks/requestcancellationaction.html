@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}"></h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form id="formu" name="formu" action="#" th:action="@{'/stocks/requestcancellationform/'+${workFlowType}}" th:object="${stockRequestCancellation}" method="post" onchange="validateform()">
+                    <input type="hidden"  class="form-control" th:field="*{id}" />
+                    <input type="hidden"  class="form-control" th:field="*{stockRequest}" />
+                    <div class="row">
+                         <div class="col-lg-6 col-md-6 col-sm-6" align="right" th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Stock Request Number</div>
+                       <div class="col-lg-6 col-md-6 col-sm-6" align="right" th:if="${workFlowType == T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Requisition Number</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><input type="text" readonly="readonly"  class="form-control" th:field="*{stockRequest.number}"  /></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Reason</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><div class="form-group"><textarea  th:readonly="*{id > 0}" class="form-control" th:field="*{reason}"  validate="1"  data-empty-error="Reason cannot be empty"  ></textarea><div class="help-block with-errors"></div></div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="*{id == 0}" ><input type="submit" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)" value="Submit" class="btn btn-primary" /></div></div>
+              <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{'/stocks/requestcancellation/'+${workFlowType}}"  class="btn btn-primary">Cancel</a></div>
+                    </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+        </div>            
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+        <script type="text/javascript">validateform();</script>
+    </body>
+</html>

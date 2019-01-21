@@ -1,0 +1,86 @@
+<mat-card class="pos-section">
+    <mat-card-title class="add-padding heading">
+        <div class="row form-group">
+                <div class="col col-sm-5 " style="text-align:right;">Select Items :</div>
+            <input type="text" class="form-control col col-sm-6" #search placeholder="Search !" (keyup)="filterProducts(search, $event)" />
+        </div>
+    </mat-card-title>
+
+    <!-- List of new Stock Receipts -->
+    <div class="add-margin">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!-- stockItem quantity expiryDate stockStatus productCategory -->
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element" (click)="addToCheck(element)" style="cursor:pointer;" > 
+                    <span class="fa fa-arrow-left"></span>
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="stockItem">
+                <th mat-header-cell *matHeaderCellDef>Stock Item</th>
+                <td mat-cell *matCellDef="let element"> {{element.name }} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                <td mat-cell *matCellDef="let element"> {{ element.currentStock.quantity }} </td>
+            </ng-container>
+
+            <!-- Price Column -->
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef> Price </th>
+                <td mat-cell *matCellDef="let element"><strong>{{ element.bondPrice | currency }}</strong></td>
+            </ng-container>
+
+            <!-- Ecocash Column -->
+            <ng-container matColumnDef="ecocash">
+                <th mat-header-cell *matHeaderCellDef> Ecocash </th>
+                <td mat-cell *matCellDef="let element"> {{ element.ecocashPrice | currency }} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="productCategory">
+                <th mat-header-cell *matHeaderCellDef> Category </th>
+                <td mat-cell *matCellDef="let element"> {{element.productCategory.name }} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="expiryDate">
+                <th mat-header-cell *matHeaderCellDef> Barcode </th>
+                <td mat-cell *matCellDef="let element"> {{element.barcode }}
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tbl-header"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="item"></tr>
+        </table>
+    </div>
+
+    <!-- <div *ngFor="let element of products" class="item-list">
+        <div class="row">
+            <div class="card" style="width: 150px; float: left;">
+                <div class="card-header">{{element.name }}</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item item quantity">{{ element.currentStock.quantity }}</li>
+                    <li class="list-group-item item stockStatus">{{ element.currentStock.stockStatus }}</li>
+                    <li class="list-group-item item product-category">{{ element.productCategory.name }}</li>
+                    <li class="list-group-item item barcode">{{ element.barcode }}</li>
+                    <li class="list-group-item item button">
+                        <button mat-button color="primary" (click)="addToCheck(element)">
+                            <mat-icon>arrow_left</mat-icon>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- <button (click)="onPrintInvoice()">PRINT INVOICE</button>
+    <button (click)="onPrintInvoiceOnModal()">PRINT INVOICE ON MODAL</button> -->
+
+</mat-card>

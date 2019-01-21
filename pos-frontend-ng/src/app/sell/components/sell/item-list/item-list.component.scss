@@ -1,0 +1,78 @@
+@import 'app/app.component.scss';
+
+.pos-section { 
+  min-height: 80vh; 
+  border: 1px solid $main-color;
+  border-radius: 2px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  padding-top:0px;
+}
+
+.heading {
+  color: $main-color;
+  font-family: $main-font;  
+}
+
+.menu {
+  margin: 0.25rem;
+}
+
+.tbl-header{
+  margin: 0;
+  height:30px;
+}
+
+.tbl-header th{ 
+  font-weight: bold; 
+  border: 1px solid orange;
+  color: black;
+  vertical-align: middle;
+  margin: 5px;
+  padding:5px;
+}
+
+.item {
+  margin: 0;
+  height: 20px;
+  font-family: $body-font; 
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); 
+}
+
+.item td {
+  border: 1px solid rgb(228, 169, 60);
+  margin: 2px;
+  padding:5px;
+}
+
+.item td:first-child button{
+  padding: 0px;
+  // width: 50x;
+}
+
+.item:hover { 
+  color: white;
+  opacity: 0.6;
+}
+
+.item:active {
+  background-color: grey;
+  color: white;
+  opacity: 0.8;
+} 
+
+.item-name {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.item-list .item{
+  font-size: 50%;
+  color:black;
+}
+
+.add-padding{
+  padding-top:5px;
+  padding-bottom:5px;
+  margin-bottom:0px;
+}

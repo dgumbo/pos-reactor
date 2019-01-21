@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}"></h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form th:method="get"  th:action="@{'/stocks/requestlist/'+ ${workFlowType}}"  th:object="${stockRequest}" class="form-inline">
+
+                    <div class="form-group">
+                        <label>From</label>
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                    </div>
+                    <div class="form-group">
+                        <label>To</label>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>  
+</div>
+                    <div class="form-group">
+                        <select class="selectpicker" data-style="btn-default"  data-live-search="true" name="locationId" id="locationId" th:field="*{issueLocation}">
+                            <option value="0">Location</option>
+                            <option th:each="location : ${stockRequest.locations}"
+                                    th:value="${location.id}"
+                                    th:text="${location.locationName.name}">....</option>
+                        </select>
+                        </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Search</button>
+                   </div>
+                </form>
+               <table class="table">
+               <tr>
+               <th>Action</th>
+               <th>Request ID</th>
+                <th th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Request Number</th>
+                <th th:if="${workFlowType == T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Requisition Number</th>
+                <th th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Location</th>
+                <th>Date</th>
+                <th>Created By</th>
+                <th>Status</th>
+                <th>Active</th>
+               </tr>
+    <tr data-th-each="stockRequest : ${stockRequests}">
+        <td><div th:if="${workFlowType == T(zw.co.psmi.hms.stocks.entity.WorkFlowType).PURCHASEORDER}"><a th:href="@{'/stocks/purchasereceiptaction/0/' + ${stockRequest.id}}"><span class="glyphicon glyphicon-transfer"></span></a></div><div th:if="${workFlowType == T(zw.co.psmi.hms.stocks.entity.WorkFlowType).STOCKREQUEST}"> <a th:href="@{'/stocks/stockissueaction/0/' + ${stockRequest.id}}"><span class="glyphicon glyphicon-transfer"></span></a></div><div th:if="${workFlowType == T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}"> <a th:href="@{'/stocks/goodsreceivedaction/0/' + ${stockRequest.id}}"><span class="glyphicon glyphicon-transfer"></span></a></div></td>
+         <td data-th-text="${stockRequest.id}">...</td>
+         <td data-th-text="${stockRequest.number}">...</td>
+         <td  th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}" data-th-text="${stockRequest.location.locationName.name}">...</td>
+        <td data-th-text="${stockRequest.creationTime}">...</td>
+        <td data-th-text="${stockRequest.createdByUser}">...</td>
+        <td data-th-text="${stockRequest.approvalStatus}">...</td>
+        <td ><div th:if="${stockRequest.activeStatus}"> Yes </div><div th:if="${!stockRequest.activeStatus}">No</div></td>
+    </tr>
+</table>
+                <!-- Content End Here -->
+            </div>
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

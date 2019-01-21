@@ -1,0 +1,29 @@
+<div class="panel panel-primary">
+                                     <div class="panel-heading">
+                                      <h3 class="panel-title">Sell History</h3>
+                                      </div>
+                                       <div class="panel-body"><div class="row">
+                                   <div class="col-lg-4 col-md-4 col-sm-4" align="right"><div class="scroll4"> 
+                                           <table class="table">
+                                               <tr>
+                                                     <th>Action</th>
+                                                    <th>Date</th>
+                                                    <th>Fullname</th>
+                                                    <th>Status</th>
+                                                    <th>Reason</th>
+                                               </tr>
+                                               <tr data-th-each="sell : ${sells}">
+                                                   <td><a th:onclick="'getSellItemList('+${sell.id}+' )'"><span class="glyphicon glyphicon-new-window"></span></a></td>
+                                                   <td th:text="${sell.sellDate}"></td>
+                                                   <td th:text="${sell.bill?.doctor?.fullname}"></td>
+                                                   <td th:text="${sell.transactionStatus}"></td>
+                                                   <td th:text="${sell.reason}"></td>
+                                               </tr>
+                                           </table>       
+                                     </div></div>
+                                   <div class="col-lg-8 col-md-8 col-sm-8" id="203"></div> 
+                           </div>
+                                        <div class='row'>
+                                           <div class='col-xs-12 col-md-12 col-lg-12' align='center'><input class='btn btn-success' type='button' name='button2' id='button' value='Close' onclick='dropdownhide(202)' /></div>
+                                           </div>
+                                    </div></div>

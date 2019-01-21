@@ -1,0 +1,29 @@
+@import '../../app.component.scss';
+
+.container {
+  min-height: 77vh;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.error {
+  padding-bottom: 1rem;
+}
+
+.reset {
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+}
+
+.guest {
+  background-color: rgb(141, 141, 141);
+  color: white;
+  margin-left: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  max-width: 50%;
+}

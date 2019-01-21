@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2 th:text="${title}"></h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <form th:method="get"  th:action="@{'/stocks/requestcancellation/'+ ${workFlowType}}"  th:object="${stockRequest}" class="form-inline">
+                    <div class="form-group">
+                        <label th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Stock Request Number</label>
+                        <label th:unless="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Requisition Number</label>
+                        <input type="text" class="form-control" th:field="*{number}" /> 
+                    </div>
+                    <div class="form-group">
+                        <label>From</label>
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                    </div>
+                    <div class="form-group">
+                        <label>To</label>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>  
+</div>
+                    
+                        <div class="form-group">
+                        <button type="submit" class="btn btn-success">Search</button>
+               </div>
+                    
+                </form>
+               <table class="table">
+               <tr>
+               <th>Action</th>
+                <th th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Stock Request Cancellation Number</th>
+                <th th:if="${workFlowType == T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Requisition Cancellation Number</th>
+                <th th:if="${workFlowType != T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Stock Request Number</th>
+                <th th:if="${workFlowType == T(zw.co.psmi.hms.stocks.entity.WorkFlowType).REQUISITION}">Requisition Number</th>
+                <th>Creation Date</th>
+                <th>Created By</th>
+               </tr>
+    <tr data-th-each="stockRequestCancellation : ${stockRequestCancellations}">
+        <td><a th:href="@{'/stocks/requestcancellationaction/' + ${stockRequestCancellation.id}+'/'+${workFlowType}}"><span class="glyphicon glyphicon-folder-open" title = "View"></span></a>
+        </td>
+        <td data-th-text="${stockRequestCancellation.number}">...</td>
+        <td data-th-text="${stockRequestCancellation.stockRequest.number}">...</td>
+        <td data-th-text="${stockRequestCancellation.creationTime}">...</td>
+        <td data-th-text="${stockRequestCancellation.createdByUser}">...</td>
+    </tr>
+</table>
+                <!-- Content End Here -->
+            </div>
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

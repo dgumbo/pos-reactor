@@ -1,0 +1,136 @@
+<h2 mat-dialog-title>Stock Receipt Details - {{stockReceiveItem.product.name}}</h2>
+<mat-dialog-content>
+    <mat-card class="add-margin">
+        <!-- <mat-card-title>Stock Receipt Details - {{stockReceiveItem.product.name}}</mat-card-title> -->
+        <mat-card-content>
+
+            <!-- Name -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.product.name" class="col-sm-3 col-form-label">Product
+                    :</label>
+                <div class="col-sm-6">
+                    <input class="form-control" value="{{stockReceiveItem.product.name}}" disabled>
+                </div>
+                <div class="col-sm-2">
+                    <button mat-stroked-button color="primary" (click)="ChangeProduct()">Change</button>
+                </div>
+            </div>
+
+            <!-- Supplier -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.supplier" class="col-sm-3 col-form-label">Supplier :</label>
+                <div class="col-sm-6 input-group">
+                    <select class="form-control" name="stockReceiveItem.supplier" [(ngModel)]="stockReceiveItem.supplier" >
+                        <option *ngFor="let supplier of suppliers" [ngValue]="supplier" >{{ supplier.name }}</option>
+                    </select>
+                </div>
+                <div class="col-sm-1 input-group">
+                    <button class="btn btn-link" (click)="addSupplier()">not listed?
+                        <span class="fa fa-plus"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quantity -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.quantity" class="col-sm-3 col-form-label">Quantity:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" placeholder="Quantity" step="1" type="number" name="stockReceiveItem.quantity"
+                        [(ngModel)]="stockReceiveItem.quantity" (keyup)="UpdateUnitCost()">
+                </div>
+            </div>
+
+            <!-- Total Cost Price -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.totalCost" class="col-sm-3 col-form-label">Total Cost Price :</label>
+                <div class="col-sm-8 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input class="form-control" placeholder="Cost Price ($)" type="number" min="0" step="0.05" name="stockReceiveItem.totalCost"
+                        [(ngModel)]="stockReceiveItem.totalCost" (keyup)="UpdateUnitCost()">
+                </div>
+            </div>
+
+            <!-- Unit Cost -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.unitCost" class="col-sm-3 col-form-label">Unit Cost :</label>
+                <div class="col-sm-8 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input class="form-control" name="stockReceiveItem.unitCost" value="{{stockReceiveItem.unitCost}}" disabled>
+                </div>
+            </div>
+
+            <!-- Selling Price -->
+            <!-- <div class="form-group row">
+                <label for="stockReceiveItem.product.name" class="col-sm-3 col-form-label">Selling Price
+                    :</label>
+                <div class="col-sm-6">
+                    <input class="form-control" value="{{stockReceiveItem.product.name}}" disabled>
+                </div>
+                <div class="col-sm-2">
+                    <button mat-stroked-button color="accent" (click)="ChangeProduct()">Change</button>                    
+                </div>
+            </div> -->
+
+            <!-- Product Category   -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.product.name" class="col-sm-3 col-form-label">Product Category :</label>
+                <div class="col-sm-8 input-group">
+                    <input class="form-control" value="{{stockReceiveItem.product.productCategory.name }}" disabled>
+                </div>
+            </div>
+
+            <!-- Last Receipt Cost Rate -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.product.lastReceiptCostRate" class="col-sm-3 col-form-label">Last Receipt
+                    Cost Rate :</label>
+                <div class="col-sm-8 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input class="form-control" value="{{stockReceiveItem.product.lastReceiptCostRate}}" disabled>
+                </div>
+            </div>
+
+            <!-- Weighted Average Cost Rate -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.product.weightedAverageCost" class="col-sm-3 col-form-label">Weighted
+                    Average Cost:</label>
+                <div class="col-sm-8 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input class="form-control" value="{{stockReceiveItem.product.lastReceiptCostRate}}" disabled>
+                </div>
+            </div>
+
+            <!-- Bar Code -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.product.name" class="col-sm-3 col-form-label">Barcode :</label>
+                <div class="col-sm-8">
+                    <input class="form-control" value="{{stockReceiveItem.product.barcode}}" disabled>
+                </div>
+            </div>
+
+            <!-- Short Code -->
+            <div class="form-group row">
+                <label for="stockReceiveItem.product.name" class="col-sm-3 col-form-label">Shortcode :</label>
+                <div class="col-sm-8">
+                    <input class="form-control" value="{{stockReceiveItem.product.shortcode}}" disabled>
+                </div>
+            </div> 
+
+        </mat-card-content>
+    </mat-card>
+</mat-dialog-content>
+
+
+<div class="spacer"></div>
+<mat-dialog-actions class="dialog-footer ml ml-a" style="margin-left:auto;">
+    <button mat-raised-button color="primary" (click)="returnStockItem()" [disabled]="!stockReceiveItem.unitCost || stockReceiveItem.unitCost === 0">Add
+        stock Item</button>
+    <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+</mat-dialog-actions>

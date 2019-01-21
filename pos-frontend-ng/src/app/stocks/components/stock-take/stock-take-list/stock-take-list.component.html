@@ -1,0 +1,79 @@
+<div class="add-margin flex flex-direction-column container">
+  <div class="title">
+    <h1>Stock Take List</h1>
+  </div>
+
+  <div class="add-margin">
+      <button *ngIf="!pendingStockTake" mat-stroked-button color="primary" [routerLink]="['..','stock-take','take']">
+        <span class="fa fa-plus"></span>
+        Start New Stock Take
+      </button>
+      <button *ngIf="pendingStockTake" mat-stroked-button color="primary" [routerLink]="['..','stock-take','finalize', pendingStockTake.id ]">
+        <span class="fa fa-pencil"></span>
+        Finalize Pending Stock Take
+      </button>
+  </div>
+
+  <br />
+
+  <!-- List of new Stock Receipts -->
+  <div class="add-margin">
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button *ngIf="element.stockTakeStatus !== 'PENDING'" [routerLink]="['..','stock-take','preview', element.id ]"
+            mat-button color="warn">
+            <span class="fa fa-plus"></span>
+            Preview
+          </button>
+          <button *ngIf="element.stockTakeStatus === 'PENDING'" [routerLink]="['..','stock-take','finalize', element.id ]"
+            mat-button color="warn">
+            <span class="fa fa-pencil"></span>
+            Finalize
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element"> {{element.stockTakeDate | date : 'dd MMM yyyy HH:mm'}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element"> {{ element.stockTakeStatus }} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="receiveCountItems">
+        <th mat-header-cell *matHeaderCellDef> Item Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.stockTakeLines.length }} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="remarks">
+        <th mat-header-cell *matHeaderCellDef> Remarks </th>
+        <td mat-cell *matCellDef="let element"> {{ element.remarks }} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef> User </th>
+        <td mat-cell *matCellDef="let element"> {{ element.createdByUser }} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+</div>
+ 

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="head :: head"> </head>
+ <body> 
+ <div class="wrapper">
+           <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>StockCount List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/stocks/stockcountaction/0' }"><span class="glyphicon glyphicon-plus" title = "Add Stock Count"></span></a></div>
+                </div>
+                <form th:method="get"  th:action="@{'/stocks/stockcount/'}"  th:object="${stockCount}" class="form-inline">
+                    <div class="form-group row">
+                        <input type="text" class="form-control" th:field="*{startDate}" id="startDate"/> 
+                        <span class="add-on">To</span>
+                        <input type="text" class="form-control" th:field="*{endDate}" id="endDate"/>  
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                </form>
+               <table class="table">
+               <tr>
+               <th>Action</th>
+                <th>Stock Count Id</th>
+                <th>Stock Count Number</th>
+                <th>Book Stock Number</th>
+                 <th>Creation Date</th>
+                <th>Created By</th>
+                <th>Remarks</th>
+               </tr>
+    <tr data-th-each="stockCount : ${stockCounts}">
+        <td><a th:href="@{'/stocks/stockcountaction/' + ${stockCount.id}}"><span class="glyphicon glyphicon-folder-open" title = "View"></span></a>&nbsp;
+<!--        <a th:onclick="'printPdf(\'/stocks/output/' + ${stockCount.id}+'/STOCK_COUNT_SHEET\')'"><span class="glyphicon glyphicon-print"></span></a>-->
+        </td> 
+        <td data-th-text="${stockCount.id}">...</td>
+        <td data-th-text="${stockCount.number}">...</td>
+        <td data-th-text="${stockCount.bookStock?.number}">...</td>
+        <td data-th-text="${stockCount.creationTime}">...</td>
+        <td data-th-text="${stockCount.user}">...</td>
+        <td data-th-text="${stockCount.bookStock?.notes}">...</td>
+    </tr>
+</table>
+                <!-- Content End Here -->
+            </div>
+            </div>
+  <div th:replace ="footer::footer"></div>
+  <script th:utext="${msg}"></script>
+ </body>
+</html>

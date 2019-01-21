@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Correct Tariff Code List</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12"><a th:href="@{'/bill/correcttariffcodeaction/0' }"><span class="glyphicon glyphicon-plus" title =  "Add New"></span></a></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <form method="get" th:action="@{'/bill/correcttariffcode' }" oninput="ignoreSubmitOnInput()" th:object="${correctTariffCode}" class="form-inline"> 
+                          <span class="add-on">From</span>
+                    <input type="text" class="form-control" th:field="*{startDate}" /> 
+                    <span class="add-on">To</span>
+                    <input type="text" class="form-control" th:field="*{endDate}" />  
+                    <button type="submit" class="btn btn-success">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Date</th>
+                        <th>Bill Start</th>
+                        <th>Bill End</th>
+                        <th>Done By</th>                         
+                    </tr>
+                    <tr data-th-each="correctTariffCode : ${correctTariffCodes}">
+                        <td><a  th:href="@{'/bill/correcttariffcodeaction/'+${correctTariffCode.id}}"><span class="glyphicon glyphicon-folder-open" title = "View"></span></a></td>
+                        <td data-th-text="${correctTariffCode.creationTime}">...</td>
+                        <td data-th-text="${correctTariffCode.billStartDate}">...</td>
+                        <td data-th-text="${correctTariffCode.billEndDate}">...</td>
+                        <td data-th-text="${correctTariffCode.createdByUser}">...</td>
+
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+
+            </div>
+        </div>
+
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html>

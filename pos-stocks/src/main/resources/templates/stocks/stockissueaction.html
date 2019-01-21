@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org" >
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Create New Stock Issue</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6" align="right">Change Issue Location</div>
+                    <div class="col-lg-6 col-md-6 col-sm-6"><select onchange="rederect1x1();" class="selectpicker" data-style="btn-default"  data-live-search="true" name="changelocation" id="changelocation"  ><option value="">Choose Location</option><option th:each="location : ${locations}"
+                                                                                                                                                                                                        th:value="${location.id}"
+                                                                                                                                                                                                        th:text="${location.locationName.name}">....</option>  </select></div>
+                </div>
+                <input type="hidden" id="stockTransactionm" th:value="${stockTransaction.id}"/>
+                <input type="hidden" id="stockRequestIdm" th:value="${stockRequestId}"/>
+
+                <!-- Content Start Here -->
+                <form id="formu" name="formu" action="#" th:action="@{/stocks/stockissueform}" th:object="${stockTransaction}" method="post"  onchange="validateform()">
+                    <input type="hidden" class="form-control" th:field="*{id}"  />
+                    <input type="hidden" class="form-control" th:field="*{stockTransactionType}"  />
+                    <input type="hidden" class="form-control" th:field="*{locationFrom}"  />
+                    <input type="hidden" class="form-control" th:field="*{unitTo}"  />
+                    <input type="hidden" class="form-control" th:field="*{unitFrom}"  />
+                    <input type="hidden" class="form-control" th:field="*{locationTo}"  />
+                    <input type="hidden" class="form-control" th:field="*{stockRequest}"  />
+                    <input type="hidden" readonly="readonly" class="form-control" id="totalcost" name ="totalCost" />
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Requesting Unit</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><div th:text="*{unitFrom.name}"> </div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Requesting Location</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><div th:text="*{locationTo.locationName.name}"></div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Issuing Location</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><div th:text="*{locationFrom.locationName.name}"></div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right">Remarks</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><textarea  th:readonly="${id > 0}" class="form-control" th:field="*{remarks}" ></textarea></div>
+                    </div>
+                    <div class="well">
+                        <div th:if='*{id > 0}' >
+                            <table class="table" id="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Request Generic Stock Type</th>
+                                    <th>Request Unit of Measure</th>
+                                    <th>Request Quantity</th>
+                                    <th>Issued Name</th>
+                                    <th>Issued Quantity</th>
+                                    <th>Last Receipt Cost</th>
+                                    <th>Weighted Average Cost</th>
+                                    <th>Batch Number</th>
+                                    <th>Expiry Date</th>
+                                </tr>
+                                <tr th:each="stockTransactionLines , rowStat: *{stockTransactionLines}">
+
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].id}" /></td>
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{stockTransactionLines[__${rowStat.index}__].stockRequestItem.genericStockType.name}" th:title="*{stockTransactionLines[__${rowStat.index}__].stockRequestItem.genericStockType.name}" /><input type="hidden"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].stockRequestItem.genericStockType.id}" /></td>
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{stockTransactionLines[__${rowStat.index}__].stockRequestItem.unitOfMeasure.name}" /><input type="hidden"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].stockRequestItem.unitOfMeasure.id}" /></td>
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].stockRequestItem.quantity}" /></td>
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:value="*{stockTransactionLines[__${rowStat.index}__].stockType.name}" th:title="*{stockTransactionLines[__${rowStat.index}__].stockType.name}" /><input type="hidden"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].stockType.id}" /></td>
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].quantity}"  oninput="this.value = getPositiveInt(this.value)" /></td>
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].lastReceiptCostRate}" /></td>
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].weightedAverageCost}" /></td>
+                                    <td ><input type="text" readonly="readonly"  class="form-control" th:field="*{stockTransactionLines[__${rowStat.index}__].batchNumber}" /></td>               
+                                    <td ><input type="text" readonly="readonly"  class="form-control dateField" th:field="*{stockTransactionLines[__${rowStat.index}__].expiryDate}" /></td>   
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div th:if='${stockRequestId > 0 and id == 0}' >
+                            <table class="table" id="table1">
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Request Generic Stock Type</th>
+                                    <th>Request Unit of Measure</th>
+                                    <th>Request Quantity</th>
+                                    <th>Issued Name</th>
+                                    <th>Issued Quantity</th>
+                                    <th>Last Receipt Cost</th>
+                                    <th>Weighted Average Cost</th>
+                                    <th>Batch Number</th>
+                                    <th>Expiry Date</th>                 
+                                </tr>
+                                <tr th:each="stockRequestItems , rowStat: *{stockRequestItems}" th:id="${rowStat.index}">
+                                    <td><a th:onclick="'cloneTableRow('+${rowStat.index}+')'"><span class="glyphicon glyphicon-copy"></span></a>&nbsp;&nbsp;&nbsp;<a th:onclick="'substituteIssue(this, '+${stockRequestItems.id}+','+*{locationFrom.id}+')'"><span class="glyphicon glyphicon-repeat"></span></a><input type="hidden"  class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].id'" value='0' /><input type="hidden"  class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].stockRequestItem'"  th:value="${stockRequestItems.id}"  /></td>
+                                    <td ><input type="text"  readonly="readonly" class="form-control"   th:value="${stockRequestItems.genericStockType.name}" th:title="${stockRequestItems.genericStockType.name}" /><input type="hidden"  class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].stockRequest.genericStockType.id'"  th:value="${stockRequestItems.genericStockType.id}"  /></td>
+                                    <td ><input type="text"  readonly="readonly" class="form-control"   th:value="${stockRequestItems.unitOfMeasure.name}" />
+                                        <input type="hidden"  class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].stockRequest.unitOfMeasure.id'"  th:value="${stockRequestItems.unitOfMeasure.id}"  /></td>
+                                    <td ><input type="text"  readonly="readonly" class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].stockRequest.quantity'" th:id="'stockTransactionLines'+${rowStat.index}+'.stockRequest.quantity'" th:value="${stockRequestItems.remaining}"  /></td>
+                                    <td > <div class="form-group">   
+                                            <input type="hidden"  class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].stockType'" th:id="'stockTransactionLines'+${rowStat.index}+'.stockType'" />
+                                            <input type="hidden"  class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].baseStock'" th:id="'stockTransactionLines'+${rowStat.index}+'.baseStock'" /><select  class="form-control"  th:onchange="'loadCurrentStockDetails(this,'+${rowStat.index}+')'" th:id="'stockTransactionLines'+${rowStat.index}+'.currentStocks'"    data-empty-error="Issue Stock Item cannot be empty" >
+                                                <option value="">Choose Stock Type</option>
+                                                <option th:each="currentStocks : ${stockRequestItems.currentStocks}"
+                                                        th:value="${currentStocks.stockType.id+'****'+currentStocks.quantity+'****'+currentStocks.stockType.lastReceiptCostRate+'****'+currentStocks.stockType.weightedAverageCost+'****'+currentStocks.batchNumber+'****'+currentStocks.expiryDate+'****'+currentStocks.id}"
+                                                        th:text="${currentStocks.stockType.name+' ['+currentStocks.quantity+'] '+currentStocks.batchNumber+' '+currentStocks.expiryDate}">....</option>  </select><div class="help-block with-errors"></div></div></td>
+                                    <td > <div class="form-group">    <div th:id="'msg'+${rowStat.index}" ></div><input type="text"  class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].quantity'" th:id="'stockTransactionLines'+${rowStat.index}+'.quantity'"    min="0" th:max="${stockRequestItems.remaining}" data-empty-error="Quantity cannot be empty" data-min-error="Please enter a Quantity greater than 0" data-max-error="Quantity cannot be greater than the Requested Quantity"  oninput="this.value = getPositiveInt(this.value)" /><div class="help-block with-errors"></div></div></td>
+                                    <td ><input type="text"  readonly="readonly" class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].lastReceiptCostRate'" th:id="'stockTransactionLines'+${rowStat.index}+'.lastReceiptCostRate'" /></td>
+                                    <td ><input type="text"  readonly="readonly" class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].weightedAverageCost'" th:id="'stockTransactionLines'+${rowStat.index}+'.weightedAverageCost'"  /></td>
+                                    <td ><input type="text"  readonly="readonly" class="form-control" th:name="'stockTransactionLines['+${rowStat.index}+'].batchNumber'" th:id="'stockTransactionLines'+${rowStat.index}+'.batchNumber'"   /></td>               
+                                    <td ><input type="text"  readonly="readonly" class="form-control dateField" th:name="'stockTransactionLines['+${rowStat.index}+'].expiryDate'" th:id="'stockTransactionLines'+${rowStat.index}+'.expiryDate'"  /></td>
+                                </tr>
+                            </table>  
+
+                        </div>
+                    </div>               
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6" align="right"><div  th:if="${id == 0}" ><input type="submit" name="btnSubmit" id="btnSubmit" onclick="disableSubmit(this)"  value="Submit" class="btn btn-primary" /></div></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6"><a th:href="@{/stocks/stockissue/}"  class="btn btn-primary">Cancel</a></div>
+                    </div>
+                </form>
+                <!-- Content End Here -->
+            </div>
+        </div>            
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+        <script type="text/javascript">
+            function rederect1x1()
+            {
+                var url = "/stocks/stockissueaction/" + document.getElementById("stockTransactionm").value + "/" + document.getElementById("stockRequestIdm").value + "?locationId=" + document.getElementById("changelocation").value;
+                window.location.replace(url);
+            }
+            validateform();
+        </script>
+    </body>
+</html>

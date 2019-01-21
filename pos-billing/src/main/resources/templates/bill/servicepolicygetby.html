@@ -1,0 +1,24 @@
+<tr>
+             <th>Action</th>
+             <th>Service</th>
+             <th>Tariff Code</th>
+             <th>Quantity</th>   
+             <th>Start Date</th>   
+             <th>End Date</th>   
+             <th>Unit Cost</th>     
+             <th>Authorisation Amount</th>   
+             <th>Cost</th>                              
+           </tr>
+           <tr th:if="${service != null and service.id > 0}" >
+     <td ><a onclick="deleteRow('tableBill', this);calcBillForm()"><span style='color:#F00' class='glyphicon glyphicon-remove-circle'></span></a><input type="checkbox" checked="checked" class="form-control" id="billItem0.activeStatus"  name="billItem[0].activeStatus" value="1" />
+                 <input type="hidden" readonly="readonly"  class="form-control" name="billItem[0].service.id"  id="billItem0.service.id" th:value="${service.id}"/>
+                 <input type="hidden" readonly="readonly"  class="form-control" name="billItem[0].cashOnly" id="billItem0.cashOnly" th:value="${service.cashOnly}" /></td>
+             <td th:text="${service?.name}"></td>
+             <td ><input type="text" readonly="readonly"  class="form-control" name="billItem[0].tariffCode"  id="billItem0.tariffCode" th:value="${service.tariffCode}" /></td>
+             <td ><input type="text" readonly="readonly"  class="form-control" name="billItem[0].quantity"  id="billItem0.quantity" th:value="1" /></td>
+             <td ><input type="text" readonly="readonly"  class="form-control" name="billItem[0].billStartDate"  id="billItem0.billStartDate" th:value="${date}" /></td>
+             <td ><input type="text" readonly="readonly"  class="form-control" name="billItem[0].billEndDate"  id="billItem0.billEndDate" th:value="${date}" /></td>
+             <td ><input type="text" readonly="readonly"  class="form-control" name="billItem[0].unitCost"  id="billItem0.unitCost" th:value="${service.fixedCost}" /></td>
+             <td ><input type="text" readonly="readonly"  class="form-control" name="billItem[0].authorisationAmount"  id="billItem0.authorisationAmount" th:value="${service.authorisationAmount}" /></td>
+             <td ><input type="text" readonly="readonly"  class="form-control" name="billItem[0].cost"  id="billItem0.cost" th:value="${service.fixedCost}" /></td>
+                                          </tr>

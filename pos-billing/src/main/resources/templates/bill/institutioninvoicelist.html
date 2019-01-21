@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head lang="en" th:replace="head :: head"> </head>
+    <body> 
+        <div class="wrapper">
+            <div th:replace ="sidebar::sidebar"></div>
+            <div id="content">
+
+                <div th:replace ="navheader::navheader"></div>
+                <h2>Invoice To Institution  Work Flow</h2>
+                <div class="line"></div>
+                <div id="msg"></div>
+                <!-- Content Start Here -->
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Number</th>
+                        <th>Date</th>
+                        <th>Ahfoz</th>
+                        <th>Active</th>
+                    </tr>
+                    <tr data-th-each="institutionInvoice : ${institutionInvoices}">
+                        <td><a th:onclick="'printInstitutionInvoice('+${institutionInvoice.id}+')'"><span class="glyphicon glyphicon-print" title = "Print"></span></a>&nbsp;&nbsp;<a th:if="${institutionInvoice.institutionInvoiceStatus == T(zw.co.psmi.hms.bill.entity.InstitutionInvoiceStatus).CREATED}" th:onclick="'cancelInstitutionInvoice(\''+${institutionInvoice.number}+'\','+${institutionInvoice.id}+')'"><span class="glyphicon glyphicon-remove-sign" style='color:#ff0000'></span></a></td>
+                        <td data-th-text="${institutionInvoice.number}">...</td>
+                        <td data-th-text="${institutionInvoice.institutionInvoiceDate}">...</td>
+                        <td data-th-text="${institutionInvoice.ahfoz}">...</td>
+                        <td ><div th:if="${institutionInvoice.activeStatus}"> Yes </div><div th:if="${!institutionInvoice.activeStatus}">No</div></td>
+                    </tr>
+                </table>
+                <!-- Content End Here -->
+            </div>
+        </div>
+        <div th:replace ="footer::footer"></div>
+        <script th:utext="${msg}"></script>
+    </body>
+</html> 

@@ -1,0 +1,36 @@
+<h1 class="diag-title" mat-dialog-title>Total Amount to Pay : 
+    <strong>{{ currencyPaymentOwing  | currency : 'USD' : "symbol" }}</strong>
+    - Currency : <strong>{{ receiptItem.currency.name }}</strong>
+</h1>
+<div mat-dialog-content class="payment-modal-container"> 
+    
+    <mat-form-field>
+        Tendered Amount : <input matInput type="number" step=any #tenderedAmount onFocus="$(this).select();" (keyup)="onTypePaidAmount()" cdkFocusRegionstart >
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Currency:" (selectionChange)="onCurrencyChange()" [(ngModel)]="receiptItem.currency" name="receiptItem.currency" >
+          <mat-option *ngFor="let cur of currencies" [value]="cur">
+            {{cur.name}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="receiptItem.currency.defaultCurrency===false">
+        Converted Amount : <input matInput disabled [ngModel]="receiptItem.convertedAmount | currency:'USD':'symbol' ">
+    </mat-form-field> 
+
+    <mat-form-field *ngIf="receiptItem.currency.defaultCurrency===false">
+            <span  *ngIf="!receiptItem.currency.name.toLowerCase().includes('ecocash')">
+            Remarks : 
+            </span>
+            <span  *ngIf="receiptItem.currency.name.toLowerCase().includes('ecocash')">
+            Ecocash Code : 
+            </span>
+        <input matInput [(ngModel)]="receiptItem.remarks" #remarks>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="submitReceiptItem(receiptItem)" >Ok</button>
+</div>  
