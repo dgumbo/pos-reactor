@@ -31,6 +31,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 @EqualsAndHashCode(of = "id")
 public abstract class BaseEntity implements Serializable {
 
+    public static final DateTimeFormatter timeFommarter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    public static final DateTimeFormatter dateFommarter = DateTimeFormatter.ofPattern("dd MMM yyyy");
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     @JsonIgnore

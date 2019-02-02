@@ -34,10 +34,11 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th class="col col-7 text-left"><strong>Product</strong></th>
+                                <th class="col col-5 text-left"><strong>Product</strong></th>
                                 <th class="col col-1 text-right"><strong>#</strong></th>
-                                <th class="col col-2 text-right"><strong>LRCR</strong></th>
+                                <th class="col col-2 text-right"><strong>Cost</strong></th>
                                 <th class="col col-2 text-right"><strong>Selling</strong></th>
+                                <th class="col col-2 text-right"><strong>Total Selling</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,31 +47,32 @@
                                     <em>{{ item.stockItem }}</em>
                                 </td>
                                 <td class="text-right">{{ item.quantity }}</td>
-                                <td class="text-right">{{ item.lrcrTotalValue | currency }}</td>
-                                <td class="text-right">{{ item.totalSellingValue | currency }}</td>
+                                <td class="text-right">{{ item.lrcr | currency }}</td>
+                                <td class="text-right">{{ item.sellingPrice | currency }}</td>
+                                <td class="text-right">{{ item.totalSellingPrice | currency }}</td>
                             </tr>
                             <tr>
-                                <td class="text-right" colspan="2">
-                                    <strong>Lines: </strong>
+                                <td class="text-right" colspan="3">
+                                    <strong>Lines : </strong>
                                 </td>
                                 <td class="text-right" colspan="2">
                                     <strong>{{ stockReOrders.length }}</strong>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-right" colspan="2">
-                                    <strong>Total Order Cost: </strong>
+                                <td class="text-right" colspan="3">
+                                    <strong>Total Order Cost : </strong>
                                 </td>
                                 <td class="text-right" colspan="2">
                                     <strong>{{ totalOrderCost | currency }}</strong>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-right" colspan="2">
-                                    <strong>Total Selling Value: </strong>
+                                <td class="text-right" colspan="3">
+                                    <strong>Total Selling Price : </strong>
                                 </td>
                                 <td class="text-right" colspan="2">
-                                    <strong>{{ totalSellingValue | currency }}</strong>
+                                    <strong>{{ totalSellingPrice | currency }}</strong>
                                 </td>
                             </tr>
                         </tbody>

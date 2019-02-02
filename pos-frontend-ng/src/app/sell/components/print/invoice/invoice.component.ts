@@ -16,7 +16,6 @@ export class InvoiceComponent implements OnInit {
   sell = <Sell>{ sellItems: [], receipt: <Receipt>{} };
 
   constructor(private route: ActivatedRoute, private printService: SellPrintService, private cartService: SellService) {
-
   }
 
   ngOnInit() {

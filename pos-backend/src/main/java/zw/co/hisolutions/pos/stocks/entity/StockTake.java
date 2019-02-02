@@ -21,8 +21,18 @@ import zw.co.hisolutions.pos.common.entity.BaseEntity;
 public class StockTake extends BaseEntity {
 
     @Temporal(javax.persistence.TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date stockTakeDate = new Date();
+    
+
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date startTime = new Date();
+    
+
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime ;
     
     private String remarks;
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -7,11 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
 
-  constructor(/*private auth: AuthService*/) { }
+  constructor(private router: Router/*private auth: AuthService*/) { }
 
   ngOnInit() { }
 
   logout() {
     //    this.auth.signOut();
+  }
+
+  showTestPrint() {
+    console.log('gsgs');
+
+    this.router.navigate(['sell',
+      {
+        outlets: {
+          'print': ['testprint']
+        }
+      }]);
   }
 }

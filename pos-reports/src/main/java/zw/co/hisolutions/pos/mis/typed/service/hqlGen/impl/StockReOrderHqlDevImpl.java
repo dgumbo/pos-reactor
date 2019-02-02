@@ -87,9 +87,9 @@ public class StockReOrderHqlDevImpl implements StockReOrderHql{
                 + "\n Join CurrentStock cs On cs.stockItem.id = sti.id And cs.stockStatus = 'AVAILABLE' "
                 + "\n Left Join MinimumOrderQuantity moq On moq.stockItem.id = sti.id ");
         queryString.append("\n Where s.sellDate >= :dateBackAgo ");
-        if (stockItemName != null && !stockItemName.trim().equalsIgnoreCase("") && !stockItemName.trim().equalsIgnoreCase("all")) {
-            queryString.append("\n And sti.name like :stockItemName ");
-        }
+//        if (stockItemName != null && !stockItemName.trim().equalsIgnoreCase("") && !stockItemName.trim().equalsIgnoreCase("all")) {
+//            queryString.append("\n And sti.name like :stockItemName ");
+//        }
         queryString.append("\n Group By cs.quantity, Coalesce(moq.minOrderQuantity, 1), pc.name, sti.name, Coalesce(sti.lastReceiptCostRate, 0) ");
 //        queryString.append("\n Having cs.quantity < CEILING( "
 //                + "\n 		Sum(si.quantity) /  "
@@ -101,9 +101,9 @@ public class StockReOrderHqlDevImpl implements StockReOrderHql{
 //                + "\n 	  * :leadDays ");
         queryString.append(" Order By currentStockDepletionDays Asc, cs.quantity Asc ");
         TypedQuery<StockReOrderView> qry = entityManager.createQuery(queryString.toString(), StockReOrderView.class);
-        if (stockItemName != null && !stockItemName.trim().equalsIgnoreCase("") && !stockItemName.trim().equalsIgnoreCase("all")) {
-            qry.setParameter("stockItemName", "%" + stockItemName + "%");
-        }
+//        if (stockItemName != null && !stockItemName.trim().equalsIgnoreCase("") && !stockItemName.trim().equalsIgnoreCase("all")) {
+//            qry.setParameter("stockItemName", "%" + stockItemName + "%");
+//        }
         qry.setParameter("dateBackAgo", dateBackAgo);
         qry.setParameter("daysBackAgo", daysBackAgo);
         qry.setParameter("leadDays", leadDays);

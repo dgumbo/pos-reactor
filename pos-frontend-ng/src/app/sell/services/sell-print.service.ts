@@ -39,10 +39,10 @@ export class SellPrintService {
           console.log('Reached 50 Sales With Date Set');
           this.ticketSync.updateSaleWithDateCount(0);
         }
-        this.router.navigate(['/sell']);
+        // this.router.navigate(['/sell']);
       } else {
-        // console.log('/sell/date-sell');
-        this.router.navigateByUrl('/sell/date-sell');
+        console.log('/sell/date-sell');
+        // this.router.navigateByUrl('/sell/date-sell');
       }
     });
   }

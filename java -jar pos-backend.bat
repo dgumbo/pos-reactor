@@ -1,0 +1,1 @@
+java -jar pos-backend/target/pos-backend-1.0.0.war

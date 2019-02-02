@@ -108,7 +108,7 @@ public class StockReOrderReportService extends AbstractObjectXSSFTReportService<
 //        System.out.println("\n\n ");
         List<StockReOrderView> results = qry.getResultList()
                 .stream()
-                .filter(sro -> sro.getCurrentStock() < sro.getTotalSafetyStock())
+                // .filter(sro -> sro.getCurrentStock() < sro.getTotalSafetyStock())
                 .collect(Collectors.toList());
 
         Comparator<StockReOrderView> comp = (o1, o2) -> {

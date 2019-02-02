@@ -28,10 +28,10 @@ public class ScheduleOfPriceServiceImpl implements ScheduleOfPriceService {
     private final StockItemDao stockItemDao;
 
     @Autowired
-    public ScheduleOfPriceServiceImpl(ScheduleOfPriceDao scheduleOfChargeDao, CurrencyService currencyService, StockItemDao stockItemService) {
+    public ScheduleOfPriceServiceImpl(ScheduleOfPriceDao scheduleOfChargeDao, StockItemDao stockItemDao, CurrencyService currencyService) {
         this.scheduleOfPriceDao = scheduleOfChargeDao;
         this.currencyService = currencyService;
-        this.stockItemDao = stockItemService;
+        this.stockItemDao = stockItemDao;
     }
 
     @Override
@@ -122,14 +122,49 @@ public class ScheduleOfPriceServiceImpl implements ScheduleOfPriceService {
                         bondPrice.setProduct(prod);
                     }
 
-                    double newPrice = usdPrice.getPrice().doubleValue() * usdBondRatio;
-                    bondPrice.setPrice(new BigDecimal(newPrice));
+                    Double newPrice = usdPrice.getPrice().doubleValue() * usdBondRatio;
+
+                    double doubleIntValue = new Double(newPrice.intValue());
+                    double intValueDiff = newPrice - doubleIntValue;
+
+                    double newDecValue;
+                    if (intValueDiff <= 0.04) {
+                        newDecValue = 0.00;
+                    } else if (intValueDiff <= 0.11) {
+                        newDecValue = 0.10;
+                    } else if (intValueDiff <= 0.20) {
+                        newDecValue = 0.20;
+                    } else if (intValueDiff <= 0.26) {
+                        newDecValue = 0.25;
+                    } else if (intValueDiff <= 0.32) {
+                        newDecValue = 0.30;
+                    } else if (intValueDiff <= 0.42) {
+                        newDecValue = 0.40;
+                    } else if (intValueDiff <= 0.52) {
+                        newDecValue = 0.50;
+                    } else if (intValueDiff <= 0.62) {
+                        newDecValue = 0.60;
+                    } else if (intValueDiff <= 0.7) {
+                        newDecValue = 0.70;
+                    } else if (intValueDiff <= 0.76) {
+                        newDecValue = 0.75;
+                    } else if (intValueDiff <= 0.82) {
+                        newDecValue = 0.80;
+                    } else if (intValueDiff <= 0.92) {
+                        newDecValue = 0.90;
+                    } else {
+                        newDecValue = 1.00;
+                    } 
+                    
+                    double newAdjustedPrice = doubleIntValue + newDecValue;
+                    
+                    bondPrice.setPrice(new BigDecimal(newAdjustedPrice));
                     save(bondPrice);
 
                     System.out.println("\nproduct : " + prod);
-                    System.out.println("usdprice : " + usdPrice.getPrice());
-                    System.out.println("bondPrice : " + bondPrice.getPrice());
                     System.out.println("usdBondRatio : " + usdBondRatio);
+                    System.out.println("usdprice : " + usdPrice.getPrice());
+                    System.out.println("bondPrice : " + bondPrice.getPrice()); 
                 }
             });
         }

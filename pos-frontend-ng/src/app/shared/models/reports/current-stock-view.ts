@@ -7,7 +7,7 @@ export interface CurrentStockView {
     lrcrTotalValue: number;
     wacTotalValue: number;
     sellingPrice: number;
-    totalSellingValue: number;
+    totalSellingPrice: number;
     currency: string;
     batchNumber: string;
     expiryDate: Date;

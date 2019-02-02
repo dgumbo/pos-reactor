@@ -11,7 +11,8 @@ import { CartEmptyModalComponent } from './components/cart-empty-modal/cart-empt
 import { SellService, SellPrintService, PosService } from './services';
 import { SellHomeComponent, SellCartComponent, ItemListComponent } from './components/sell';
 import { PrintLayoutComponent, InvoiceComponent } from './components/print';
-
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { ReceiptPreviewComponent } from './components/receipt-preview/receipt-preview.component';
 
 @NgModule({
     declarations: [
@@ -24,12 +25,14 @@ import { PrintLayoutComponent, InvoiceComponent } from './components/print';
         PaymentLineModalFormComponent,
         StockItemNotFoundModalComponent,
         CartEmptyModalComponent,
+        ReceiptPreviewComponent,
     ],
     imports: [
         CommonModule,
         FormsModule,
         SharedModule,
         SellRoutingModule,
+        PdfViewerModule,
     ],
     entryComponents: [
         PaymentModalComponent,

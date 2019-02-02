@@ -1,0 +1,10 @@
+// .header, .header-space, .footer, .footer-space { height: auto; }
+
+// .header { /*position: fixed;*/ top: 10px; }
+// .receipt-footer { position: fixed; bottom: 10px; }
+
+@media screen {
+  :host {
+    display: none;
+  }
+} 

@@ -1,4 +1,4 @@
-package zw.co.hisolutions.pos.reports.entity;
+package zw.co.hisolutions.pos.common.enums;
 
 /**
  *

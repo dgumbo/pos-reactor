@@ -18,10 +18,14 @@ export class AddProductModalComponent implements OnInit {
   currencies: Currency[] = [];
   productCategories: ProductCategory[] = [];
 
+  oldName = '';
+
   constructor(public dialogRef: MatDialogRef<AddProductModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { product: Product, currencies: Currency[], productCategories: ProductCategory[] },
   ) {
     this.newForm = data.product.id ? false : true;
+    this.oldName = data.product.name;
+
     this.currencies = data.currencies;
     this.productCategories = data.productCategories;
     this.product = this.data.product;
@@ -38,19 +42,24 @@ export class AddProductModalComponent implements OnInit {
       const bondPrice = this.product.bondPrice;
 
       this.price.currency = currencies.find(c => c.name.toLowerCase().includes('bond'));
-      this.price.price = bondPrice; 
+      this.price.price = bondPrice;
 
       this.product.productCategory = productCategories.find(pc => pc.name === product.productCategory.name);
     }
   }
 
   returnProduct() {
-    const scheduleOfPrice = <ScheduleOfPrice>{};
-    scheduleOfPrice.additionalCharge = 0;
-    scheduleOfPrice.chargeType = ChargeType.PRIMARY;
-    scheduleOfPrice.currency = this.price.currency;
-    scheduleOfPrice.price = this.price.price;
-    this.product.scheduleOfPrices = [scheduleOfPrice];
+    if (this.newForm) {
+      const scheduleOfPrice = <ScheduleOfPrice>{};
+      scheduleOfPrice.additionalCharge = 0;
+      scheduleOfPrice.chargeType = ChargeType.PRIMARY;
+      scheduleOfPrice.currency = this.price.currency;
+      scheduleOfPrice.price = this.price.price;
+      this.product.scheduleOfPrices = [scheduleOfPrice];
+    } else {
+      this.product.currentStock = null;
+      this.product.scheduleOfPrices = [];
+    }
 
     this.dialogRef.close(this.product);
   }

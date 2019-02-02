@@ -36,6 +36,8 @@ export class StockTakeFormComponent implements OnInit {
     } else if (stockTakePreviewId && Number(stockTakePreviewId) >= 1) {
       stockTakeId = stockTakePreviewId;
       this.newForm = false;
+    } else {
+      this.checkPendingStockTake();
     }
 
     if (stockTakeId && Number(stockTakeId) >= 1) {
@@ -61,6 +63,19 @@ export class StockTakeFormComponent implements OnInit {
   getAllAvailaleStock() {
     this.stockTakeService.getAllStockItems()
       .subscribe((res: Product[]) => this.products = res);
+  }
+
+  editStockTakeLine(stockTakeLine: StockTakeLine) {
+    console.log(stockTakeLine);
+  }
+
+  removeStockTakeLine(stockTakeLine: StockTakeLine) {
+    const index = this.stockTake.stockTakeLines.findIndex(stl => stl.stockItem.id === stockTakeLine.stockItem.id);
+
+    // if (index >= 0) {
+    //   this.stockTake.stockTakeLines.slice(index, 1);
+    //   this.dataSource.data = this.stockTake.stockTakeLines;
+    // }
   }
 
   openDialog() {
@@ -111,6 +126,16 @@ export class StockTakeFormComponent implements OnInit {
           // console.log(res);
         });
     }
+  }
+
+  checkPendingStockTake() {
+    this.stockTakeService.checkPendingStockTake()
+      .subscribe((res: StockTake) => {
+        // console.log(res);
+        if (res.stockTakeStatus === 'PENDING') {
+          this.router.navigate(['/stocks', 'stock-take']);
+        }
+      });
   }
 
 }

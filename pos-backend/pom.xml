@@ -27,23 +27,23 @@
             <artifactId>pos-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>  
-       <dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>pos-reports</artifactId>
             <version>${project.parent.version}</version> 
         </dependency>   
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>pos-auth-jwt</artifactId>
             <version>${project.parent.version}</version> 
         </dependency>   -->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>pos-storage</artifactId>
             <version>${project.parent.version}</version> 
         </dependency> -->     
          
-        <!-- End Database Depencencies Declerations -->
+        <!-- End Database Depencencies Declerations --> 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>

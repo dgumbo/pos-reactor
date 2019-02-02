@@ -21,5 +21,6 @@ public enum StockTransactionType {
     ,REVERSAL 
     ,COST_ADJUSTMENT 
     ,JOB_ORDER_ISSUE 
-    ,JOB_ORDER_RETURN   
+    ,JOB_ORDER_RETURN
+    , STOCK_TAKE   
 }

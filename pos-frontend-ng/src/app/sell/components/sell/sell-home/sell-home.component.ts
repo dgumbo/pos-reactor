@@ -14,6 +14,6 @@ export class SellHomeComponent implements OnInit {
     this.dateSell = route.snapshot.params['date-sell'] ? true : false;
   }
 
-  ngOnInit() { }
+  ngOnInit() {  }
 
 }

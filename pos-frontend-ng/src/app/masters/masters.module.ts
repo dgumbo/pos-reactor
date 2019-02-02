@@ -25,6 +25,7 @@ import { ExchangeRateModalFormComponent } from './components/exchange-rates/exch
 import { ExchangeRatesListComponent } from './components/exchange-rates/exchange-rates-list/exchange-rates-list.component';
 import { PriceListComponent } from './components/update-price/price-list/price-list.component';
 import { PriceUpdateModalFormComponent } from './components/update-price/price-update-modal-form/price-update-modal-form.component';
+import { MassPriceUpdateModalFormComponent } from './components/update-price/mass-price-update-modal-form/mass-price-update-modal-form.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { PriceUpdateModalFormComponent } from './components/update-price/price-u
     ExchangeRatesListComponent,
     PriceListComponent,
     PriceUpdateModalFormComponent,
+    MassPriceUpdateModalFormComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +59,7 @@ import { PriceUpdateModalFormComponent } from './components/update-price/price-u
     ProductCategoryModalFormComponent,
     AddProductModalComponent,
     PriceUpdateModalFormComponent,
+    MassPriceUpdateModalFormComponent,
   ],
   providers: [
     CurrencyDataService,

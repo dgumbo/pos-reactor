@@ -1,0 +1,18 @@
+<!-- <div class="container receipt-layout"> 
+  <pdf-viewer #pdfViewer
+  [src]="pdfSrc"  
+  (after-load-complete)="afterLoadComplete($event)" 
+  (page-rendered)="pageRendered($event)">
+
+  </pdf-viewer> 
+</div>  -->
+
+<iframe #ifrm 
+[src]="pdfSrc | safeUrl" 
+class="container receipt-layout" 
+id="pdf" name="pdf" 
+(load)="onLoaded()"
+width="100%" 
+height="1000px">
+
+</iframe>

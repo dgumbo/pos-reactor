@@ -16,10 +16,10 @@ export class CurrentStockReceiptReportComponent implements OnInit {
 
   date = new Date();
   totalOrderCost = 0;
-  totalSellingValue = 0;
+  totalSellingPrice = 0;
 
   stockReOrders: CurrentStockView[] = [];
-  returnUrl: string = null;
+  // returnUrl: string = null;
 
   constructor(private route: ActivatedRoute,
     private reportsPrintService: ReportsPrintService,
@@ -28,9 +28,9 @@ export class CurrentStockReceiptReportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.params['returnUrl'];
-    // console.log(this);
-    console.log('this.returnUrl', this.returnUrl);
+    // this.returnUrl = this.route.snapshot.params['returnUrl'];
+    // // console.log(this);
+    // console.log('this.returnUrl', this.returnUrl);
 
     this.getReportData();
   }
@@ -48,7 +48,7 @@ export class CurrentStockReceiptReportComponent implements OnInit {
 
           res.reportData.forEach((rd: any) => {
             this.totalOrderCost += rd.lrcrTotalValue;
-            this.totalSellingValue += rd.totalSellingValue;
+            this.totalSellingPrice += rd.totalSellingPrice;
           });
 
           this.stockReOrders = res.reportData;

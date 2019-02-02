@@ -19,12 +19,11 @@ import {
     MatSnackBarModule,
 } from '@angular/material';
 import { FooterComponent, HeaderComponent, SideNavComponent } from './components';
-import { SplitCamelCasePipe } from './pipes';
+import { SplitCamelCasePipe, SafeUrlPipe } from './pipes';
 import { RouterModule } from '@angular/router';
 import { NotificationComponent } from './components/notification/notification.component';
 import { OwlNativeDateTimeModule, OwlDateTimeModule, OWL_DATE_TIME_FORMATS, DateTimeAdapter, OWL_DATE_TIME_LOCALE } from 'ng-pick-datetime';
 import { MomentDateTimeAdapter } from 'ng-pick-datetime-moment';
-
 export const MY_MOMENT_FORMATS = {
     parseInput: 'DD-MMMM-YYYY HH:mm:ss',
     fullPickerInput: 'DD MMMM YYYY HH:mm:ss',
@@ -71,6 +70,7 @@ export const sharedModules = [
 ];
 export const sharedPipes = [
     SplitCamelCasePipe,
+    SafeUrlPipe,
 ];
 
 @NgModule({

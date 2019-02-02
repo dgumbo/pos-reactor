@@ -24,10 +24,10 @@ import { ReportsComponent } from './components/other-reports/reports.component';
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule,
-    ReportsRoutingModule,
     DynamicFormModule,
     FormsModule,
+    SharedModule,
+    ReportsRoutingModule,
     // AuthModule,
   ],
   declarations: [

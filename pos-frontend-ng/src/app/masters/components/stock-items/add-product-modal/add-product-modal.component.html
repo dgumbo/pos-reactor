@@ -1,23 +1,27 @@
 <mat-card class="add-margin">
-  <mat-card-title>Add Item</mat-card-title>
+  <mat-card-title *ngIf="newForm">Add New Product</mat-card-title>
+  <mat-card-title *ngIf="!newForm">Edit - {{oldName}}</mat-card-title>
   <mat-card-content>
     <form class="form">
       <!-- Name -->
       <mat-form-field>
         <input matInput placeholder="Name:" name="name" [(ngModel)]="product.name">
       </mat-form-field>
+
       <!-- Price -->
-      <mat-form-field>
+      <mat-form-field *ngIf="newForm">
         <input matInput placeholder="Price ($):" step="0.05" type="number" name="price.price" [(ngModel)]="price.price">
       </mat-form-field>
+
       <!-- Price Currency -->
-      <mat-form-field>
+      <mat-form-field *ngIf="newForm">
         <mat-select placeholder="Price Currency:" name="price.currency" [(ngModel)]="price.currency">
           <mat-option *ngFor="let cur of currencies" [value]="cur">
             {{cur.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
+
       <!-- Product type dropdown -->
       <mat-form-field>
         <mat-select placeholder="Product Category:" name="productCategory" [(ngModel)]="product.productCategory">
@@ -26,6 +30,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
       <!-- Bar Code -->
       <mat-form-field>
         <input matInput placeholder="Bar Code" type="text" name="barcode" [(ngModel)]="product.barcode">
@@ -37,7 +42,7 @@
       </mat-form-field>
 
       <!-- Current Stock -->
-      <mat-form-field>
+      <mat-form-field *ngIf="newForm">
         <input matInput placeholder="Current Stock" type="number" step="1" name="currentStock" [(ngModel)]="product.currentStock.quantity">
       </mat-form-field> 
     </form>

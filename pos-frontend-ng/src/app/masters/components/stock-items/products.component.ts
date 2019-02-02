@@ -92,12 +92,18 @@ export class ProductsComponent implements OnInit {
 
     const dialogRef = this.dialog.open(AddProductModalComponent, dialogConfig);
 
+    let currentStockBeforeUpdate: CurrentStock = null;
+    if (product.currentStock) {
+      currentStockBeforeUpdate = product.currentStock;
+      // console.log('currentStockBeforeUpdate : ', currentStockBeforeUpdate.quantity);
+    }
+
     dialogRef.afterClosed().subscribe((diagRes: Product) => {
       if (diagRes && diagRes.name) {
         this.productService.create(diagRes)
           .subscribe((res: Product) => {
 
-            if (diagRes.currentStock.quantity >= 1) {
+            if (diagRes.currentStock && diagRes.currentStock.quantity >= 1) {
               this.currentStockService
                 .setProductCurrentStock(res.id, diagRes.currentStock.quantity)
                 .subscribe((csRes: CurrentStock) => {
@@ -105,12 +111,19 @@ export class ProductsComponent implements OnInit {
                 });
             }
 
+            if (currentStockBeforeUpdate && currentStockBeforeUpdate.quantity > 0) {
+              console.log(currentStockBeforeUpdate);
+              res.currentStock = currentStockBeforeUpdate;
+            }
+            console.log(res.currentStock);
+
             const index = this.products.findIndex(ger => ger.name === res.name);
             if (index >= 0) {
-              this.products.splice(index, 1);
+              this.products.splice(index, 1, res);
+            } else {
+              this.products.push(res);
             }
 
-            this.products.push(res);
             this.unFilteredProductsHolder = this.products;
             this.dataSource.data = this.products;
           });

@@ -13,5 +13,7 @@ import zw.co.hisolutions.pos.stocks.entity.StockTransactionStatus;
 @Repository
 public interface StockTakeDao extends JpaRepository<StockTake, Long>  { 
     List<StockTake> getByStockTakeStatus(StockTransactionStatus transactionStatus);
+
+    List<StockTake> findByStockTakeStatus(StockTransactionStatus stockTransactionStatus);
  
 }

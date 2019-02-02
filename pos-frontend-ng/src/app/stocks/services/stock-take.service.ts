@@ -26,6 +26,10 @@ export class StockTakeService extends DataRestService {
     });
   }
 
+  checkPendingStockTake(): Observable<any> {
+    return this.restHttpClient.get(this.url + '/check-pending-stock-take');
+  }
+
   getAllStockItems(): Observable<any> {
     return this.restHttpClient.get(this.url + '/all-stock-items');
   }
