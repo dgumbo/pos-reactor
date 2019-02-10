@@ -5,14 +5,16 @@
   (page-rendered)="pageRendered($event)">
 
   </pdf-viewer> 
+[src]="pdfSrc | safeUrl" 
 </div>  -->
 
 <iframe #ifrm 
-[src]="pdfSrc | safeUrl" 
 class="container receipt-layout" 
 id="pdf" name="pdf" 
-(load)="onLoaded()"
+(load)="onIframeLoaded($event)"
 width="100%" 
-height="1000px">
+height="1000px"
+itemtype="application/pdf"
+(ended)="onIframeEnded($event)">
 
 </iframe>

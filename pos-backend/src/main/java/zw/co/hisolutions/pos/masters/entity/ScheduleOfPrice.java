@@ -47,12 +47,12 @@ public class ScheduleOfPrice extends BaseEntity {
     private String description;
 
     @Min(0)
+    @Column(nullable = false)
     private BigDecimal price;
 
     @Min(0)
     private double ratio;
 
     @Min(0)
-    private BigDecimal additionalCharge;
-
+    private BigDecimal additionalCharge; 
 }

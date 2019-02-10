@@ -34,7 +34,7 @@ public class ReceiptPrintServiceImpl implements ReceiptPrintService {
     private final Float MM_PER_INCH = 1 / (10 * 2.54f) * POINTS_PER_INCH;
 
     private final int DOCUMENT_WIDTH = MM_PER_INCH.intValue() * 112;
-    private final int DOCUMENT_HEIGHT = MM_PER_INCH.intValue() * 180;
+    private final int DOCUMENT_HEIGHT = MM_PER_INCH.intValue() * 200;
 
     private final int CONTENT_START_X = 4;
 
@@ -109,7 +109,7 @@ public class ReceiptPrintServiceImpl implements ReceiptPrintService {
     }
 
     private int printHeader(PDPageContentStream contents, Sell sell, int headerStartY) throws IOException {
-        headerStartY -= 20;
+        headerStartY -= 25;
         int col1EndX = DOCUMENT_WIDTH * 1 / 3;
 
         final int letterHeadRowHeight = 10;
@@ -140,14 +140,12 @@ public class ReceiptPrintServiceImpl implements ReceiptPrintService {
         int headerRowHeight = 25;
         nextStartY -= 40;
 
-        contents.addRect(CONTENT_START_X, nextStartY, DOCUMENT_WIDTH - CONTENT_START_X * 2, headerRowHeight);
-
-        Color fillColor = new Color(240, 240, 240);
-        Color strokeColor = new Color(238, 238, 238);
-        contents.setStrokingColor(strokeColor);
-        contents.setNonStrokingColor(fillColor);
-        contents.fillAndStroke();
-
+//        contents.addRect(CONTENT_START_X, nextStartY, DOCUMENT_WIDTH - CONTENT_START_X * 2, headerRowHeight);
+//        Color fillColor = new Color(240, 240, 240);
+//        Color strokeColor = new Color(238, 238, 238);
+//        contents.setStrokingColor(strokeColor);
+//        contents.setNonStrokingColor(fillColor);
+//        contents.fillAndStroke();
 //        contents.moveTo(prodPos, nextStartY + headerRowHeight);
 //        contents.lineTo(prodPos, nextStartY);
 //        contents.moveTo(quantityPos, nextStartY + headerRowHeight);
@@ -158,7 +156,6 @@ public class ReceiptPrintServiceImpl implements ReceiptPrintService {
 //        strokeColor = new Color(220, 220, 220);
 //        contents.setStrokingColor(strokeColor);
 //        contents.stroke();
-
         PDFont font = PDType1Font.HELVETICA;
         PDFPrinterService headerPrinter = new PDFPrinterService(contents, font, 11);
         headerPrinter.putText(CONTENT_START_X + 3, nextStartY + headerRowHeight * 2 / 6, "Item");
@@ -225,33 +222,30 @@ public class ReceiptPrintServiceImpl implements ReceiptPrintService {
         int pricePos = quantityPos + (DOCUMENT_WIDTH * PRICE_COLUMN_RATIO / GLOBAL_RATIO);
         int totalPos = pricePos + (DOCUMENT_WIDTH * TOTAL_COLUMN_RATIO / GLOBAL_RATIO);
 
-        Color fillColor = new Color(250, 250, 250);
-        Color strokeColor = new Color(238, 238, 238);
-        
-        contents.setStrokingColor(strokeColor);
-        contents.setNonStrokingColor(fillColor);
-
-        contents.addRect(CONTENT_START_X, rowY - height, DOCUMENT_WIDTH - CONTENT_START_X * 2, height);
-
-        if (odd) {
-            contents.fillAndStroke();
-        } else {
-            contents.stroke();
-        }
-
+//        Color fillColor = new Color(250, 250, 250);
+//        Color strokeColor = new Color(238, 238, 238);
+//        
+//        contents.setStrokingColor(strokeColor);
+//        contents.setNonStrokingColor(fillColor);
+//        contents.addRect(CONTENT_START_X, rowY - height, DOCUMENT_WIDTH - CONTENT_START_X * 2, height);
+//        if (odd) {
+//            contents.fillAndStroke();
+//        } else {
+//            contents.stroke();
+//        }
 //        contents.moveTo(prodPos, rowY - height);
 //        contents.lineTo(prodPos, rowY);
 //        contents.moveTo(quantityPos, rowY - height);
 //        contents.lineTo(quantityPos, rowY);
 //        contents.moveTo(pricePos, rowY - height);
 //        contents.lineTo(pricePos, rowY);
-
 //        strokeColor = new Color(220, 220, 220);
 //        contents.setStrokingColor(strokeColor);
 //        contents.stroke();
     }
 
     private int printServicesListSummary(PDPageContentStream contents, Sell sell, int summaryStartY) throws IOException {
+        summaryStartY -= 10;
         int summaryRowHeight = 18;
         summaryStartY -= summaryRowHeight;
 
@@ -274,12 +268,23 @@ public class ReceiptPrintServiceImpl implements ReceiptPrintService {
 
         PDFPrinterService summaryPrinter = new PDFPrinterService(contents, PDType1Font.HELVETICA, 11);
 
-        // /* Print Subtotal */ 
-        contents.moveTo(firstRectEndX, summaryStartY);
-        contents.lineTo(secondRectEndX, summaryStartY);
-        contents.stroke();
+        // /* Print Items Count */ 
+//        contents.moveTo(firstRectEndX, summaryStartY);
+//        contents.lineTo(secondRectEndX, summaryStartY);
+//        contents.stroke();
 
-        summaryPrinter.putTextToTheRight(firstRectEndX, summaryStartY + summaryRowHeight * 1 / 4, "Sub Total : ");
+        summaryPrinter.putTextToTheRight(firstRectEndX, summaryStartY + summaryRowHeight * 1 / 4, "Items : ");
+        summaryPrinter.putTextToTheRight(DOCUMENT_WIDTH - CONTENT_START_X * 2 - 4, summaryStartY + summaryRowHeight * 1 / 4, ((Integer) sell.getSellItems().size()).toString());
+
+        summaryStartY -= summaryRowHeight;
+        // /* End Print Items Count */
+
+        // /* Print Subtotal */ 
+//        contents.moveTo(firstRectEndX, summaryStartY);
+//        contents.lineTo(secondRectEndX, summaryStartY);
+//        contents.stroke();
+
+        summaryPrinter.putTextToTheRight(firstRectEndX, summaryStartY + summaryRowHeight * 1 / 4, "Total Amount : ");
         summaryPrinter.putTextToTheRight(DOCUMENT_WIDTH - CONTENT_START_X * 2 - 4, summaryStartY + summaryRowHeight * 1 / 4, "$ " + sellAmount.toString());
 
         summaryStartY -= summaryRowHeight;
@@ -287,24 +292,24 @@ public class ReceiptPrintServiceImpl implements ReceiptPrintService {
 
         // /* Print VAT */
 //        contents.addRect(firstRectEndX, summaryStartY, secondRectEndX - 5, summaryRowHeight);
-        contents.moveTo(firstRectEndX, summaryStartY);
-        contents.lineTo(secondRectEndX, summaryStartY);
-        contents.stroke();
+//        contents.moveTo(firstRectEndX, summaryStartY);
+//        contents.lineTo(secondRectEndX, summaryStartY);
+//        contents.stroke();
 
-        summaryPrinter.putTextToTheRight(firstRectEndX, summaryStartY + summaryRowHeight * 1 / 4, "Vat : ");
-        summaryPrinter.putTextToTheRight(DOCUMENT_WIDTH - CONTENT_START_X * 2 - 4, summaryStartY + summaryRowHeight * 1 / 4, "$ " + changeAmount.toString());
+        summaryPrinter.putTextToTheRight(firstRectEndX, summaryStartY + summaryRowHeight * 1 / 4, "Tendered : ");
+        summaryPrinter.putTextToTheRight(DOCUMENT_WIDTH - CONTENT_START_X * 2 - 4, summaryStartY + summaryRowHeight * 1 / 4, "$ " + paidAmount.toString());
 
         summaryStartY -= summaryRowHeight;
         // /* End Print VAT */ 
 
         // /* Print Total */
 //        contents.addRect(firstRectEndX, summaryStartY, secondRectEndX - 5, summaryRowHeight);
-        contents.moveTo(firstRectEndX, summaryStartY);
-        contents.lineTo(secondRectEndX, summaryStartY);
-        contents.stroke();
+//        contents.moveTo(firstRectEndX, summaryStartY);
+//        contents.lineTo(secondRectEndX, summaryStartY);
+//        contents.stroke();
 
-        summaryPrinter.putTextToTheRight(firstRectEndX, summaryStartY + summaryRowHeight * 1 / 4, "Total : ");
-        summaryPrinter.putTextToTheRight(DOCUMENT_WIDTH - CONTENT_START_X * 2 - 4, summaryStartY + summaryRowHeight * 1 / 4, "$ " + paidAmount.toString());
+        summaryPrinter.putTextToTheRight(firstRectEndX, summaryStartY + summaryRowHeight * 1 / 4, "Change : ");
+        summaryPrinter.putTextToTheRight(DOCUMENT_WIDTH - CONTENT_START_X * 2 - 4, summaryStartY + summaryRowHeight * 1 / 4, "$ " + changeAmount.toString());
         // /* End Print Total */
 
         return summaryStartY;

@@ -10,7 +10,7 @@ import { StockTakeService } from 'app/stocks/services/stock-take.service';
 })
 export class StockTakeListComponent implements OnInit {
 
-  stockReceiveList: StockTake[] = [];
+  stockReceiveList: StockTake[] = []; 
   displayedColumns: string[] = ['action', 'date', 'status', 'receiveCountItems', 'remarks', 'user'];
   dataSource = new MatTableDataSource<StockTake>();
 

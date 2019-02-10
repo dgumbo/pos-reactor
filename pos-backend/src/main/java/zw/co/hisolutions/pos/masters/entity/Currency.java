@@ -15,12 +15,11 @@ import zw.co.hisolutions.pos.common.entity.BaseEntity;
 @Entity
 @Data
 @Table(name="currency")
-public class Currency  extends BaseEntity {
-    
+public class Currency  extends BaseEntity { 
     @Column(nullable = false, unique = true)
     private String name;
     
-    @NotNull
+    @Column(nullable = false)
     private boolean defaultCurrency;
      
     private boolean displayOnSummary;

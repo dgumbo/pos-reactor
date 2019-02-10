@@ -1,5 +1,7 @@
 package zw.co.hisolutions.pos.mis.typed.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -14,11 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.DataConsolidateFunction;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity; 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import zw.co.hisolutions.pos.mis.typed.entity.MisReportInformation;
 import zw.co.hisolutions.pos.mis.typed.entity.StockReOrderView;
-import zw.co.hisolutions.pos.mis.typed.entity.TypedParameterMetadata;  
+import zw.co.hisolutions.pos.mis.typed.entity.TypedParameterMetadata;
 import zw.co.hisolutions.pos.mis.typed.service.hqlGen.StockReOrderHql;
 import zw.co.hisolutions.pos.reports.entity.ReportAnalysisColumn;
 import zw.co.hisolutions.pos.reports.entity.ReportAnalysisSheet;
@@ -30,13 +32,13 @@ import zw.co.hisolutions.pos.sxssf.service.AbstractObjectXSSFTReportService;
 /**
  *
  * @author dgumbo
- */ 
+ */
 @Service
 public class StockReOrderReportService extends AbstractObjectXSSFTReportService<StockReOrderView> {
 
     @PersistenceContext
     EntityManager entityManager;
-    
+
     @Autowired
     StockReOrderHql stockReOrderHql;
 
@@ -90,7 +92,6 @@ public class StockReOrderReportService extends AbstractObjectXSSFTReportService<
     }
 
     private List<StockReOrderView> getData(String stockItemName) {
-//System.out.println(" zw.co.psmi.hms.mis.controllers.MisController.getReportPreview()" );
 
         long leadDays = 8;
         int daysBackAgo = 60;
@@ -100,20 +101,49 @@ public class StockReOrderReportService extends AbstractObjectXSSFTReportService<
         cal.add(Calendar.DAY_OF_MONTH, -daysBackAgo);
         dateBackAgo = cal.getTime();
 
-        //TypedQuery<StockReOrderView> qry = createNQuery(stockItemName, dateBackAgo, daysBackAgo, leadDays);
-        TypedQuery<StockReOrderView> qry = stockReOrderHql.createNQuery(stockItemName, dateBackAgo, daysBackAgo, leadDays);
+//        System.out.println("\n\n\nzw.co.hisolutions.pos.mis.typed.service.StockReOrderReportService.getData()");
+        TypedQuery<StockReOrderView> qry = stockReOrderHql.createNQuery(stockItemName, dateBackAgo);
 
-//        System.out.println("\n\n qry");
-//        System.out.println(" " +  qry.toString());
-//        System.out.println("\n\n ");
-        List<StockReOrderView> results = qry.getResultList()
+        List<StockReOrderView> results = qry.getResultList();
+
+        results.forEach(srov -> {
+            long daysToCalculateAverageOn = getDateDiff(new Date(), srov.getMinSellDate());
+
+            double averageDailySales = new Double(srov.getTotalSales()) / (daysToCalculateAverageOn == 0 ? 1 : daysToCalculateAverageOn);
+            averageDailySales = round(averageDailySales, 2);
+            srov.setAverageDailySales(averageDailySales);
+
+            Double curentStockDepletionDays = srov.getCurrentStock() / averageDailySales;
+            srov.setCurrentStockDepletionDays(curentStockDepletionDays.longValue());
+
+            Double safetyStock = averageDailySales * leadDays;
+            safetyStock = roundUp(safetyStock, 0);
+            srov.setTotalSafetyStock(safetyStock.longValue());
+
+            Double requiredQuantity = safetyStock - srov.getCurrentStock();
+            requiredQuantity = requiredQuantity < 0 ? 0 : requiredQuantity;
+            requiredQuantity = requiredQuantity > 0 && requiredQuantity < srov.getMinOrderQuantity() ? srov.getMinOrderQuantity() : requiredQuantity;
+            srov.setRequiredQuantity(requiredQuantity.longValue());
+
+            BigDecimal orderCost = srov.getUnitCost().multiply(new BigDecimal(requiredQuantity));
+            srov.setOrderCost(orderCost);
+        });
+
+        results = results
                 .stream()
-                // .filter(sro -> sro.getCurrentStock() < sro.getTotalSafetyStock())
+                .filter(sro -> sro.getCurrentStock() <= 1 || sro.getRequiredQuantity() >= 1)
                 .collect(Collectors.toList());
 
+        results.forEach(srov -> {
+            long requiredQuantity = srov.getRequiredQuantity() < srov.getMinOrderQuantity()
+                    ? srov.getMinOrderQuantity()
+                    : srov.getRequiredQuantity();
+
+            srov.setRequiredQuantity(requiredQuantity);
+        });
+
         Comparator<StockReOrderView> comp = (o1, o2) -> {
-            int iSort = 0;
-            iSort = o1.getCurrentStockDepletionDays() > o2.getCurrentStockDepletionDays() ? 5 : -5;
+            int iSort = o1.getCurrentStockDepletionDays() > o2.getCurrentStockDepletionDays() ? 5 : -5;
             iSort = o1.getCurrentStockDepletionDays() == o2.getCurrentStockDepletionDays()
                     && o1.getCurrentStock() > o2.getCurrentStock() ? 4 : iSort;
             iSort = o1.getCurrentStockDepletionDays() == o2.getCurrentStockDepletionDays()
@@ -126,7 +156,34 @@ public class StockReOrderReportService extends AbstractObjectXSSFTReportService<
 
         return results;
     }
- 
+
+    private Long getDateDiff(Date date1, Date date2) {
+        long diff = date1.getTime() - date2.getTime();
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        return diffDays;
+    }
+
+    private double round(double value, int places) {
+        if (places < 0) {
+            places = 0;
+        }
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    private double roundUp(double value, int places) {
+        if (places < 0) {
+            places = 0;
+        }
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.UP);
+        return bd.doubleValue();
+    }
+
     @Override
     public List<ReportAnalysisSheet> getReportAnalysisSheetList() {
         return Arrays.asList(

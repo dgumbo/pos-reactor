@@ -90,15 +90,6 @@ public class StockTakeController extends BasicRestController<StockTake, Long> {
         return new ResponseEntity<>(pendingStockTake, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/all-stock-items", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
-    public ResponseEntity<?> getAllStockProducts() {
-        List<StockItem> productList = stockTakeService.getAllStock();
-
-        //Resource resource = getService().buildResource(entity);
-        //System.out.println("\n T B4 Save : " + resource.getContent() + "\n");
-        return new ResponseEntity<>(productList, HttpStatus.OK);
-    }
-
     @GetMapping(value = "/pending-stock-take", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     public ResponseEntity<?> getPendingStockTake() {
         StockTake stockTakePending = stockTakeService.getPendingStockTake();
@@ -106,6 +97,15 @@ public class StockTakeController extends BasicRestController<StockTake, Long> {
         //Resource resource = getService().buildResource(entity);
         //System.out.println("\n T B4 Save : " + resource.getContent() + "\n");
         return new ResponseEntity<>(stockTakePending, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/all-stock-items", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    public ResponseEntity<?> getAllStockProducts() {
+        List<StockItem> productList = stockTakeService.getAllStock();
+
+        //Resource resource = getService().buildResource(entity);
+        //System.out.println("\n T B4 Save : " + resource.getContent() + "\n");
+        return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
     @InitBinder

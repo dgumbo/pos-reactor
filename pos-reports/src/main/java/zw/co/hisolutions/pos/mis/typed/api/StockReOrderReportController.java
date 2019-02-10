@@ -40,7 +40,7 @@ public class StockReOrderReportController extends AbstractReportsController {
         //System.out.println("zw.co.psmi.hms.mis.controllers.MisController.getReportPreview()");
 
                 
-        return stockOutReportService.getReportPreviewInformation( stockItemName);
+        return stockOutReportService.getReportPreviewInformation( stockItemName );
     }
 
     @GetMapping("/downloadExcelReport")

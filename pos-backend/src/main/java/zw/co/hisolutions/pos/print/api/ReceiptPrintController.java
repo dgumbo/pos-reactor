@@ -41,6 +41,15 @@ public class ReceiptPrintController {
     }
 
     @ResponseBody
+    @GetMapping("/views/{filenames:.+}") //using Path Variable
+    public ResponseEntity<byte[]> viewFiles(@PathVariable String filenames) throws IOException {
+//    @GetMapping("/view") //using Path Variable
+//    public ResponseEntity<Resource> viewFile( ) { 
+        System.out.println("zw.co.hisolutions.storage.controllers.StorageController.viewFile()");
+        return disposeFileContent(filename, ContentDisposalType.inline);
+    }
+
+    @ResponseBody
     @GetMapping("/view/{filenames:.+}") //using Path Variable
     public ResponseEntity<byte[]> viewFile(@PathVariable String filenames) throws IOException {
 //    @GetMapping("/view") //using Path Variable

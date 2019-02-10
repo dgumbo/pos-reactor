@@ -27,19 +27,30 @@ export class StockReceiveComponent implements OnInit {
   displayedColumns: string[] = ['action', 'product', 'supplier', 'quantity', 'totalcost', 'unitcost', 'category', 'lrcr', 'wac'];
   dataSource = new MatTableDataSource<StockReceiveItem>();
 
-  constructor(private currentStockService: StockReceiveDataService,
+  constructor(private stockReceiveService: StockReceiveDataService,
     private supplierService: SupplierDataService,
     public dialog: MatDialog,
     private router: Router,
     private activeRoute: ActivatedRoute) {
-    const receiveId = this.activeRoute.snapshot.params['receiveId'];
+    let stockReceiveId = 0;
+    const stockReceiveFinalizeId = this.activeRoute.snapshot.params['stockReceiveFinalizeId'];
+    const stockReceivePreviewId = this.activeRoute.snapshot.params['stockReceivePreviewId'];
 
-    if (receiveId && Number(receiveId) >= 1) {
+    if (stockReceiveFinalizeId && Number(stockReceiveFinalizeId) >= 1) {
+      stockReceiveId = stockReceiveFinalizeId;
+      this.newForm = true;
+    } else if (stockReceivePreviewId && Number(stockReceivePreviewId) >= 1) {
+      stockReceiveId = stockReceivePreviewId;
+      this.newForm = false;
+    } else {
+      this.checkPendingStockReceive();
+    }
+
+    if (stockReceiveId && Number(stockReceiveId) >= 1) {
       // console.log('receiveId :', receiveId);
-      this.currentStockService.get(Number(receiveId))
+      this.stockReceiveService.get(Number(stockReceiveId))
         .subscribe((res: StockReceive) => {
           // console.log(res);
-          this.newForm = false;
           this.stockReceive = res;
           this.stockReceive.stockReceiveItems.forEach(sri => {
             sri.totalCost = sri.unitCost * sri.quantity;
@@ -60,7 +71,7 @@ export class StockReceiveComponent implements OnInit {
   }
 
   getAllAvailaleStock() {
-    this.currentStockService.getAllAvailaleStock()
+    this.stockReceiveService.getAllAvailaleStock()
       .subscribe((res: Product[]) => this.products = res);
   }
 
@@ -82,8 +93,34 @@ export class StockReceiveComponent implements OnInit {
         res.batchNumber = 'BN';
         this.stockReceive.stockReceiveItems.push(res);
         this.dataSource.data = this.stockReceive.stockReceiveItems;
+        this.partialSaveStockReceive();
       }
     });
+  }
+
+  partialSaveStockReceive() {
+    const totalLines = this.stockReceive.stockReceiveItems.length;
+
+    if (totalLines >= 1) {
+      console.log('StockReceive : B4 Save :');
+      console.log(this.stockReceive);
+      this.stockReceiveService.partialSaveStockReceive(this.stockReceive)
+        .subscribe((res: StockReceive) => {
+          this.stockReceive = res;
+          // console.log('StockReceive : After Save :');
+          // console.log(res);
+        });
+    }
+  }
+
+  checkPendingStockReceive() {
+    this.stockReceiveService.checkPendingStockReceive()
+      .subscribe((res: StockReceive) => {
+        // console.log(res);
+        if (res.recieveStatus === 'PENDING') {
+          this.router.navigate(['/stocks', 'stock-take']);
+        }
+      });
   }
 
   saveStockReceive() {
@@ -101,7 +138,7 @@ export class StockReceiveComponent implements OnInit {
     if (totalLines >= 1) {
       // console.log('StockReceive : B4 Save :');
       // console.log(this.stockReceive);
-      this.currentStockService.createStockReceive(this.stockReceive)
+      this.stockReceiveService.finalizeStockReceive(this.stockReceive)
         .subscribe((res: any) => {
           // console.log('StockReceive : After Save :');
           // console.log(res);
@@ -110,6 +147,19 @@ export class StockReceiveComponent implements OnInit {
           this.router.navigate(['/stocks', 'stock-receive']);
         });
     }
+  }
+
+  editStockReceiveItem(stockTakeLine: StockReceiveItem) {
+    console.log(stockTakeLine);
+  }
+
+  removeStockReceiveItem(stockTakeLine: StockReceiveItem) {
+    const index = this.stockReceive.stockReceiveItems.findIndex(stl => stl.product .id === stockTakeLine.product.id);
+
+    // if (index >= 0) {
+    //   this.stockTake.stockTakeLines.slice(index, 1);
+    //   this.dataSource.data = this.stockTake.stockTakeLines;
+    // }
   }
 
 }

@@ -41,22 +41,31 @@ public class StockTransactionServiceImpl implements StockTransactionService {
     }
 
     @Override
-    public StockTransaction createReceiptTransaction(StockTransaction stockTransaction) {
-        return stockTransactionDao.save(stockTransaction) ;
+    public StockTransaction createStockReceiveTransaction(StockTransaction stockTransaction) {
+             stockTransaction
+                .getStockTransactionLines()
+                .forEach(stl-> stl.setStockTransaction(stockTransaction));
+             return stockTransactionDao.save(stockTransaction) ;
     }
 
     @Override
     public StockTransaction createSellStockTransaction(StockTransaction stockTransaction) {
-        return stockTransactionDao.save(stockTransaction) ;
+             stockTransaction
+                .getStockTransactionLines()
+                .forEach(stl-> stl.setStockTransaction(stockTransaction));
+             return stockTransactionDao.save(stockTransaction) ;
     }
 
     @Override
     public StockTransaction createStockTakeTransaction(StockTransaction stockTransaction) {
+        stockTransaction
+                .getStockTransactionLines()
+                .forEach(stl-> stl.setStockTransaction(stockTransaction));
         return stockTransactionDao.save(stockTransaction) ;
     }
 
     @Override
-    public StockTransactionLine createStockTakeTransactionLine(StockTakeLine stkl,StockTransaction stockTransaction ) {
+    public StockTransactionLine createStockTakeTransactionLine(StockTakeLine stkl  ) {
          Date expiryDate = null;
         try {
             expiryDate = dateFormat.parse("2099-12-31");
@@ -101,7 +110,6 @@ public class StockTransactionServiceImpl implements StockTransactionService {
         StockTransactionLine stl = new StockTransactionLine();
         stl.setProduct(stockItem);
         stl.setQuantity(stkl.getQuantity());
-        stl.setStockTransaction(stockTransaction);
         stl.setBatchNumber(stkl.getBatchNumber());
         stl.setConsignment(newAvailableStock.isConsignment());
         stl.setCurrentStockBefore(oldSplitStock);
@@ -119,7 +127,7 @@ public class StockTransactionServiceImpl implements StockTransactionService {
 
 
     @Override
-    public StockTransactionLine createStockReceiveTransactionLine(StockReceiveItem sri, StockTransaction stockTransaction) {
+    public StockTransactionLine createStockReceiveTransactionLine(StockReceiveItem sri ) {
          Date expiryDate = null;
         try {
             expiryDate = dateFormat.parse("2099-12-31");
@@ -167,8 +175,7 @@ public class StockTransactionServiceImpl implements StockTransactionService {
 
         StockTransactionLine stl = new StockTransactionLine();
         stl.setProduct(stockItem);
-        stl.setQuantity(sri.getQuantity());
-        stl.setStockTransaction(stockTransaction);
+        stl.setQuantity(sri.getQuantity()); 
         stl.setBatchNumber(sri.getBatchNumber());
         stl.setConsignment(newAvailableStock.isConsignment());
         stl.setCurrentStockBefore(oldSplitStock);

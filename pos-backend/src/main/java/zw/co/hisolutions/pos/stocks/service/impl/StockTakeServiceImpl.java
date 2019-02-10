@@ -41,16 +41,8 @@ public class StockTakeServiceImpl implements StockTakeService {
     @Override
     public Class getController() {
         return StockTakeController.class;
-    }
-
-    public StockTransaction createStockTakeTransaction(StockTransaction stockTransaction) {
-        return stockTransactionService.createStockTakeTransaction(stockTransaction);
-    }
-
-    public StockTransactionLine createStockTakeTransactionLine(StockTransaction stockTransaction, StockTakeLine stockTakeLine) {
-        return stockTransactionService.createStockTakeTransactionLine(stockTakeLine, stockTransaction);
-    }
-
+    } 
+    
     @Override
     public StockTake partialSaveStockTake(StockTake stockTake) {
         for (StockTakeLine stkl : stockTake.getStockTakeLines()) {
@@ -66,19 +58,14 @@ public class StockTakeServiceImpl implements StockTakeService {
     }
 
     @Override
-    public StockTake finalizeStockTake(StockTake stockTake) {
-        StockTransaction stockTransaction = new StockTransaction();
+    public StockTake finalizeStockTake(StockTake stockTake) { 
         List<StockTransactionLine> stockTransactionLines = new ArrayList();
-        stockTransaction.setStockTransactionLines(stockTransactionLines);
-        stockTransaction.setStockTransactionType(StockTransactionType.STOCK_TAKE);
-        stockTransaction.setEndTime(new Date());
-        stockTransaction.setTransactionTime(new Date());
 
         List<StockTakeLine> stockTakelines = stockTake.getStockTakeLines();
         for (StockTakeLine stkl : stockTakelines) {
             stkl.setStockTake(stockTake);
 
-            StockTransactionLine stl = stockTransactionService.createStockTakeTransactionLine(stkl, stockTransaction);
+            StockTransactionLine stl = stockTransactionService.createStockTakeTransactionLine(stkl);
 
             stockTransactionLines.add(stl);
             stkl.setStockTransactionLine(stl);
@@ -86,34 +73,19 @@ public class StockTakeServiceImpl implements StockTakeService {
             stkl.setCurrentStockAfter(stl.getCurrentStockAfter());
         }
 
-        StockTransaction st = stockTransactionService.createReceiptTransaction(stockTransaction);
+        StockTransaction stockTransaction = new StockTransaction();
+        stockTransaction.setStockTransactionLines(stockTransactionLines);
+        stockTransaction.setStockTransactionType(StockTransactionType.STOCK_TAKE);
+        stockTransaction.setEndTime(new Date());
+        stockTransaction.setTransactionTime(new Date());
+        StockTransaction savedStockTransaction = stockTransactionService.createStockTakeTransaction(stockTransaction);
 
         stockTake.setEndTime(new Date());
-        stockTake.setStockTransaction(st);
+        stockTake.setStockTransaction(savedStockTransaction);
         stockTake.setStockTakeStatus(StockTransactionStatus.COMPLETED);
         stockTake = stockTakeDao.save(stockTake);
 
         return stockTake;
-    }
-
-    @Override
-    public StockTake create(StockTake data) throws IllegalArgumentException {
-        return StockTakeService.super.create(data); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public StockTake save(StockTake data) throws IllegalArgumentException {
-        return StockTakeService.super.save(data); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void delete(Long id) throws IllegalArgumentException {
-        StockTakeService.super.delete(id); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public StockTake update(long id, StockTake data) throws IllegalArgumentException {
-        return StockTakeService.super.update(id, data); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -128,13 +100,14 @@ public class StockTakeServiceImpl implements StockTakeService {
     }
 
     @Override
-    public List<StockItem> getAllStock() {
-        return currentStockService.getAllStock();
-    }
-
-    @Override
     public StockTake getPendingStockTake() {
         List<StockTake> pendingStockTakes = stockTakeDao.getByStockTakeStatus(StockTransactionStatus.PENDING);
         return pendingStockTakes.isEmpty() ? null : pendingStockTakes.get(0);
     }
+ 
+    @Override
+    public List<StockItem> getAllStock() {
+        return currentStockService.getAllStock();
+    }
+
 }

@@ -22,7 +22,7 @@ const routes: Routes = [
     //   { path: 'invoice/:sellId', component: InvoiceComponent }
     // ]
   },
-  // { path: ':date-sell', component: SellHomeComponent },
+  { path: ':date-sell', component: SellHomeComponent },
 ];
 
 @NgModule({

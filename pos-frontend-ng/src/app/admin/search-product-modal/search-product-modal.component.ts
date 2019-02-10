@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Inject, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { Product, ProductCategory } from 'app/shared/models';
-import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatTabChangeEvent, MatTabGroup } from '@angular/material';
-import { StockSupplier } from 'app/shared/models/supplier';
+import { Product } from 'app/shared/models';
+import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-search-product-modal',

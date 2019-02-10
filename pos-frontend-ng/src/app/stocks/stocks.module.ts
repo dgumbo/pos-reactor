@@ -7,7 +7,7 @@ import { StockReceiveModalFormComponent } from './components/stock-receive/modal
 import { CurrentStockComponent } from './components/current-stock/current-stock.component';
 import { PriceListComponent } from './components/price-update/price-list/price-list.component';
 import { ReceiveListComponent } from './components/stock-receive/receive-list/receive-list.component';
-import { StockReceiveComponent } from './components/stock-receive/receive/stock-receive.component';
+import { StockReceiveComponent } from './components/stock-receive/receive-form/stock-receive.component';
 import { StockComponent } from './components/stock/stock.component';
 import { FormsModule } from '@angular/forms';
 import { SupplierDataService } from 'app/masters/services/supplier-data.service';

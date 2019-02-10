@@ -44,7 +44,7 @@
       <!--- Note that these columns can be defined in any order.
               The actual rendered columns are set as a property on the row definition" -->
 
-      <!-- Action Column -->
+      <!-- Action Column --> 
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
@@ -90,7 +90,8 @@
 
   <br />
 
-  <button mat-raised-button color="primary" (click)="saveStockTake()" [disabled]="!newForm">Finalize Stock Take</button>
+  <button mat-raised-button color="primary" (click)="saveStockTake()" 
+  [disabled]="!newForm">Finalize Stock Take</button>
 
   <button mat-raised-button color="warn" [routerLink]="['/stocks/stock-take']" routerLinkActive="router-link-active">Cancel</button>
 

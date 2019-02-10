@@ -11,8 +11,14 @@ import zw.co.hisolutions.pos.stocks.entity.StockTransaction;
  */
 public interface StockReceiveService extends GenericService<StockReceive, Long> {
 
-    public StockItem adjustUnitCost(StockTransaction stockTransaction);
+    public StockItem adjustUnitCost(StockTransaction stockTransaction); 
 
-    public StockReceive receiveStock(StockReceive StockReceive); 
+    public StockReceive getPendingStockReceive();
+
+    public StockReceive getAnyPendingStock();
+
+    public StockReceive finalizeStockReceive(StockReceive stockReceive);
+
+    public StockReceive partialSaveStockReceive(StockReceive stockReceive);
     
 }

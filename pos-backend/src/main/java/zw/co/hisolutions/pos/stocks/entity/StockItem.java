@@ -37,8 +37,7 @@ public class StockItem extends BaseEntity implements EntityWithName {
 
     @Column(unique = true, nullable = false)
     private String name;
-
-    // @Column(unique = true)
+ 
     private String barcode;
 
     private String shortcode;
@@ -57,8 +56,8 @@ public class StockItem extends BaseEntity implements EntityWithName {
     @Column(nullable = false)
     private boolean expirable = false;
 
-    @ManyToOne
-    private UnitOfMeasure unitOfMeasure;
+//    @ManyToOne
+//    private UnitOfMeasure unitOfMeasure;
 
     @Column(name = "weighted_average_cost", precision = 12, scale = 4)
     private BigDecimal weightedAverageCost = BigDecimal.ZERO;

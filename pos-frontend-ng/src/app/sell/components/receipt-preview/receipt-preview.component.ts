@@ -3,7 +3,8 @@ import { PDFSource, PDFDocumentProxy } from 'pdfjs-dist';
 import { SellPrintService } from 'app/sell/services';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ResponseContentType } from '@angular/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-receipt-preview',
@@ -14,46 +15,91 @@ export class ReceiptPreviewComponent implements OnInit, AfterViewInit {
 
   @ViewChild('ifrm') ifrm: ElementRef;
 
+  pdfUrl = 'http://localhost:8080/api/pdf-receipt/view/pddoc.pdf';
   pdfSrc: string | PDFSource | ArrayBuffer;
 
   error: any;
   Url: SafeUrl;
+  backgroundImagePicFile: any;
+  backgroundImagePicDisplay: any;
 
   constructor(private sellPrintService: SellPrintService,
-    private http: HttpClient, ) {
-    this.pdfSrc = 'http://localhost:8080/api/pdf-receipt/view';
+    private http: HttpClient,
+    private matSnackBar: MatSnackBar) {
+    this.pdfSrc = 'http://localhost:8080/api/pdf-receipt/views/pddoc.pdf';
   }
 
   ngOnInit() {
+    console.log('ngOnInit');
     // const rc = 'http://localhost:8080/api/pdf-receipt/view';
     // this.Url = this.sanitizer.bypassSecurityTrustResourceUrl(rc);
   }
 
   ngAfterViewInit(): void {
+    // this.sellPrintService.onDataReady();
     // this.onFileSelected();
     // this.loadPdf();
-    console.log('ifrm');
+    console.log('ngAfterViewInit');
     console.log(this.ifrm);
 
-    // const rc = 'http://localhost:8080/api/pdf-receipt/view';
-    // this.http.get(rc , {
-    //   responseType: ResponseContentType.Blob
-    // } ).subscribe(
-    //   (response: any) => { // download file
-    //     const blob = new Blob([response.blob()], { type: 'application/pdf' });
-    //     const blobUrl = URL.createObjectURL(blob);
-    //     // const iframe = document.createElement('iframe');
-    //     const iframe = this.ifrm.nativeElement;
-    //     iframe.style.display = 'none';
-    //     iframe.src = blobUrl;
-    //     document.body.appendChild(iframe);
-    //     iframe.contentWindow.print();
-    //   });
+    this.getPDF().subscribe((response) => {
+
+      const file = new Blob([response], { type: 'application/pdf' });
+      const fileURL = URL.createObjectURL(file);
+      window.open(fileURL);
+    });
+  }
+
+  getPDF() {
+    const url = this.pdfUrl;
+
+    const httpOptions = {
+      headers: new HttpHeaders(
+        {
+          'responseType': 'blob'
+          // both combination
+          // 'responseType'  : 'arraybuffer'
+        }
+      )
+    };
+
+    return this.http.get<any>(url, httpOptions);
+
+  }
+
+  createPDF() {
+    console.log('Sending GET on ' + this.pdfSrc);
+
+    const pdfUrl: string = this.pdfSrc.toString();
+
+    this.http.get(pdfUrl).subscribe(
+      (data) => {
+        console.log('Data');
+        this.handleResponse(data);
+      });
+  }
+
+  handleResponse(data: any) {
+    console.log('[Receipt service] GET PDF byte array ');
+    console.log(JSON.stringify(data));
+
+    const file = new Blob([data._body], { type: 'application/pdf' });
+    const fileURL = URL.createObjectURL(file);
+    window.open(fileURL);
+  }
+
+  onIframeLoaded($event) {
+    console.log('onIframeLoaded');
+
     // this.sellPrintService.onDataReady();
   }
 
-  onLoaded() {
-    console.log('tesrffffffmffmm');
+  onIframeEnded($event) {
+    console.log('onIframeLoaded');
+  }
+
+  load() {
+    console.log('onIframeLoaded');
 
     const pdfFrame = window.frames['pdf'];
 
@@ -63,7 +109,7 @@ export class ReceiptPreviewComponent implements OnInit, AfterViewInit {
   }
 
   onFileSelected() {
-    const $pdf: any = 'http://localhost:8080/api/pdf-receipt/view';
+    const $pdf: any = 'http://localhost:8080/api/pdf-receipt/view/pddoc.pdf';
 
     if (typeof FileReader !== 'undefined') {
       const reader = new FileReader();
@@ -78,7 +124,7 @@ export class ReceiptPreviewComponent implements OnInit, AfterViewInit {
 
   loadPdf() {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://localhost:8080/api/pdf-receipt/view', true);
+    xhr.open('GET', 'http://localhost:8080/api/pdf-receipt/view/pddoc.pdf', true);
     xhr.responseType = 'blob';
 
     xhr.onload = (e: any) => {

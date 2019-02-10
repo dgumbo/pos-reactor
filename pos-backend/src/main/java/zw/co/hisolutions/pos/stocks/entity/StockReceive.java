@@ -46,14 +46,24 @@ public class StockReceive extends BaseEntity {
     private WorkFlowType workFlowType;
 
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull
     private Date receiveDate  ;
 
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @NotNull
-    private Date receiveDateTime  ;
+    @Column(nullable = true)
+    private Date receiveDateTime = new Date() ;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(nullable = true)
+    private Date startTime  ;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(nullable = true)
+    private Date endTime  ;
 
     @Column(name = "total_cost", precision = 12, scale = 4)
     private BigDecimal totalCost;
