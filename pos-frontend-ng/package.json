@@ -52,6 +52,7 @@
     "node-forge": "^0.8.0",
     "npm-check-updates": "^2.15.0",
     "popper.js": "^1.14.7",
+    "print-js": "^1.0.54",
     "qz-tray": "^2.0.8",
     "rsvp": "4.8.4",
     "rxjs": "^6.4.0",

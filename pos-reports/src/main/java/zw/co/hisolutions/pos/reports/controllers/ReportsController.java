@@ -3,6 +3,8 @@ package zw.co.hisolutions.pos.reports.controllers;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -20,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import zw.co.hisolutions.pos.common.enums.ContentDisposalType;
-import zw.co.hisolutions.pos.reports.entity.ColumnMetadata; 
+import zw.co.hisolutions.pos.common.util.Results;
+import zw.co.hisolutions.pos.reports.entity.ColumnMetadata;
 import zw.co.hisolutions.pos.reports.entity.ReportInformation;
 import zw.co.hisolutions.pos.reports.service.MisService;
 import zw.co.hisolutions.pos.reports.entity.ParameterHolder;
@@ -32,7 +35,7 @@ import zw.co.hisolutions.pos.reports.entity.ReportConfig;
 import zw.co.hisolutions.pos.reports.entity.ReportConfigParameter;
 import zw.co.hisolutions.pos.reports.entity.ReportParameterType;
 import zw.co.hisolutions.pos.reports.service.ReportAnalysisService;
-import zw.co.hisolutions.pos.reports.service.ReportConfigService; 
+import zw.co.hisolutions.pos.reports.service.ReportConfigService;
 import zw.co.hisolutions.pos.reports.service.ReportDataService;
 import zw.co.hisolutions.pos.sxssf.service.SXSSFReportService;
 
@@ -71,10 +74,38 @@ public class ReportsController {
         return misService.getReportList();
     }
 
-    @GetMapping("/getReportConfig/{reportConfigId}")
-    public ReportConfig getReportConfig(@PathVariable Long reportConfigId) {
-        ReportConfig reportConfig = reportConfigService.getByID(reportConfigId);
-        return getReportConfigProperties(reportConfig);
+    @GetMapping(value = "/getReportConfig/{reportConfigId}", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    public ResponseEntity<ReportConfig> getReportConfig(@PathVariable Long reportConfigId) {
+        ReportConfig reportConfig = new ReportConfig();
+        
+       if( reportConfigId != null && reportConfigId != 0 ){
+            reportConfig= reportConfigService.getByID(reportConfigId);
+            
+            List<ReportConfigParameter> reportConfigParams = reportConfigService.getParametersByReportConfig(reportConfig);
+            reportConfig.setReportConfigParameters(reportConfigParams);
+       }
+
+//        System.out.println("\nreportConfig : ");
+//        System.out.println(reportConfig);
+//        System.out.println(reportConfig.getColumns());
+//        System.out.println(reportConfig.getNativeQuery());
+//        System.out.println(reportConfig.getReportConfigParameters());
+//        System.out.println("\n\n");
+
+        ResponseEntity responseEntity;
+        HttpStatus httpStatus;
+        try { 
+            ReportConfig entity = getReportConfigProperties(reportConfig);
+            httpStatus = HttpStatus.CREATED;
+            responseEntity = new ResponseEntity<>(entity, httpStatus);
+        } catch (Exception ex) {
+            httpStatus = HttpStatus.NOT_IMPLEMENTED;
+            responseEntity = new ResponseEntity<>(new Results(Results.DBActionResult.EncounteredError, "Could not create entity.", "new", this.getClass()), httpStatus);
+
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return responseEntity;
     }
 
     @GetMapping("/getReportConfigByReportName/{reportName}")
@@ -95,6 +126,32 @@ public class ReportsController {
         reportConfig.setReportConfigParameters(reportParameters);
         return reportConfig;
     }
+    
+    @PostMapping(value = "/updateReportConfig", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    public ReportConfig updateReportConfig(@RequestBody ReportConfig reportConfig) {
+        System.out.println("zw.co.psmi.hms.mis.controllers.MisController.updateReportConfig()");
+        System.out.println("reportConfig : " + reportConfig);
+        System.out.println("reportConfig.getReportConfigParameters() : " + reportConfig.getReportConfigParameters());
+        System.out.println("reportConfig.getReportConfigParameters().size() : " + reportConfig.getReportConfigParameters().size());
+        System.out.println("\n\n");
+
+        reportConfig = this.reportConfigService.save(reportConfig);
+
+        return reportConfig;
+    }
+
+    @PostMapping(value = "/updateReportAnalysisSheet", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    public ResponseEntity<ReportAnalysisSheet> updateReportAnalysisSheet(@RequestBody ReportAnalysisSheet reportAnalysisSheet) {
+//        System.out.println("zw.co.psmi.hms.mis.controllers.MisController.updateReportAnalysisSheet()");
+//        System.out.println("reportAnalysisSheet : " + reportAnalysisSheet); 
+//        System.out.println("reportAnalysisSheet.getReportConfig() : " + reportAnalysisSheet.getReportConfig());  
+
+        reportAnalysisSheet = this.reportAnalysisService.save(reportAnalysisSheet, reportAnalysisSheet.getAnalysisColumnList());
+
+        ReportAnalysisSheet sheet = reportAnalysisService.getSheetByNameAndReportConfig(reportAnalysisSheet.getName(), reportAnalysisSheet.getReportConfig().getId());
+        return new ResponseEntity<>(sheet, HttpStatus.OK);
+    }
+
 
     @GetMapping("/getReportConfigParameters/{reportConfigId}")
     public List<ReportConfigParameter> getReportConfigParameters(@PathVariable Long reportConfigId) {
@@ -233,31 +290,7 @@ public class ReportsController {
         return null;
     }
 
-    @PostMapping(value = "/updateReportConfig", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
-    public ReportConfig updateReportConfig(@RequestBody ReportConfig reportConfig) {
-        System.out.println("zw.co.psmi.hms.mis.controllers.MisController.updateReportConfig()");
-        System.out.println("reportConfig : " + reportConfig);
-        System.out.println("reportConfig.getReportConfigParameters() : " + reportConfig.getReportConfigParameters());
-        //System.out.println("reportConfig.getReportConfigParameters().size() : " + reportConfig.getReportConfigParameters().size());
-        System.out.println("getReportConfigParameters : " + reportConfig.getReportConfigParameters());
-
-        reportConfig = this.reportConfigService.save(reportConfig, reportConfig.getReportConfigParameters());
-
-        return reportConfig;
-    }
-
-    @PostMapping(value = "/updateReportAnalysisSheet", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
-    public ResponseEntity<ReportAnalysisSheet> updateReportAnalysisSheet(@RequestBody ReportAnalysisSheet reportAnalysisSheet) {
-//        System.out.println("zw.co.psmi.hms.mis.controllers.MisController.updateReportAnalysisSheet()");
-//        System.out.println("reportAnalysisSheet : " + reportAnalysisSheet); 
-//        System.out.println("reportAnalysisSheet.getReportConfig() : " + reportAnalysisSheet.getReportConfig());  
-
-        reportAnalysisSheet = this.reportAnalysisService.save(reportAnalysisSheet, reportAnalysisSheet.getAnalysisColumnList());
-
-        ReportAnalysisSheet sheet = reportAnalysisService.getSheetByNameAndReportConfig(reportAnalysisSheet.getName(), reportAnalysisSheet.getReportConfig().getId());
-        return new ResponseEntity<>(sheet, HttpStatus.OK);
-    }
-
+    
 //    @PostMapping(value = "/updateReportAnalysisSheet", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
 //    public ResponseEntity<T> create(@RequestBody T resourceEntity) throws Exception {
 //        System.out.println("\n"+ resourceEntity.getClass() .getName() + "  B4 Save : " + resourceEntity + "\n");

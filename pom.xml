@@ -34,8 +34,9 @@
         <module>pos-reports</module>
         <!--      <module>pos-base-stocks</module>                            
         <module>pos-billing</module> -->
+        <module>pos-client-printer</module>
+        <module>pos-base</module>
         <module>pos-frontend-ng</module>  
-        <module>pos-client-printer</module>  
     </modules>
     
     <dependencyManagement>

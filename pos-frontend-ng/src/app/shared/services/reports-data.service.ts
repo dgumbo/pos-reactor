@@ -13,7 +13,7 @@ export class ReportsDataService {
     private url: string;
 
     constructor(private httpClient: HttpClient) {
-        this.url = environment.apiUrl + '/reports/mis';
+        this.url = environment.apiUrl + '/reports';
 
         this.headers = new HttpHeaders();
         this.headers = this.headers.set('Content-Type', 'application/json; charset=utf-8');

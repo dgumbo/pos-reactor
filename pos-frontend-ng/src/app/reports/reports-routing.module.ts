@@ -8,6 +8,9 @@ import { CurrentStockReceiptReportComponent } from './components/receipt-print-l
 import {
     SalesSummaryReceiptPrintComponent
 } from './components/receipt-print-layout/sales-summary-receipt-print/sales-summary-receipt-print.component';
+import {
+    ReportsPdfPrintPreviewComponent
+} from './components/reports-pdf-print/reports-pdf-print-preview/reports-pdf-print-preview.component';
 
 const routes: Routes = [
     {
@@ -17,6 +20,10 @@ const routes: Routes = [
     {
         path: 'report-view-by-id/:reportId',
         component: ReportViewComponent
+    },
+    {
+        path: 'admin',
+        loadChildren: './reports-admin/reports-admin.module#ReportsAdminModule'
     },
     {
         path: 'report-view-by-name/:reportName',
@@ -37,6 +44,18 @@ const routes: Routes = [
             { path: 'current-stock', component: CurrentStockReceiptReportComponent },
             { path: 'stock-out', component: ReOrderPrintComponent },
         ]
+    },
+    {
+        path: 'reports-pdf-print',
+        component: ReportsPdfPrintPreviewComponent,
+        // outlet: 'print',
+        // children: [
+        //     { path: 're-order', component: ReOrderPrintComponent },
+        //     { path: 'sales-summary-summarized', component: SalesSummaryReceiptPrintComponent },
+        //     { path: 'sales-summary-detailed', component: SalesSummaryReceiptPrintComponent },
+        //     { path: 'current-stock', component: CurrentStockReceiptReportComponent },
+        //     { path: 'stock-out', component: ReOrderPrintComponent },
+        // ]
     },
 ];
 

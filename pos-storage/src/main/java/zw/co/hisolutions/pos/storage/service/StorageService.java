@@ -39,6 +39,10 @@ public interface StorageService {
     DocumentMetadata store(File file);
 
     DocumentMetadata store(MultipartFile file);
+    
+    File getFile(String pathFromRoot, String filename) ;
+    
+    File getFontFile(String fontFolder, String filename);
 
     void scanServerDirectory();
 

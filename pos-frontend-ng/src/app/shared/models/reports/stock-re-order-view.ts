@@ -3,7 +3,7 @@ export interface StockReOrderView {
     stockItem: string;
     requiredQuantity: number;
     unitCost: number;
-    orderCost: number;
+    totalCost: number;
     currentStock: number;
     averageDailyConsumption: number;
     currentStockDepletionDays: number;

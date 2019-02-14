@@ -1,11 +1,14 @@
 package zw.co.hisolutions.pos.reports.entity;
  
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient; 
 import javax.validation.constraints.NotNull;
@@ -16,6 +19,7 @@ import zw.co.hisolutions.pos.common.entity.BaseEntity;
 @Entity
 @Data
 @Table(name="report_config", indexes = {@Index(name = "idx_nci_u_report_config_name", unique = true, columnList = "name")})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ReportConfig extends BaseEntity {
     
     @ManyToOne 
@@ -25,15 +29,15 @@ public class ReportConfig extends BaseEntity {
     @Column(name="name",length = 50)
     private String name;
     
-    @Lob
-    @Column(name="native_query")
+//    @Lob
+    @Column(name="native_query" )
     private String nativeQuery;
     
-    @Lob
+//    @Lob
     @Column(name="report_columns")
     private String columns; 
-     
-    @Transient
+      
+    @OneToMany(targetEntity = ReportConfigParameter.class, cascade = CascadeType.ALL)
     private List<ReportConfigParameter> reportConfigParameters;
      
     @Transient

@@ -6,7 +6,7 @@ import { PreviousRouteService } from 'app/shared/services/previous-route.service
 import { ReportsDataService } from 'app/shared/services/reports-data.service';
 import { ReportConfigParameter } from 'shared/models/reports/report-config-parameter';
 
-declare var $: any;
+declare let $: any;
 @Component({
     selector: 'app-report-config',
     templateUrl: './report-config.component.html',
@@ -118,7 +118,7 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
 
             let columns = '';
             for (let i = 0; i < columnList.length; i++) {
-                columns += (columns === '' ? columnList[i] : ', ' + columnList[i])
+                columns += (columns === '' ? columnList[i] : ', ' + columnList[i]);
             }
 
             this.reportConfig.columns = columns;
@@ -201,15 +201,16 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
         let selectPosition = nativeQry.toLowerCase().indexOf('select ');
 
         nativeQry = nativeQry.substring(selectPosition, nativeQry.length);
-        selectPosition = nativeQry.toLowerCase().indexOf('select ')
-        // console.log('selectPosition : ' + selectPosition); 
+        selectPosition = nativeQry.toLowerCase().indexOf('select ');
+        // console.log('selectPosition : ' + selectPosition);
 
         let fromPosition = nativeQry.toLowerCase().indexOf('inner join');
         fromPosition = fromPosition <= 0 ? nativeQry.toLowerCase().indexOf('left join') : fromPosition;
         fromPosition = fromPosition <= 0 ? nativeQry.toLowerCase().indexOf('right join') : fromPosition;
         fromPosition = fromPosition <= 0 ? nativeQry.toLowerCase().indexOf('outer join') : fromPosition;
         // fromPosition = fromPosition <= 0 ? nativeQry.toLowerCase().indexOf(' from ') : fromPosition;
-        fromPosition = fromPosition <= 0 || fromPosition <= selectPosition || fromPosition > nativeQry.length ? nativeQry.length : fromPosition;
+        fromPosition = fromPosition <= 0 || fromPosition <= selectPosition || fromPosition > nativeQry.length
+            ? nativeQry.length : fromPosition;
         // console.log('fromPosition : ' + fromPosition);
 
         nativeQry = nativeQry.substring(selectPosition, fromPosition);
@@ -226,20 +227,21 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
             let iOpenned = false;
 
             // console.log('fromPosition : ' + fromPosition);
-            for (var i = fromPosition; i < nativeQry.length; i++) {
-                var t = nativeQry.substring(i, i + 1);
+            for (let i = fromPosition; i < nativeQry.length; i++) {
+                const t = nativeQry.substring(i, i + 1);
                 if (t === '(') {
                     openB++;
                     iOpenned = true;
                 }
-                if (t === ')')
+                if (t === ')') {
                     closeB++;
+                }
 
-                //console.log('t : ' + t + ', openB : ' + openB + ', closeB : ' + closeB);
+                // console.log('t : ' + t + ', openB : ' + openB + ', closeB : ' + closeB);
 
-                if (openB == closeB && iOpenned === true) {
-                    var toReplace = nativeQry.substring(fromPosition, i + 1);
-                    //console.log('toReplace : ' + toReplace) ;
+                if (openB === closeB && iOpenned === true) {
+                    const toReplace = nativeQry.substring(fromPosition, i + 1);
+                    // console.log('toReplace : ' + toReplace) ;
                     nativeQry = nativeQry.replace(toReplace, '');
 
                     break;
@@ -251,25 +253,26 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
         while (nativeQry.toLowerCase().indexOf('convert') >= 1 && ic <= 20) {
             ic++;
             fromPosition = nativeQry.toLowerCase().indexOf('convert');
-            var openB = 0;
-            var closeB = 0;
-            var iOpenned = false;
+            let openB = 0;
+            let closeB = 0;
+            let iOpenned = false;
 
-            //console.log('fromPosition : ' + fromPosition);
-            for (var i = fromPosition; i < nativeQry.length; i++) {
-                var t = nativeQry.substring(i, i + 1);
+            // console.log('fromPosition : ' + fromPosition);
+            for (let i = fromPosition; i < nativeQry.length; i++) {
+                const t = nativeQry.substring(i, i + 1);
                 if (t === '(') {
                     openB++;
                     iOpenned = true;
                 }
-                if (t === ')')
+                if (t === ')') {
                     closeB++;
+                }
 
-                //console.log('t : ' + t + ', openB : ' + openB + ', closeB : ' + closeB);
+                // console.log('t : ' + t + ', openB : ' + openB + ', closeB : ' + closeB);
 
-                if (openB == closeB && iOpenned === true) {
-                    var toReplace = nativeQry.substring(fromPosition, i + 1);
-                    //console.log('toReplace : ' + toReplace) ;
+                if (openB === closeB && iOpenned === true) {
+                    const toReplace = nativeQry.substring(fromPosition, i + 1);
+                    // console.log('toReplace : ' + toReplace) ;
                     nativeQry = nativeQry.replace(toReplace, '');
 
                     break;
@@ -281,25 +284,26 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
         while (nativeQry.toLowerCase().indexOf('isnull') >= 1 && ic <= 20) {
             ic++;
             fromPosition = nativeQry.toLowerCase().indexOf('isnull');
-            var openB = 0;
-            var closeB = 0;
-            var iOpenned = false;
+            let openB = 0;
+            let closeB = 0;
+            let iOpenned = false;
 
-            //console.log('fromPosition : ' + fromPosition);
-            for (var i = fromPosition; i < nativeQry.length; i++) {
-                var t = nativeQry.substring(i, i + 1);
+            // console.log('fromPosition : ' + fromPosition);
+            for (let i = fromPosition; i < nativeQry.length; i++) {
+                const t = nativeQry.substring(i, i + 1);
                 if (t === '(') {
                     openB++;
                     iOpenned = true;
                 }
-                if (t === ')')
+                if (t === ')') {
                     closeB++;
+                }
 
-                //console.log('t : ' + t + ', openB : ' + openB + ', closeB : ' + closeB);
+                // console.log('t : ' + t + ', openB : ' + openB + ', closeB : ' + closeB);
 
-                if (openB == closeB && iOpenned === true) {
-                    var toReplace = nativeQry.substring(fromPosition, i + 1);
-                    //console.log('toReplace : ' + toReplace) ;
+                if (openB === closeB && iOpenned === true) {
+                    const toReplace = nativeQry.substring(fromPosition, i + 1);
+                    // console.log('toReplace : ' + toReplace) ;
                     nativeQry = nativeQry.replace(toReplace, '');
 
                     break;
@@ -311,25 +315,26 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
         while (nativeQry.toLowerCase().indexOf('datediff') >= 1 && ic <= 20) {
             ic++;
             fromPosition = nativeQry.toLowerCase().indexOf('datediff');
-            var openB = 0;
-            var closeB = 0;
-            var iOpenned = false;
+            let openB = 0;
+            let closeB = 0;
+            let iOpenned = false;
 
-            //console.log('fromPosition : ' + fromPosition);
-            for (var i = fromPosition; i < nativeQry.length; i++) {
-                var t = nativeQry.substring(i, i + 1);
+            // console.log('fromPosition : ' + fromPosition);
+            for (let i = fromPosition; i < nativeQry.length; i++) {
+                const t = nativeQry.substring(i, i + 1);
                 if (t === '(') {
                     openB++;
                     iOpenned = true;
                 }
-                if (t === ')')
+                if (t === ')') {
                     closeB++;
+                }
 
-                //console.log('t : ' + t + ', openB : ' + openB + ', closeB : ' + closeB);
+                // console.log('t : ' + t + ', openB : ' + openB + ', closeB : ' + closeB);
 
                 if (openB === closeB && iOpenned === true) {
-                    var toReplace = nativeQry.substring(fromPosition, i + 1);
-                    //console.log('toReplace : ' + toReplace) ;
+                    const toReplace = nativeQry.substring(fromPosition, i + 1);
+                    // console.log('toReplace : ' + toReplace) ;
                     nativeQry = nativeQry.replace(toReplace, '');
 
                     break;
@@ -341,26 +346,27 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
         while (nativeQry.toLowerCase().indexOf('case') >= 1 && ic <= 20) {
             ic++;
             fromPosition = nativeQry.toLowerCase().indexOf('case');
-            var openB = 0;
-            var closeB = 0;
-            var iOpenned = false;
+            let openB = 0;
+            let closeB = 0;
+            let iOpenned = false;
 
-            //console.log('fromPosition : ' + fromPosition);
-            for (var i = fromPosition; i < nativeQry.length; i++) {
-                var vcase = nativeQry.substring(i, i + 5);
-                var end = nativeQry.substring(i, i + 4);
+            // console.log('fromPosition : ' + fromPosition);
+            for (let i = fromPosition; i < nativeQry.length; i++) {
+                const vcase = nativeQry.substring(i, i + 5);
+                const end = nativeQry.substring(i, i + 4);
                 if (vcase.trim().toLowerCase() === 'case') {
                     openB++;
                     iOpenned = true;
                 }
-                if (end.trim().toLowerCase() === 'end')
+                if (end.trim().toLowerCase() === 'end') {
                     closeB++;
+                }
 
-                //console.log('--> ' + vcase + ' : ' + end + ' <--, openB : ' + openB + ', closeB : ' + closeB);
+                // console.log('--> ' + vcase + ' : ' + end + ' <--, openB : ' + openB + ', closeB : ' + closeB);
 
                 if (openB === closeB && iOpenned === true) {
-                    var toReplace = nativeQry.substring(fromPosition, i + 4);
-                    //console.log('toReplace : ' + toReplace) ;
+                    const toReplace = nativeQry.substring(fromPosition, i + 4);
+                    // console.log('toReplace : ' + toReplace) ;
                     nativeQry = nativeQry.replace(toReplace, '');
 
                     break;
@@ -368,7 +374,7 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
             }
         }
 
-        //console.log('Cleaned Qry : ' + nativeQry) ;
+        // console.log('Cleaned Qry : ' + nativeQry) ;
         return nativeQry;
     }
 
@@ -389,7 +395,7 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
             iCountBreak += 1;
             query = query.replace('  ', ' ');
 
-            //console.log('iCountBreak :', iCountBreak);
+            // console.log('iCountBreak :', iCountBreak);
             if (iCountBreak >= 500) {
                 break;
             }
@@ -407,14 +413,14 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
             if (iCountBreak >= 50) {
                 break;
             }
-            //for (var  columnMetaData in columnMetaDataList) {
-            var oppeningCommentPosition = query.indexOf('/*');
-            var clossingCommentPosition = 0;
-            var open = 0;
-            var close = 0;
+            // for (let  columnMetaData in columnMetaDataList) {
+            const oppeningCommentPosition = query.indexOf('/*');
+            let clossingCommentPosition = 0;
+            let open = 0;
+            let close = 0;
 
-            for (var i = oppeningCommentPosition; i < query.length; i++) {
-                var clossingComment = query.substring(i, i + 2);
+            for (let i = oppeningCommentPosition; i < query.length; i++) {
+                const clossingComment = query.substring(i, i + 2);
 
                 if (clossingComment.includes('/*')) {
                     open += 1;
@@ -423,17 +429,17 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
                     clossingCommentPosition = i;
                 }
 
-                //console.log('open : ', open, ', close : ', close );
+                // console.log('open : ', open, ', close : ', close );
                 if (open >= 1 && close === open) {
-                    var part1 = query.substring(0, oppeningCommentPosition);
-                    var part2 = query.substring(clossingCommentPosition + 2, query.length);
+                    const part1 = query.substring(0, oppeningCommentPosition);
+                    const part2 = query.substring(clossingCommentPosition + 2, query.length);
                     query = part1 + part2;
                     break;
                 }
             }
         }
-        //console.log('query without /* */ comments : ');
-        //console.log(query);
+        // console.log('query without /* */ comments : ');
+        // console.log(query);
         /* End Remove Commented out SQL Qry Code  */
 
 
@@ -445,16 +451,16 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
                 break;
             }
 
-            //for (var  columnMetaData in columnMetaDataList) {
-            var oppeningCommentPosition = query.toLowerCase().indexOf('case ');
-            //console.log('case index :', oppeningCommentPosition)
-            var clossingCommentPosition = 0;
-            var open = 0;
-            var close = 0;
+            // for (let  columnMetaData in columnMetaDataList) {
+            const oppeningCommentPosition = query.toLowerCase().indexOf('case ');
+            // console.log('case index :', oppeningCommentPosition)
+            let clossingCommentPosition = 0;
+            let open = 0;
+            let close = 0;
 
-            for (i = oppeningCommentPosition; i < query.length; i++) {
-                var endVar = query.substring(i, i + 4);
-                var openVar = query.substring(i, i + 5);
+            for (let i = oppeningCommentPosition; i < query.length; i++) {
+                const endVar = query.substring(i, i + 4);
+                const openVar = query.substring(i, i + 5);
 
                 if (openVar.toLowerCase().includes('case ')) {
                     open += 1;
@@ -463,17 +469,17 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
                     clossingCommentPosition = i;
                 }
 
-                //console.log('CASE - open : ', open, ', close : ', close );
+                // console.log('CASE - open : ', open, ', close : ', close );
                 if (open >= 1 && close === open) {
-                    var part1 = query.substring(0, oppeningCommentPosition);
-                    var part2 = query.substring(clossingCommentPosition + 3, query.length);
+                    const part1 = query.substring(0, oppeningCommentPosition);
+                    const part2 = query.substring(clossingCommentPosition + 3, query.length);
                     query = part1 + part2;
                     break;
                 }
             }
         }
-        //console.log('query without /* */ comments : ');
-        //console.log(query);
+        // console.log('query without /* */ comments : ');
+        // console.log(query);
         /* End Remove Case SQL Qry Code  */
 
 
@@ -485,15 +491,15 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
                 break;
             }
 
-            //for (var  columnMetaData in columnMetaDataList) {
-            var oppeningCommentPosition = query.toLowerCase().indexOf('(select');
-            //console.log('case index :', query.substring( oppeningCommentPosition, oppeningCommentPosition + 50 )); 
-            var clossingCommentPosition = 0;
-            var open = 0;
-            var close = 0;
+            // for (let  columnMetaData in columnMetaDataList) {
+            const oppeningCommentPosition = query.toLowerCase().indexOf('(select');
+            // console.log('case index :', query.substring( oppeningCommentPosition, oppeningCommentPosition + 50 )); 
+            let clossingCommentPosition = 0;
+            let open = 0;
+            let close = 0;
 
-            for (i = oppeningCommentPosition; i < query.length; i++) {
-                var char = query.substring(i, i + 1);
+            for (let i = oppeningCommentPosition; i < query.length; i++) {
+                const char = query.substring(i, i + 1);
 
                 if (char.toLowerCase().includes('(')) {
                     open += 1;
@@ -502,47 +508,47 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
                     clossingCommentPosition = i;
                 }
 
-                //console.log('CASE - open : ', open, ', close : ', close );
+                // console.log('CASE - open : ', open, ', close : ', close );
                 if (open >= 1 && close === open) {
-                    var part1 = query.substring(0, oppeningCommentPosition);
-                    var part2 = query.substring(clossingCommentPosition + 2, query.length);
+                    const part1 = query.substring(0, oppeningCommentPosition);
+                    const part2 = query.substring(clossingCommentPosition + 2, query.length);
                     query = part1 + part2;
                     break;
                 }
             }
         }
-        //console.log('query without /* */ comments : ');
-        //console.log(query);
+        // console.log('query without /* */ comments : ');
+        // console.log(query);
         /* End Remove Case SQL Qry Code  */
 
 
 
         /* Start Remove convert|cast|count|coalesce|datediff|replace SQL Qry Code */
         iCountBreak = 0;
-        //while (query.toLowerCase().indexOf(/(convert|cast)/) >= 1) {
-        var regex = /(convert|cast|count|coalesce|datediff|replace)/;
-        while (regex.test(query.toLowerCase()) == true) {
+        // while (query.toLowerCase().indexOf(/(convert|cast)/) >= 1) {
+        const regex = /(convert|cast|count|coalesce|datediff|replace)/;
+        while (regex.test(query.toLowerCase()) === true) {
             iCountBreak += 1;
             if (iCountBreak >= 500) {
                 break;
             }
 
-            var regex_values = regex.exec(query.toLowerCase());
-            var search_value = regex_values[0];
-            //console.log( 'regex_value regex_value : ', search_value); 
+            const regex_values = regex.exec(query.toLowerCase());
+            const search_value = regex_values[0];
+            // console.log( 'regex_value regex_value : ', search_value);
 
-            //for (var  columnMetaData in columnMetaDataList) {
-            var oppeningCommentPosition = query.toLowerCase().indexOf(search_value);
-            //var oppeningCommentPosition = query.toLowerCase().indexOf('coalesce');
+            // for (let  columnMetaData in columnMetaDataList) {
+            const oppeningCommentPosition = query.toLowerCase().indexOf(search_value);
+            // let oppeningCommentPosition = query.toLowerCase().indexOf('coalesce');
             //     console.log('oppeningCommentPosition :', oppeningCommentPosition);
             //     console.log('few sql code :', query.substring(oppeningCommentPosition, oppeningCommentPosition + 31));
-            //     console.log('length :', query.toLowerCase().length); 
-            var clossingCommentPosition = 0;
-            var open = 0;
-            var close = 0;
+            //     console.log('length :', query.toLowerCase().length);
+            let clossingCommentPosition = 0;
+            let open = 0;
+            let close = 0;
 
-            for (i = oppeningCommentPosition; i < query.length; i++) {
-                var char = query.substring(i, i + 1);
+            for (let i = oppeningCommentPosition; i < query.length; i++) {
+                const char = query.substring(i, i + 1);
 
                 if (char.includes('(')) {
                     open += 1;
@@ -555,26 +561,26 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
                 //         console.log('Convert - open : ', open, ', close : ', close, ', i :', i)
                 //         console.log('char :'', char + ''');
                 if (open >= 1 && close === open) {
-                    //             console.log('oppeningCommentPosition : ', oppeningCommentPosition, ', clossingCommentPosition : ', clossingCommentPosition);
-                    var part1 = query.substring(0, oppeningCommentPosition);
-                    var part2 = query.substring(clossingCommentPosition + 1, query.length);
+                    // console.log('oppeningCommentPosition : ', oppeningCommentPosition, ', clossingCommentPosition : ', clossingCommentPosition);
+                    const part1 = query.substring(0, oppeningCommentPosition);
+                    const part2 = query.substring(clossingCommentPosition + 1, query.length);
                     query = part1 + part2;
-                    //console.log(query);
+                    // console.log(query);
                     break;
                 }
             }
         }
-        //console.log('query without /* */ comments : ');
-        //console.log(query);
+        // console.log('query without /* */ comments : ');
+        // console.log(query);
         /* End Remove DateDiff SQL Qry Code  */
 
 
 
 
-        var selectPosition = query.toLowerCase().indexOf('select'); //$NON-NLS-1$
-        var fromPosition = 0;
+        let selectPosition = query.toLowerCase().indexOf('select'); // $NON-NLS-1$
+        let fromPosition = 0;
 
-        //console.log('selectPosition :', selectPosition);
+        // console.log('selectPosition :', selectPosition);
         if (selectPosition >= 0) {
             query = query.substring(selectPosition, query.length - 1);
 
@@ -588,21 +594,21 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
         }
 
         fromPosition = fromPosition <= 0 || fromPosition > query.length - 1 ? query.length - 1 : fromPosition;
-        //console.log('fromPosition:', fromPosition);
+        // console.log('fromPosition:', fromPosition);
         if (selectPosition >= 0 && selectPosition < fromPosition && query.length >= 5) {
-            var columns = query.substring(selectPosition + 6, fromPosition);
-            //console.log('columns :', columns);
+            const columns = query.substring(selectPosition + 6, fromPosition);
+            // console.log('columns :', columns);
 
-            var columnMetaDataList = columns.split(','); //$NON-NLS-1$
-            var columnList = [];
+            const columnMetaDataList = columns.split(','); // $NON-NLS-1$
+            const columnList = [];
 
-            //for (var  columnMetaData in columnMetaDataList) {
-            for (i = 0; i < columnMetaDataList.length; i++) {
-                var columnMetaData = columnMetaDataList[i];
+            // for (let  columnMetaData in columnMetaDataList) {
+            for (let i = 0; i < columnMetaDataList.length; i++) {
+                const columnMetaData = columnMetaDataList[i];
 
-                var columnName = '';
-                var open = 0;
-                var close = 0;
+                let columnName = '';
+                let open = 0;
+                let close = 0;
                 if (columnMetaData.includes('[') && columnMetaData.includes(']')) {
                     open = columnMetaData.toLowerCase().indexOf('[');
                     close = columnMetaData.toLowerCase().indexOf(']');
@@ -620,8 +626,8 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
                     close = columnMetaData.length;
                     columnName = columnMetaData.substring(open + 3, close).trim();
                 } else if ((columnMetaData.match(/'/g) || []).length >= 4) {
-                    var arr = columnMetaData.trim().split('"');
-                    var size = arr.length;
+                    const arr = columnMetaData.trim().split('"');
+                    const size = arr.length;
 
                     columnName = arr[size - 2];
                 } else if (columnMetaData.trim().includes('+')) {
@@ -629,26 +635,27 @@ export class ReportConfigComponent implements OnInit, OnDestroy {
                     open = columnMetaData.toLowerCase().indexOf('.');
                     columnName = columnMetaData.substring(open + 1, close).trim();
                 } else if (columnMetaData.trim().split(/[\s.]+/).length >= 2 && columnMetaData.trim().split(/[\s.]+/).length <= 3) {
-                    var arr = columnMetaData.trim().split(/[\s.]+/);
-                    var size = arr.length;
+                    const arr = columnMetaData.trim().split(/[\s.]+/);
+                    const size = arr.length;
 
                     columnName = arr[size - 1];
                 } else {
                     columnName = columnMetaData;
-                    //console.log('columnName : ' + columnName.trim() );
+                    // console.log('columnName : ' + columnName.trim() );
                 }
 
                 columnList.push(columnName);
-                //console.log('columnName : ' + columnName.trim() );
+                // console.log('columnName : ' + columnName.trim() );
             }
 
-            //console.log(columnList);
-            if (columnList)
+            // console.log(columnList);
+            if (columnList) {
                 return columnList;
-            else
+            } else {
                 return [];
+            }
         } else {
-            //console.log('(selectPosition >= 0 && selectPosition < fromPosition && query.length >= 5), resolved to :' + (selectPosition >= 0 && selectPosition < fromPosition && query.length >= 5));
+            // console.log('(selectPosition >= 0 && selectPosition < fromPosition && query.length >= 5), resolved to :' + (selectPosition >= 0 && selectPosition < fromPosition && query.length >= 5));
             return [];
         }
     }

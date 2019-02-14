@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController; 
+import org.springframework.web.bind.annotation.RestController;
 import zw.co.hisolutions.pos.common.controllers.rest.BasicRestController;
 import zw.co.hisolutions.pos.common.service.GenericService;
 import zw.co.hisolutions.pos.common.util.Results;
 import zw.co.hisolutions.pos.stocks.entity.StockItem;
-import zw.co.hisolutions.pos.stocks.entity.StockReceive; 
+import zw.co.hisolutions.pos.stocks.entity.StockReceive;
+import zw.co.hisolutions.pos.stocks.entity.StockTransactionStatus;
 import zw.co.hisolutions.pos.stocks.service.CurrentStockService;
 import zw.co.hisolutions.pos.stocks.service.StockReceiveService;
 
@@ -36,14 +37,15 @@ import zw.co.hisolutions.pos.stocks.service.StockReceiveService;
 @RestController
 @Slf4j
 @RequestMapping("/api/stocks/receive")
-public class StockReceiveController  extends BasicRestController<StockReceive, Long> { 
-    private final StockReceiveService stockReceiveService;  
+public class StockReceiveController extends BasicRestController<StockReceive, Long> {
+
+    private final StockReceiveService stockReceiveService;
     private final CurrentStockService currentStockService;
 
-    public StockReceiveController( StockReceiveService StockReceiveService, CurrentStockService currentStockService ) {
+    public StockReceiveController(StockReceiveService StockReceiveService, CurrentStockService currentStockService) {
         this.stockReceiveService = StockReceiveService;
-        this.currentStockService=currentStockService;
-    }    
+        this.currentStockService = currentStockService;
+    }
 
     @PutMapping(value = "/partial-save-stock-receive", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     public ResponseEntity<StockReceive> partialSaveStockReceive(@RequestBody StockReceive stockReceive) throws Exception {
@@ -71,15 +73,27 @@ public class StockReceiveController  extends BasicRestController<StockReceive, L
 
         ResponseEntity responseEntity;
         HttpStatus httpStatus;
-        try {
-            StockReceive entity = stockReceiveService.finalizeStockReceive(stockReceive);
-            httpStatus = HttpStatus.CREATED;
-            responseEntity = new ResponseEntity<>(entity, httpStatus);
-        } catch (Exception ex) {
+
+        StockReceive pendingStock = stockReceiveService.getPendingStockReceive();
+
+        if (stockReceive.getReceiveStatus() == StockTransactionStatus.PENDING
+                && pendingStock.getReceiveStatus() == StockTransactionStatus.PENDING
+                && pendingStock.getId() == stockReceive.getId()) {
+            try {
+                StockReceive entity = stockReceiveService.finalizeStockReceive(stockReceive);
+                httpStatus = HttpStatus.CREATED;
+                responseEntity = new ResponseEntity<>(entity, httpStatus);
+            } catch (Exception ex) {
+                httpStatus = HttpStatus.NOT_IMPLEMENTED;
+                responseEntity = new ResponseEntity<>(new Results(Results.DBActionResult.EncounteredError, "Could not create entity.", "new", this.getClass()), httpStatus);
+
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
             httpStatus = HttpStatus.NOT_IMPLEMENTED;
             responseEntity = new ResponseEntity<>(new Results(Results.DBActionResult.EncounteredError, "Could not create entity.", "new", this.getClass()), httpStatus);
 
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, "Stock Already Received");
         }
 
         return responseEntity;
@@ -103,31 +117,31 @@ public class StockReceiveController  extends BasicRestController<StockReceive, L
         //System.out.println("\n T B4 Save : " + resource.getContent() + "\n");
         return new ResponseEntity<>(stockReceivePending, HttpStatus.OK);
     }
-    
+
     @GetMapping(value = "/getAllByDateRange", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     public ResponseEntity<List<StockReceive>> getAllByDateRange(@RequestParam(name = "fromDate", required = false) Date fromDate,
-            @RequestParam(name = "toDate", required = false) Date toDate ) throws Exception { 
+            @RequestParam(name = "toDate", required = false) Date toDate) throws Exception {
 //        System.out.println("\n\nzw.co.hisolutions.pos.stocks.api.StockReceiveController.getAll()\n");
 //        System.out.println("");
-        
+
         ResponseEntity responseEntity;
         HttpStatus httpStatus;
         try {
-            List<StockReceive> entity =stockReceiveService.findAll() ;
+            List<StockReceive> entity = stockReceiveService.findAll();
             System.out.println("entity");
             System.out.println(entity);
             System.out.println("\n\n");
             httpStatus = HttpStatus.OK;
-            responseEntity = new ResponseEntity<>(entity, httpStatus); 
+            responseEntity = new ResponseEntity<>(entity, httpStatus);
         } catch (Exception ex) {
             httpStatus = HttpStatus.NOT_IMPLEMENTED;
-            responseEntity = new ResponseEntity<>(new Results(Results.DBActionResult.EncounteredError, "Could not create entity.", "new", this.getClass()), httpStatus); 
+            responseEntity = new ResponseEntity<>(new Results(Results.DBActionResult.EncounteredError, "Could not create entity.", "new", this.getClass()), httpStatus);
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
 
         return responseEntity;
-    }   
-    
+    }
+
 //    @PutMapping(value = "/receive", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
 //    @Override
 //    public ResponseEntity<StockReceive> create(@RequestBody StockReceive stockReceive) throws Exception {
@@ -148,12 +162,10 @@ public class StockReceiveController  extends BasicRestController<StockReceive, L
 //
 //        return responseEntity;
 //    }
-
     @GetMapping(value = "/available-stock", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
-    public ResponseEntity<?> getAllStockProducts () {
+    public ResponseEntity<?> getAllStockProducts() {
         List<StockItem> productList = currentStockService.getAllStock();
-        
-        
+
         //Resource resource = getService().buildResource(entity);
         //System.out.println("\n T B4 Save : " + resource.getContent() + "\n");
         return new ResponseEntity<>(productList, HttpStatus.OK);
@@ -166,7 +178,7 @@ public class StockReceiveController  extends BasicRestController<StockReceive, L
 
     @Override
     public GenericService getService() {
-       return stockReceiveService ;
+        return stockReceiveService;
     }
 
     @Override

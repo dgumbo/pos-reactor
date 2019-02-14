@@ -17,6 +17,16 @@
             <artifactId>pos-core</artifactId>
             <version>${project.version}</version>
         </dependency>  
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>pos-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>  
+<!--        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>pos-storage</artifactId>
+            <version>${project.version}</version>
+        </dependency>  -->
         
         <dependency>
             <groupId>org.apache.poi</groupId>

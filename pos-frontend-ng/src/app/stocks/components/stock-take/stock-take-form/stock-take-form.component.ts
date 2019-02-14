@@ -87,7 +87,7 @@ export class StockTakeFormComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((res: StockTakeLine) => {
       console.log(res);
-      if (res && res.stockItem && res.quantity > 0) {
+      if (res && res.quantity > 0 && res.stockItem && res.stockItem.id && res.stockItem.name ) {
         res.batchNumber = 'BN';
         this.stockTake.stockTakeLines.push(res);
         this.dataSource.data = this.stockTake.stockTakeLines;

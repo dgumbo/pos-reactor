@@ -117,10 +117,13 @@
 
             <!-- Short Code -->
             <div class="form-group row">
-                <label for="stockReceiveItem.product.name" class="col-sm-3 col-form-label">Shortcode :</label>
-                <div class="col-sm-8">
-                    <input class="form-control" value="{{stockReceiveItem.product.shortcode}}" disabled>
-                </div>
+                <label for="stockReceiveItem.product.name" class="col-sm-3 col-form-label">
+                    {{ !stockReceiveItem 
+                        || !stockReceiveItem.unitCost || stockReceiveItem.unitCost === 0
+                        || !stockReceiveItem.product || !stockReceiveItem.product.id 
+                        || !stockReceiveItem.supplier || !stockReceiveItem.supplier.id  }}
+                </label>
+                 
             </div> 
 
         </mat-card-content>
@@ -130,7 +133,12 @@
 
 <div class="spacer"></div>
 <mat-dialog-actions class="dialog-footer ml ml-a" style="margin-left:auto;">
-    <button mat-raised-button color="primary" (click)="returnStockItem()" [disabled]="!stockReceiveItem.unitCost || stockReceiveItem.unitCost === 0">Add
-        stock Item</button>
+    <button mat-raised-button color="primary" (click)="returnStockItem()" 
+    [disabled]="!stockReceiveItem 
+    || !stockReceiveItem.unitCost || stockReceiveItem.unitCost === 0
+    || !stockReceiveItem.product || !stockReceiveItem.product.id 
+    || !stockReceiveItem.supplier || !stockReceiveItem.supplier.id  ">
+    Add Stock Item</button>
     <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+    
 </mat-dialog-actions>

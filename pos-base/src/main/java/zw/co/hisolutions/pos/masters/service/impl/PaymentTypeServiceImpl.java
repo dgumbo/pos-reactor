@@ -2,8 +2,7 @@ package zw.co.hisolutions.pos.masters.service.impl;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import zw.co.hisolutions.pos.masters.entity.PaymentType;
-import zw.co.hisolutions.pos.sell.api_controller.SellController; 
+import zw.co.hisolutions.pos.masters.entity.PaymentType; 
 import zw.co.hisolutions.pos.sell.entity.dao.PaymentTypeDao;
 import zw.co.hisolutions.pos.sell.services.PaymentTypeService;
 
@@ -46,7 +45,7 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 
     @Override
     public Class getController() {
-        return SellController.class;
+        return this.getClass();
     }
 
     @Override

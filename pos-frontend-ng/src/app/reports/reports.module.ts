@@ -19,6 +19,7 @@ import {
 } from './components/receipt-print-layout/sales-summary-receipt-print/sales-summary-receipt-print.component';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { ReportsComponent } from './components/other-reports/reports.component';
+import { ReportsPdfPrintPreviewComponent } from './components/reports-pdf-print/reports-pdf-print-preview/reports-pdf-print-preview.component';
 // import {AuthModule} from '../auth/auth.module';
 
 @NgModule({
@@ -43,6 +44,7 @@ import { ReportsComponent } from './components/other-reports/reports.component';
 
     LineChartComponent,
     ReportsComponent,
+    ReportsPdfPrintPreviewComponent,
   ],
   providers: [
     StaticReportsDataService,

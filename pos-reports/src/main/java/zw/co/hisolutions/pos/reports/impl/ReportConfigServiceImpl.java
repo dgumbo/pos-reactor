@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List; 
+import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository; 
-import org.springframework.stereotype.Service; 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 import zw.co.hisolutions.pos.reports.dao.ReportConfigDao;
 import zw.co.hisolutions.pos.reports.dao.ReportConfigParameterDao;
 import zw.co.hisolutions.pos.reports.entity.ParameterHolder;
@@ -25,10 +26,10 @@ import zw.co.hisolutions.pos.reports.service.ReportConfigService;
 public class ReportConfigServiceImpl implements ReportConfigService {
 
     private final ReportConfigDao reportConfigDao;
-    private final ReportConfigParameterDao reportConfigParameterDao;
 
     @PersistenceContext
     private EntityManager entityManager;
+    private final ReportConfigParameterDao reportConfigParameterDao;
 
     @Autowired
     public ReportConfigServiceImpl(ReportConfigDao reportConfigDao, ReportConfigParameterDao reportConfigParameterDao) {
@@ -46,9 +47,9 @@ public class ReportConfigServiceImpl implements ReportConfigService {
      * @param reportConfig
      * @param list
      * @return
-     */ 
+     */
     @Override
-    public ReportConfig save(ReportConfig reportConfig, List<ReportConfigParameter> list) {
+    public ReportConfig save(ReportConfig reportConfig) {
 
         //List<String> columns = extractColumnsFromSqlStatement(reportConfig.getNativeQuery());
         List<String> columns = Arrays.asList(reportConfig.getColumns());
@@ -59,42 +60,44 @@ public class ReportConfigServiceImpl implements ReportConfigService {
         }
         reportConfig.setColumns(reportColumns);
 
-        reportConfig = reportConfigDao.save(reportConfig);
+        for (ReportConfigParameter rcp : reportConfig.getReportConfigParameters()) {
+            rcp.setReportConfig(reportConfig);
+        }
+        reportConfig.setReportConfigParameters(reportConfig.getReportConfigParameters());
 
         List<ReportConfigParameter> oldReportConfigParameters = getParametersByReportConfig(reportConfig);
 
-        if (list == null) {
-            list = new ArrayList<>();
+        if (reportConfig.getReportConfigParameters() == null) {
+            reportConfig.setReportConfigParameters(new ArrayList<>());
         }
 
         /* Report Config Params Added when no params where defined */
-        if (!list.isEmpty() && oldReportConfigParameters.isEmpty()) {
+        if (!reportConfig.getReportConfigParameters().isEmpty() && oldReportConfigParameters.isEmpty()) {
 //            System.out.println("Report Config Params Added when no params where defined");
-            list.forEach(parameter -> {
+            reportConfig.getReportConfigParameters().forEach(parameter -> {
 //                parameter.setReportConfig(reportConfig);
             });
         }
 
         /* All Report Config Params Removed when they previously existed. */
-        if (list.isEmpty() && !oldReportConfigParameters.isEmpty()) {
+        if (reportConfig.getReportConfigParameters().isEmpty() && !oldReportConfigParameters.isEmpty()) {
 //            System.out.println("Report Config Params Removed when they previously existed.");
             oldReportConfigParameters.forEach(currentParameter -> {
                 currentParameter.setActiveStatus(false);
-                reportConfigParameterDao.save(currentParameter);
             });
         }
 
         /* Existing Report Config Params Modified, Added or Removed */
-        if (!list.isEmpty() && !oldReportConfigParameters.isEmpty()) {
+        if (!reportConfig.getReportConfigParameters().isEmpty() && !oldReportConfigParameters.isEmpty()) {
 //            System.out.println("Existing Report Config Params Modified, Added or Removed");
 //            System.out.println("Existing Report Config Params : " + oldReportConfigParameters.size());
-//            System.out.println("New Report Config Params : " + list.size());
+//            System.out.println("New Report Config Params : " + reportConfig.getReportConfigParameters().size());
             oldReportConfigParameters.stream().forEach(currentParameter -> {
                 currentParameter.setActiveStatus(false);
                 //reportConfigParameterDao.save(currentParameter) ;
             });
 
-            list.forEach(parameter -> {
+            reportConfig.getReportConfigParameters().forEach(parameter -> {
                 if (oldReportConfigParameters.stream().anyMatch(p -> p.getId() == parameter.getId())) {
                     ReportConfigParameter existingParam = oldReportConfigParameters.stream().filter(p -> p.getId() == parameter.getId()).findFirst().get();
                     existingParam.setActiveStatus(true);
@@ -114,29 +117,13 @@ public class ReportConfigServiceImpl implements ReportConfigService {
             });
 
 //            reportConfigParameterDao.save(oldReportConfigParameters);
-            list = oldReportConfigParameters;
+            reportConfig.setReportConfigParameters(oldReportConfigParameters);
         }
 
-//        reportConfigParameterDao.save(list);
+//        reportConfigParameterDao.save(reportConfig.getReportConfigParameters());
 //        System.out.println("\nCurrent Position 9 \n");
+        reportConfig = reportConfigDao.save(reportConfig);
         return reportConfig;
-    }
- 
-    
-    @Override
-    public List<ReportConfigParameter> getAllReportConfigParameters() {
-        return reportConfigParameterDao.findAll();
-    }
-
-    @Override
-    public List<ReportConfigParameter> getParametersByReportConfig(ReportConfig reportConfig, ParameterHolder holder) {
-        Long reportConfigId = reportConfig.getId();
-        List<ReportConfigParameter> reportConfigParameters = reportConfigParameterDao.getByReportConfigIdAndActiveStatusTrue(reportConfigId);
-        reportConfigParameters.stream().forEach(line -> {
-            line.setHtmlElements(this.preProcess(line, line.getParameter(), this.getDataValue(holder, line.getParameter())));
-        });
-
-        return reportConfigParameters;
     }
 
     @Override
@@ -145,14 +132,36 @@ public class ReportConfigServiceImpl implements ReportConfigService {
     }
 
     @Override
+    public ReportConfig getByID(Long reportConfigId) {
+        return reportConfigDao.getOne(reportConfigId);
+    }
+
+    @Override
+    public List<ReportConfigParameter> getParametersByReportConfig(ReportConfig reportConfig, ParameterHolder holder) {
+        List<ReportConfigParameter> reportConfigParameters = getParametersByReportConfig(reportConfig.getId());
+
+        reportConfigParameters.stream().forEach(line -> {
+            line.setHtmlElements(this.preProcess(line, line.getParameter(), this.getDataValue(holder, line.getParameter())));
+        });
+
+        return reportConfigParameters;
+    }
+
+    @Override
     public List<ReportConfigParameter> getParametersByReportConfig(Long reportConfigId) {
-        List<ReportConfigParameter> reportConfigParameters = reportConfigParameterDao.getByReportConfigIdAndActiveStatusTrue(reportConfigId);
+        Optional<ReportConfig> reportConfigParametersOpt = reportConfigDao.findById(reportConfigId);
+
+        List<ReportConfigParameter> reportConfigParameters = reportConfigParametersOpt.isPresent()
+                ? reportConfigParametersOpt.get().getReportConfigParameters()
+                : new ArrayList();
+
         return reportConfigParameters;
     }
 
     @Override
     public List<ReportConfigParameter> getParametersByReportConfig(String reportConfigName) {
-        return reportConfigParameterDao.getByReportConfigNameAndActiveStatusTrue(reportConfigName);
+        List<ReportConfigParameter> reportConfigParameters = reportConfigDao.findByNameAndActiveStatusTrue(reportConfigName).get(0).getReportConfigParameters();
+        return reportConfigParameters;
     }
 
     @Override
@@ -163,13 +172,11 @@ public class ReportConfigServiceImpl implements ReportConfigService {
 
         //UserLogin user = getCurrentAuditor();
         //String unitCode = (user != null && user.getUnitCode() != null) ? user.getUnitCode() : "";
-
 //        if ((reportConfigParameter.getSelectSql()).contains(":unitCode")) {
 //            nQuery.setParameter("unitCode", unitCode);
 //        } else if ((reportConfigParameter.getSelectSql()).contains(":UnitCode")) {
 //            nQuery.setParameter("UnitCode", unitCode);
 //        }
-
         return nQuery.getResultList();
     }
 
@@ -277,7 +284,6 @@ public class ReportConfigServiceImpl implements ReportConfigService {
 //        }
 //        return null;
 //    }
-
     private String getDataValue(ParameterHolder holder, String parameter) {
         String value = "";
         switch (parameter) {
@@ -316,8 +322,8 @@ public class ReportConfigServiceImpl implements ReportConfigService {
     }
 
     public static String getCurrDateTime(ReportConfigParameter param) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
-        
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
         DateTime dateTime;
         if (param.getName().toLowerCase().contains("from") || param.getParameter().toLowerCase().contains("from") || param.getName().toLowerCase().contains("start") || param.getParameter().toLowerCase().contains("start")) {
             dateTime = DateTime.now().withTimeAtStartOfDay();
@@ -332,8 +338,8 @@ public class ReportConfigServiceImpl implements ReportConfigService {
     }
 
     @Override
-    public ReportConfig getByID(Long reportConfigId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Class getController() {
+        return this.getClass();
     }
 
 }

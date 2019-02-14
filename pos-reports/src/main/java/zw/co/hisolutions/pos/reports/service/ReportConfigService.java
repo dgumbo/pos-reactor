@@ -1,15 +1,12 @@
 package zw.co.hisolutions.pos.reports.service;
 
-import java.util.List; 
-import zw.co.hisolutions.pos.common.service.BasicListService;
-//import zw.co.hisolutions.pos.common.service.BasicListService;
+import java.util.List;  
+import zw.co.hisolutions.pos.common.service.GenericService; 
 import zw.co.hisolutions.pos.reports.entity.ParameterHolder;
 import zw.co.hisolutions.pos.reports.entity.ReportConfig;
 import zw.co.hisolutions.pos.reports.entity.ReportConfigParameter;
 
-public interface ReportConfigService extends BasicListService<ReportConfig, ReportConfigParameter> {
-
-    List<ReportConfigParameter> getAllReportConfigParameters();
+public interface ReportConfigService extends GenericService<ReportConfig, Long> { 
 
     ReportConfig getByName(String name);
 

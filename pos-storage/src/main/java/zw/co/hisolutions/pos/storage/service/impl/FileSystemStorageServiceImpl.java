@@ -33,7 +33,7 @@ import zw.co.hisolutions.pos.storage.service.StorageService;
  * @author dgumbo
  */
 @Service
-@Profile("development")
+@Profile("devs")
 public class FileSystemStorageServiceImpl implements StorageService { 
     
     private final Path rootLocation;
@@ -242,5 +242,15 @@ public class FileSystemStorageServiceImpl implements StorageService {
     @Override
     public Tika getTika() {
         return tika;
+    }
+
+    @Override
+    public File getFile(String pathFromRoot, String filename) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public File getFontFile(String fontFolder, String filename) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

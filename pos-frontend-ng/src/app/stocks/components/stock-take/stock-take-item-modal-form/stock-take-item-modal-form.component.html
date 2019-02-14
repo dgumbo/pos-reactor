@@ -21,7 +21,7 @@
         <label for="stockTakeLine.quantity" class="col-sm-4 col-form-label">Quantity:</label>
         <div class="col-sm-8">
           <input class="form-control" placeholder="Quantity" step="1" type="number" name="stockTakeLine.quantity"
-            [(ngModel)]="stockTakeLine.quantity" >
+            [(ngModel)]="stockTakeLine.quantity">
         </div>
       </div>
 
@@ -67,7 +67,8 @@
 
 <div class="spacer"></div>
 <mat-dialog-actions class="dialog-footer ml ml-a" style="margin-left:auto;">
-  <button mat-raised-button color="primary" (click)="returnStockItem()" [disabled]="!stockTakeLine.quantity || stockTakeLine.quantity === 0">Add
-    stock Item</button>
+  <button mat-raised-button color="primary" (click)="returnStockItem()" [disabled]="stockTakeLine && stockTakeLine.stockItem && stockTakeLine.stockItem.id  
+  && (!stockTakeLine.quantity || stockTakeLine.quantity === 0)">
+    Add Stock Item</button>
   <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
 </mat-dialog-actions>

@@ -1,5 +1,6 @@
 package zw.co.hisolutions.pos.reports.entity;
  
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import zw.co.hisolutions.pos.common.entity.BaseEntity;
 public class ReportConfigParameter extends BaseEntity {
     
     @ManyToOne 
+    @JsonIgnore
     private ReportConfig reportConfig;
     
     @Column(name="name",length = 50)

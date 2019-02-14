@@ -19,7 +19,7 @@
                     report.name }}</a>
             </td>
         </tr>
-        <tr *ngFor="let menu of (userReportMenus|async)">
+        <tr *ngFor="let menu of (dynamicReportMenus|async)">
             <td>
                 <a title="Run {{ menu.name }}" [routerLink]="['/reports/report-view-by-name/', menu.menuFunction.split('/').pop()]"><i
                         class="fa fa-list-alt"></i></a>
@@ -32,8 +32,7 @@
 
         <tr *ngFor="let report of receiptPrintReports">
             <td>
-                <a title="Print {{ report.name }}" 
-                    [routerLink]="['/reports', { outlets: {'print': ['print', report.menuFunction] }}]">
+                <a title="Print {{ report.name }}" [routerLink]="['/reports', { outlets: {'print': ['print', report.menuFunction] }}]">
                     <i class="fa fa-list-alt"></i>
                 </a>
             </td>
@@ -50,5 +49,9 @@
     <mat-spinner *ngIf="(isLoading$|async)">
 
     </mat-spinner>
+
+    <a title="Add Dynamic Report" [routerLink]="['/reports/admin']">
+        <i class="fa fa-plus"> Add Dynamic Report</i>
+    </a>
 
 </section>

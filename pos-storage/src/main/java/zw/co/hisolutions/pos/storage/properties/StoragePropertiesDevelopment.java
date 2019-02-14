@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 //@ConfigurationProperties("storage")
 @Data
-@Profile("development")
+@Profile("dev")
 public class StoragePropertiesDevelopment implements StorageProperties { 
     
     @Value("${server.upload.dir}")

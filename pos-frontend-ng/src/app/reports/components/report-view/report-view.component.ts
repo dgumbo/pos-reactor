@@ -8,11 +8,10 @@ import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { HostListener } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
 import { saveFile } from 'app/shared/helpers';
+import { Store, select } from '@ngrx/store';
 import * as fromRoot from 'app/app.reducer';
-import * as sharedActions from '../../../shared/actions';
-import { select } from '@ngrx/store';
+import * as sharedActions from 'shared/actions';
 import * as moment from 'moment/moment';
 import { ReportConfig } from 'shared/models/reports/report-config';
 import { ReportsDataService } from 'shared/services/reports-data.service';
@@ -84,6 +83,7 @@ export class ReportViewComponent implements OnInit, AfterViewInit {
     loadReportDetails(reportConfig: ReportConfig): void {
         this.reportConfig = reportConfig;
         let fields: FieldConfig[] = [];
+
         for (const param of reportConfig.reportConfigParameters) {
             const field = this.generateParameterFormConfig(param);
             fields.push(field);

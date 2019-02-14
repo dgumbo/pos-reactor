@@ -1,4 +1,13 @@
 <mat-card class="ticket-section flex flex-direction-column justify-between">
+
+    <div *ngIf="isSubmittingSale">
+        <br />
+        <mat-progress-bar mode="query">!! Submitting Sale
+        </mat-progress-bar>
+    </div>
+
+    <br />
+
     <table class="table">
         <tr class="table-header">
             <th>Item</th>
@@ -19,7 +28,6 @@
             </td>
         </tr>
     </table>
-
 
     <mat-card-actions class="summary flex flex-direction-row align-items-center justify-between">
         <div class="card ml-auto" style="width: 25rem;">
@@ -64,11 +72,19 @@
         </div>
     </mat-card-actions>
 
+    <div *ngIf="isSubmittingSale">
+        <br />
+        <mat-progress-bar mode="query">!! Submitting Sale
+        </mat-progress-bar>
+    </div>
+
     <mat-card-actions class="summary flex flex-direction-row align-items-center justify-between">
         <div class="flex flex-direction-row buttons">
-            <button class="cart-buttons clear" mat-raised-button (click)="clearCart()">Clear</button>
+            <button class="cart-buttons clear" [disabled]="isSubmittingSale" mat-raised-button (click)="clearCart()">Clear</button>
             <!-- <button class="cart-buttons save" mat-raised-button (click)="saveCart()">Save for Later</button> -->
-            <button class="cart-buttons checkout btn btn-md primary" (click)="checkout()" #checkoutButton>Make Payment</button>
+            <button class="cart-buttons checkout btn btn-md primary" [disabled]="isSubmittingSale" (click)="checkout()"
+                #checkoutButton>Make Payment</button>
         </div>
     </mat-card-actions>
+    
 </mat-card>

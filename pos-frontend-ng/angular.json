@@ -8,8 +8,7 @@
             "sourceRoot": "src",
             "projectType": "application",
             "prefix": "app",
-            "schematics": { 
-            },
+            "schematics": {},
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
@@ -25,15 +24,17 @@
                         ],
                         "styles": [
                             "src/styles.scss",
-                            "src/styles-media-queries.scss"
+                            "src/styles-media-queries.scss",
+                            "node_modules/print-js/dist/print.css"
                         ],
                         "scripts": [
-                            "node_modules/jquery/dist/jquery.js", 
+                            "node_modules/jquery/dist/jquery.js",
                             "node_modules/bootstrap/dist/js/bootstrap.js",
                             "node_modules/waypoints/lib/jquery.waypoints.js",
-                            "node_modules/counterup/jquery.counterup.min.js", 
-                            "node_modules/jquery.easing/jquery.easing.js", 
-                            "node_modules/wowjs/dist/wow.js"
+                            "node_modules/counterup/jquery.counterup.min.js",
+                            "node_modules/jquery.easing/jquery.easing.js",
+                            "node_modules/wowjs/dist/wow.js",
+                            "node_modules/print-js/dist/print.js"
                         ]
                     },
                     "configurations": {

@@ -4,6 +4,14 @@
     <h1 *ngIf="!newForm">Preview of Received Stock</h1>
   </div>
   <br />
+
+  <div *ngIf="(isSubmittingStockReceive$|async)">
+    <br />
+    <mat-progress-bar mode="query">!! Submitting Sale
+    </mat-progress-bar>
+    <br />
+  </div>
+
   <div class="add-margin">
     <button mat-stroked-button (click)="openDialog()" color="primary" *ngIf="newForm">
       <span class="fa fa-plus"></span>
@@ -104,17 +112,29 @@
   </div>
   <br />
 
+  <div *ngIf="(isSubmittingStockReceive$|async)">
+    <br />
+    <mat-progress-bar mode="query">!! Submitting Sale
+    </mat-progress-bar>
+    <br />
+  </div>
 
   <div class="row">
     <div class="col-sm-4">
-      <button mat-raised-button color="primary" (click)="saveStockReceive()" 
-      [disabled]="!newForm">Save Stock Receipt</button>
+      <button mat-raised-button color="primary" 
+      (click)="saveStockReceive()" 
+      [disabled]="!newForm || (isSubmittingStockReceive$|async)" >Save Stock Receipt</button>
     </div>
     <div class="col-sm-3">
-      <button mat-raised-button color="warn" [routerLink]="['/stocks/stock-receive']" routerLinkActive="router-link-active">Cancel</button>
+      <button mat-raised-button color="warn"
+      [disabled]="(isSubmittingStockReceive$|async)"
+       [routerLink]="['/stocks/stock-receive']" 
+       routerLinkActive="router-link-active">Cancel</button>
     </div>
     <div class="col-sm-3">
-      <button mat-raised-button color="warn" (click)="getAllAvailaleStock()">Refresh Products</button>
+      <button mat-raised-button color="warn"
+      [disabled]="(isSubmittingStockReceive$|async)"
+       (click)="getAllAvailaleStock()">Refresh Products</button>
     </div>
   </div>
 

@@ -18,20 +18,25 @@
     <dependencies>     
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>pos-frontend-ng</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-        </dependency>  
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>pos-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>  
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>pos-base</artifactId>
+            <version>${project.version}</version>
+        </dependency> 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>pos-reports</artifactId>
             <version>${project.parent.version}</version> 
         </dependency>   
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>pos-frontend-ng</artifactId>
+            <version>${project.parent.version}</version>
+            <type>pom</type>
+        </dependency>  
         <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>pos-auth-jwt</artifactId>

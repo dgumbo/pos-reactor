@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 //@ConfigurationProperties("storage")
 @Configuration
 @Data
-@Profile("production")
+@Profile("prod")
 public class StoragePropertiesProduction  implements StorageProperties{
     private String location = null;     
     private String awsAccessKeyId = null;     

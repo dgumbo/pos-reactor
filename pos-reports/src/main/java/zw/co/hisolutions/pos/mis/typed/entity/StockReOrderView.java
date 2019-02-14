@@ -19,13 +19,13 @@ import lombok.Data;
 public class StockReOrderView { 
     private String productCategory;
     private String stockItem;
+    private long currentStock;
     private long requiredQuantity;
     private BigDecimal unitCost;
-    private BigDecimal orderCost;
-    private long currentStock;
-    private long totalSales; 
-    private Date minSellDate; 
+    private BigDecimal totalCost;
     private double averageDailySales;
+    private long totalSales; 
+    private Date firstSellDate; 
     private long currentStockDepletionDays;
     private long minOrderQuantity;
     private long totalSafetyStock;  

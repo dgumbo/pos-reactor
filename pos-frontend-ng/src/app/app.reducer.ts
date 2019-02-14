@@ -1,6 +1,7 @@
 import * as fromShared from './shared/reducers';
 import * as fromAuth from './auth/reducers/auth.reducer';
 import * as fromSell from './sell/reducers/sell.reducer';
+import * as fromStocks from './stocks/reducers/stocks.reducer';
 
 import { createFeatureSelector, ActionReducerMap, createSelector } from '@ngrx/store';
 
@@ -9,6 +10,7 @@ export interface State {
     auth: fromAuth.State;
     menus: fromShared.Menus;
     sell: fromSell.State;
+    stocks: fromStocks.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
@@ -16,6 +18,7 @@ export const reducers: ActionReducerMap<State> = {
     auth: fromAuth.authReducer,
     menus: fromShared.navMenuReducer,
     sell: fromSell.sellUiReducer,
+    stocks: fromStocks.stocksUiReducer,
 };
 
 export const getUiState = createFeatureSelector<fromShared.State>('ui');
@@ -36,3 +39,7 @@ export const getIsCartOpen = createSelector(getSellState, fromSell.getIsCartOpen
 export const getIsDialogOpen = createSelector(getSellState, fromSell.getIsDialogOpen);
 export const getIsProcessingPayment = createSelector(getSellState, fromSell.getIsProcessingPayment);
 export const getIsSubmittingSale = createSelector(getSellState, fromSell.getIsSubmittingSale);
+
+export const getStocksState = createFeatureSelector<fromStocks.State>('stocks');
+export const getIsSubmittingStockReceive = createSelector(getStocksState, fromStocks.getIsSubmittingStockReceive);
+export const getIsSubmittingStockTake = createSelector(getStocksState, fromStocks.getIsSubmittingStockTake);

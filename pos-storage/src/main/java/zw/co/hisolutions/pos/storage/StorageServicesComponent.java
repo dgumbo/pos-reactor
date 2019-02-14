@@ -4,7 +4,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
   
 @Configuration 
-@ComponentScan //(basePackages = "zw.co.hisolutions.storage")
+@ComponentScan  // (basePackages = "zw.co.hisolutions.pos.storage")
 public @interface StorageServicesComponent {
    
 }

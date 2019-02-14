@@ -22,6 +22,7 @@ import zw.co.hisolutions.pos.common.service.GenericService;
 import zw.co.hisolutions.pos.common.util.Results;
 import zw.co.hisolutions.pos.stocks.entity.StockItem;
 import zw.co.hisolutions.pos.stocks.entity.StockTake;
+import zw.co.hisolutions.pos.stocks.entity.StockTransactionStatus;
 import zw.co.hisolutions.pos.stocks.service.StockTakeService;
 
 /**
@@ -66,15 +67,27 @@ public class StockTakeController extends BasicRestController<StockTake, Long> {
 
         ResponseEntity responseEntity;
         HttpStatus httpStatus;
-        try {
-            StockTake entity = stockTakeService.finalizeStockTake(stockTake);
-            httpStatus = HttpStatus.CREATED;
-            responseEntity = new ResponseEntity<>(entity, httpStatus);
-        } catch (Exception ex) {
+
+        StockTake pendingStockTake = stockTakeService.getPendingStockTake();
+
+        if (stockTake.getStockTakeStatus() == StockTransactionStatus.PENDING
+                && pendingStockTake.getStockTakeStatus() == StockTransactionStatus.PENDING
+                && pendingStockTake.getId() == stockTake.getId()) {
+            try {
+                StockTake entity = stockTakeService.finalizeStockTake(stockTake);
+                httpStatus = HttpStatus.CREATED;
+                responseEntity = new ResponseEntity<>(entity, httpStatus);
+            } catch (Exception ex) {
+                httpStatus = HttpStatus.NOT_IMPLEMENTED;
+                responseEntity = new ResponseEntity<>(new Results(Results.DBActionResult.EncounteredError, "Could not create entity.", "new", this.getClass()), httpStatus);
+
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
             httpStatus = HttpStatus.NOT_IMPLEMENTED;
             responseEntity = new ResponseEntity<>(new Results(Results.DBActionResult.EncounteredError, "Could not create entity.", "new", this.getClass()), httpStatus);
 
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, "Stock Take Already Saved");
         }
 
         return responseEntity;
@@ -109,7 +122,8 @@ public class StockTakeController extends BasicRestController<StockTake, Long> {
     }
 
     @InitBinder
-    public void initBinder(WebDataBinder binder) {
+    public void initBinder(WebDataBinder binder
+    ) {
         binder.setAutoGrowCollectionLimit(500000);
     }
 

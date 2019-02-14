@@ -11,6 +11,11 @@ import { WorkFlowType } from 'app/shared/models/enums/work-flow-type';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StockReceiveDataService } from 'app/stocks/services/stock-receive-data.service';
 
+import { Store, select } from '@ngrx/store';
+import * as fromRoot from 'app/app.reducer';
+import * as stocksActions from '../../../actions';
+import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-stock-receive',
   templateUrl: './stock-receive.component.html',
@@ -27,14 +32,18 @@ export class StockReceiveComponent implements OnInit {
   displayedColumns: string[] = ['action', 'product', 'supplier', 'quantity', 'totalcost', 'unitcost', 'category', 'lrcr', 'wac'];
   dataSource = new MatTableDataSource<StockReceiveItem>();
 
+  isSubmittingStockReceive$: Observable<boolean>;
+
   constructor(private stockReceiveService: StockReceiveDataService,
     private supplierService: SupplierDataService,
     public dialog: MatDialog,
     private router: Router,
-    private activeRoute: ActivatedRoute) {
+    private activeRoute: ActivatedRoute,
+    private store: Store<fromRoot.State>) {
     let stockReceiveId = 0;
     const stockReceiveFinalizeId = this.activeRoute.snapshot.params['stockReceiveFinalizeId'];
     const stockReceivePreviewId = this.activeRoute.snapshot.params['stockReceivePreviewId'];
+
 
     if (stockReceiveFinalizeId && Number(stockReceiveFinalizeId) >= 1) {
       stockReceiveId = stockReceiveFinalizeId;
@@ -42,8 +51,6 @@ export class StockReceiveComponent implements OnInit {
     } else if (stockReceivePreviewId && Number(stockReceivePreviewId) >= 1) {
       stockReceiveId = stockReceivePreviewId;
       this.newForm = false;
-    } else {
-      this.checkPendingStockReceive();
     }
 
     if (stockReceiveId && Number(stockReceiveId) >= 1) {
@@ -58,16 +65,21 @@ export class StockReceiveComponent implements OnInit {
           this.dataSource.data = this.stockReceive.stockReceiveItems;
         });
     } else {
-      this.stockReceive.stockReceiveItems = [];
+      this.newMethod();
       this.stockReceive.remarks = 'Received Addition Stock';
     }
 
+    this.isSubmittingStockReceive$ = this.store.pipe(select(fromRoot.getIsSubmittingStockReceive));
   }
 
   ngOnInit() {
     this.getAllAvailaleStock();
     this.getSuppliers();
     // this.stockReceive.stockReceiveItems.length
+  }
+
+  private newMethod() {
+    this.stockReceive.stockReceiveItems = [];
   }
 
   getAllAvailaleStock() {
@@ -99,17 +111,25 @@ export class StockReceiveComponent implements OnInit {
   }
 
   partialSaveStockReceive() {
+    this.store.dispatch(new stocksActions.StartStockReceiveSubmition());
     const totalLines = this.stockReceive.stockReceiveItems.length;
 
     if (totalLines >= 1) {
       console.log('StockReceive : B4 Save :');
       console.log(this.stockReceive);
       this.stockReceiveService.partialSaveStockReceive(this.stockReceive)
-        .subscribe((res: StockReceive) => {
+        .subscribe(
+          (res: StockReceive) => {
+            this.store.dispatch(new stocksActions.CompleteStockReceiveSubmition());
+
           this.stockReceive = res;
           // console.log('StockReceive : After Save :');
           // console.log(res);
-        });
+        },
+        (error: Error) => {
+          this.store.dispatch(new stocksActions.CompleteStockReceiveSubmition());
+        }
+        );
     }
   }
 
@@ -124,6 +144,8 @@ export class StockReceiveComponent implements OnInit {
   }
 
   saveStockReceive() {
+    this.store.dispatch(new stocksActions.StartStockReceiveSubmition());
+
     let totalCost = 0;
     let totalLines = 0;
     // let totalLineItems = 0;
@@ -139,13 +161,19 @@ export class StockReceiveComponent implements OnInit {
       // console.log('StockReceive : B4 Save :');
       // console.log(this.stockReceive);
       this.stockReceiveService.finalizeStockReceive(this.stockReceive)
-        .subscribe((res: any) => {
-          // console.log('StockReceive : After Save :');
-          // console.log(res);
-          this.stockReceive = <StockReceive>{};
-          this.dataSource.data = [];
-          this.router.navigate(['/stocks', 'stock-receive']);
-        });
+        .subscribe(
+          (res: any) => {
+            this.store.dispatch(new stocksActions.CompleteStockReceiveSubmition());
+            // console.log('StockReceive : After Save :');
+            // console.log(res);
+            this.stockReceive = <StockReceive>{};
+            this.dataSource.data = [];
+            this.router.navigate(['/stocks', 'stock-receive']);
+          },
+          (error: Error) => {
+            this.store.dispatch(new stocksActions.CompleteStockReceiveSubmition());
+          }
+        );
     }
   }
 
@@ -154,7 +182,7 @@ export class StockReceiveComponent implements OnInit {
   }
 
   removeStockReceiveItem(stockTakeLine: StockReceiveItem) {
-    const index = this.stockReceive.stockReceiveItems.findIndex(stl => stl.product .id === stockTakeLine.product.id);
+    const index = this.stockReceive.stockReceiveItems.findIndex(stl => stl.product.id === stockTakeLine.product.id);
 
     // if (index >= 0) {
     //   this.stockTake.stockTakeLines.slice(index, 1);

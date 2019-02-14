@@ -107,7 +107,7 @@ public class StockReOrderReportService extends AbstractObjectXSSFTReportService<
         List<StockReOrderView> results = qry.getResultList();
 
         results.forEach(srov -> {
-            long daysToCalculateAverageOn = getDateDiff(new Date(), srov.getMinSellDate());
+            long daysToCalculateAverageOn = getDateDiff(new Date(), srov.getFirstSellDate());
 
             double averageDailySales = new Double(srov.getTotalSales()) / (daysToCalculateAverageOn == 0 ? 1 : daysToCalculateAverageOn);
             averageDailySales = round(averageDailySales, 2);
@@ -125,8 +125,8 @@ public class StockReOrderReportService extends AbstractObjectXSSFTReportService<
             requiredQuantity = requiredQuantity > 0 && requiredQuantity < srov.getMinOrderQuantity() ? srov.getMinOrderQuantity() : requiredQuantity;
             srov.setRequiredQuantity(requiredQuantity.longValue());
 
-            BigDecimal orderCost = srov.getUnitCost().multiply(new BigDecimal(requiredQuantity));
-            srov.setOrderCost(orderCost);
+            BigDecimal totalCost = srov.getUnitCost().multiply(new BigDecimal(requiredQuantity));
+            srov.setTotalCost(totalCost);
         });
 
         results = results

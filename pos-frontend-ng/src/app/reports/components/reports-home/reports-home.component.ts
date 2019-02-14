@@ -3,9 +3,12 @@ import { MatSnackBar } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import * as fromRoot from 'app/app.reducer';
+import * as  SharedActions from 'shared/actions';
 import { Menu } from 'shared/models/menu';
 import { MenuGroup } from 'shared/models/menu_group';
 import { ReportsPrintService } from 'app/reports/services/reports-print.service';
+import { ReportsDataService } from 'shared/services/reports-data.service';
+import { ReportConfig } from 'shared/models/reports/report-config';
 
 @Component({
     selector: 'app-reports-home',
@@ -14,7 +17,7 @@ import { ReportsPrintService } from 'app/reports/services/reports-print.service'
 })
 export class ReportsHomeComponent implements OnInit {
     msg: any;
-    userReportMenus: Observable<Menu[]>;
+    dynamicReportMenus: Observable<Menu[]>;
     isLoading$: Observable<boolean>;
 
     staticReports: Menu[] = [];
@@ -22,17 +25,43 @@ export class ReportsHomeComponent implements OnInit {
 
     constructor(private snackbar: MatSnackBar,
         private store: Store<fromRoot.State>,
-        private reportsPrintService: ReportsPrintService) {
+        private reportsPrintService: ReportsPrintService,
+        private reportsDataService: ReportsDataService) {
         this.isLoading$ = this.store.pipe(select(fromRoot.getIsLoading));
     }
 
     ngOnInit() {
-        this.userReportMenus = this.store.pipe(
+        this.dynamicReportMenus = this.store.pipe(
             select(fromRoot.getUserMenus),
         );
 
+        // this.dynamicReportMenus.subscribe(res => console.log('pano : ' , res));
+
+        this.getDynamicReports();
         this.populateStaticReports();
         this.populateReceiptPrintReports();
+    }
+
+    getDynamicReports() {
+        this.reportsDataService.getReportList()
+            .subscribe((res: ReportConfig[]) => {
+                // console.log(res) ;
+                const menus: Menu[] = [];
+
+                res.forEach(rc => {
+                    const menu = <Menu>{
+                        name: rc.name,
+                        menuFunction: rc.name,
+                        menuGroup: { name: 'Dynamic Reports' },
+                        type: 'Dynamic Reports',
+                    };
+                    menus.push(menu);
+                });
+
+                // console.log(menus);
+                this.store.dispatch(new SharedActions.SetUserMenus(menus));
+            });
+
     }
 
     populateStaticReports() {

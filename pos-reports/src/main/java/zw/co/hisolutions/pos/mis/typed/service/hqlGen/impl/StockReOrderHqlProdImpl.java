@@ -29,13 +29,13 @@ public class StockReOrderHqlProdImpl implements StockReOrderHql {
         StringBuilder queryString = new StringBuilder("Select new " + StockReOrderView.class.getName() + " ( ");
 
         queryString.append("\n pc.name As productCategory, sti.name As stockItem "
+                + "\n 	, cs.quantity As currentStock "
                 + "\n 	, cs.quantity * 0 As requiredQuantity "
                 + "\n 	, Coalesce(sti.lastReceiptCostRate, 0) As unitCost "
                 + "\n 	, Coalesce(sti.lastReceiptCostRate, 0) * 0 As orderCost "
-                + "\n 	, cs.quantity As currentStock "
-                + "\n 	, Sum(si.quantity) As totalSales  "
-                + "\n 	, Min(s.sellDate) As minSellDate  "
                 + "\n 	, 0.0 As averageDailySales  "
+                + "\n 	, Sum(si.quantity) As totalSales  "
+                + "\n 	, Min(s.sellDate) As firstSellDate  "
                 + "\n 	, cs.quantity * 0 As currentStockDepletionDays  "
                 + "\n 	, Coalesce(moq.minOrderQuantity, 1) As minOrderQuantity "
                 + "\n 	, cs.quantity * 0 As totalSafetyStock "
