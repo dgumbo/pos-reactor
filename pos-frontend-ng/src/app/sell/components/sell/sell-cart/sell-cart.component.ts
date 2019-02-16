@@ -12,8 +12,10 @@ import { SellPrintService, PosService, SellService } from 'app/sell/services';
 import { Store, select } from '@ngrx/store';
 import * as fromRoot from 'app/app.reducer';
 import * as  SellActions from 'app/sell/actions/sell-ui.action';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, merge } from 'rxjs';
 import { PaymentModalComponent } from '../../payment/payment-modal/payment-modal.component';
+import { async } from 'q';
+import { combineLatest } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sell-cart',
@@ -31,10 +33,10 @@ export class SellCartComponent implements OnInit {
 
   enterCount = 0;
 
-  isCartOpen = false;
-  isProcessingPayment = false;
-  isDialogOpen = false;
-  isSubmittingSale = false;
+  isCartOpen$: Observable<boolean>;
+  isProcessingPayment$: Observable<boolean>;
+  isDialogOpen$: Observable<boolean>;
+  isSubmittingSale$: Observable<boolean>;
 
   cart = <Cart>{ items: [], payment: <PaymentDetail>{} }; // itemsCount: 0, paidAmount: 0,  tenderedAmount: 0,
   // isDateSell = false;
@@ -71,10 +73,15 @@ export class SellCartComponent implements OnInit {
 
     this.cart.dateSale = this.isDateSell;
 
-    this.store.pipe(select(fromRoot.getIsCartOpen)).subscribe((res: boolean) => this.isCartOpen = res);
-    this.store.pipe(select(fromRoot.getIsProcessingPayment)).subscribe((res: boolean) => this.isProcessingPayment = res);
-    this.store.pipe(select(fromRoot.getIsDialogOpen)).subscribe((res: boolean) => this.isDialogOpen = res);
-    this.store.pipe(select(fromRoot.getIsSubmittingSale)).subscribe((res: boolean) => this.isSubmittingSale = res);
+    this.isCartOpen$ = this.store.pipe(select(fromRoot.getIsCartOpen));
+    this.isProcessingPayment$ = this.store.pipe(select(fromRoot.getIsProcessingPayment));
+    this.isDialogOpen$ = this.store.pipe(select(fromRoot.getIsDialogOpen));
+    this.isSubmittingSale$ = this.store.pipe(select(fromRoot.getIsSubmittingSale));
+
+    // this.store.pipe(select(fromRoot.getIsCartOpen)).subscribe((res: boolean) => this.isCartOpen = res);
+    // this.store.pipe(select(fromRoot.getIsProcessingPayment)).subscribe((res: boolean) => this.isProcessingPayment = res);
+    // this.store.pipe(select(fromRoot.getIsDialogOpen)).subscribe((res: boolean) => this.isDialogOpen = res);
+    // this.store.pipe(select(fromRoot.getIsSubmittingSale)).subscribe((res: boolean) => this.isSubmittingSale = res);
   }
 
   // Increase quantity by one
@@ -215,7 +222,19 @@ export class SellCartComponent implements OnInit {
   }
 
   checkout() {
-    if (!this.isSubmittingSale && !this.isProcessingPayment && !this.isDialogOpen) {
+    const isSubmittingSale = new BehaviorSubject(false);
+    this.isSubmittingSale$.subscribe(isSubmittingSale);
+
+    const isProcessingPayment = new BehaviorSubject(false);
+    this.isProcessingPayment$.subscribe(isProcessingPayment);
+
+    const isDialogOpen = new BehaviorSubject(false);
+    this.isDialogOpen$.subscribe(isDialogOpen);
+
+
+    if (!isSubmittingSale.value
+      && !isProcessingPayment.value
+      && !isDialogOpen.value) {
       if (this.cart.items.length > 0) {
         const dialogRef = this.dialog.open(PaymentModalComponent, {
           width: '800px',
@@ -247,13 +266,11 @@ export class SellCartComponent implements OnInit {
   }
 
   submitSale(cart: Cart): any {
-    // this.posService.updateProcessingPaymentStatus(true);
     this.store.dispatch(new SellActions.StartSellSubmition);
     this.cartService.processSell(this.cart)
       .subscribe(
         (res: Sell) => {
           this.store.dispatch(new SellActions.SellSubmitionComplete);
-          // this.posService.updateProcessingPaymentStatus(false);
           this.clearCart();
           this.sellPrintService.printSellReciept(res, this.isDateSell);
         },

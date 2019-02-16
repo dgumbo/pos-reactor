@@ -1,6 +1,6 @@
 <mat-card class="ticket-section flex flex-direction-column justify-between">
 
-    <div *ngIf="isSubmittingSale">
+    <div *ngIf="( isSubmittingSale$ | async )">
         <br />
         <mat-progress-bar mode="query">!! Submitting Sale
         </mat-progress-bar>
@@ -72,7 +72,7 @@
         </div>
     </mat-card-actions>
 
-    <div *ngIf="isSubmittingSale">
+    <div *ngIf="( isSubmittingSale$ | async )">
         <br />
         <mat-progress-bar mode="query">!! Submitting Sale
         </mat-progress-bar>
@@ -80,11 +80,11 @@
 
     <mat-card-actions class="summary flex flex-direction-row align-items-center justify-between">
         <div class="flex flex-direction-row buttons">
-            <button class="cart-buttons clear" [disabled]="isSubmittingSale" mat-raised-button (click)="clearCart()">Clear</button>
+            <button class="cart-buttons clear" [disabled]="( isSubmittingSale$ | async )  || ( isProcessingPayment$ | async ) || cart.items.length === 0 " mat-raised-button (click)="clearCart()">Clear</button>
             <!-- <button class="cart-buttons save" mat-raised-button (click)="saveCart()">Save for Later</button> -->
-            <button class="cart-buttons checkout btn btn-md primary" [disabled]="isSubmittingSale" (click)="checkout()"
+            <button class="cart-buttons checkout btn btn-md primary" [disabled]="( isSubmittingSale$ | async ) || ( isProcessingPayment$ | async ) || cart.items.length === 0 " (click)="checkout()"
                 #checkoutButton>Make Payment</button>
         </div>
     </mat-card-actions>
-    
+
 </mat-card>

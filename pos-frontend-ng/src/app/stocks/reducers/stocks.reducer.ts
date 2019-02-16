@@ -4,7 +4,6 @@ import {
 } from '../actions/stocks-ui.action';
 
 
-
 export interface State {
     isDialogOpen: boolean;
     isSubmittingStockTake: boolean;
